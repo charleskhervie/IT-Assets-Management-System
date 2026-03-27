@@ -1,0 +1,15 @@
+package dao.intfc;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import dao.model.Transaction;
+
+public interface TransactionDAO {
+    void add(Transaction transaction) throws SQLException;
+    void update(Transaction transaction) throws SQLException;
+    void delete(int id) throws SQLException;
+    List<Transaction> findAll() throws SQLException;
+    List<Transaction> findWithAttribute(String attribute, String value) throws SQLException;
+    
+} 
