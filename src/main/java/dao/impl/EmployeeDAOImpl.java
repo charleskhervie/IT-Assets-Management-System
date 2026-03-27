@@ -65,13 +65,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Employee employee = new Employee(
-                    rs.getInt("emp_id"),
-                    rs.getInt("department_id"),
-                    rs.getString("department_id"),
-                    rs.getString("user_name"),
+                    rs.getInt("empID"),
+                    rs.getInt("departmentId"),
+                    rs.getString("userName"),
                     rs.getString("password"),
                     rs.getString("role"),
-                    rs.getString("full_name")
+                    rs.getString("fullName")
                 );
                 employees.add(employee);
             }
@@ -98,13 +97,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Employee employee = new Employee(
-                        rs.getInt("emp_id"),
-                        rs.getInt("department_id"),
-                        rs.getString("department_id"),
-                        rs.getString("user_name"),
+                        rs.getInt("empId"),
+                        rs.getInt("departmentId"),
+                        rs.getString("userName"),
                         rs.getString("password"),
                         rs.getString("role"),
-                        rs.getString("full_name")
+                        rs.getString("fullName")
                     );
                     employees.add(employee);
                 }

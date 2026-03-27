@@ -20,7 +20,8 @@ public class DBUtil {
     }
 
     public static boolean isValid(String user, String pass) {
-        try (Connection conn = DriverManager.getConnection(URL, user, pass)) {
+        try {
+            DriverManager.getConnection(URL, user, pass).close();
             return true;
         } catch (SQLException e) {
             return false;
