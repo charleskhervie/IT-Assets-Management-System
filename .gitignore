@@ -4,3 +4,4 @@ target/
 *.class 
 *.workspace
 *.code-workspace
+MEMORY.md
