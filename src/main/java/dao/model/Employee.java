@@ -2,15 +2,15 @@ package dao.model;
 public class Employee {
     private int empId;
     private int departmentId;
-    private String userName;
+    private String username;
     private String password;
     private String role;
     private String fullName;
 
-    public Employee(int empID, int departmentId, String userName, String password, String role, String fullName){
-        this.empId = empID;
+    public Employee(int empId, int departmentId, String username, String password, String role, String fullName) {
+        this.empId = empId;
         this.departmentId = departmentId;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.role = role;
         this.fullName = fullName;
@@ -33,11 +33,11 @@ public class Employee {
     }
 
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getPassword() {
