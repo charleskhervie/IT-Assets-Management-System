@@ -13,11 +13,11 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public void add(Employee employee) throws SQLException {
-        String query = "insert into employee (department_id, user_name, password, role, full_name) values (?, ?, ?, ?, ?)";
+        String query = "insert into employee (department_id, username, password, role, full_name) values (?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, employee.getDepartmentId());
-            ps.setString(2, employee.getUserName());
+            ps.setString(2, employee.getUsername());
             ps.setString(3, employee.getPassword());
             ps.setString(4, employee.getRole());
             ps.setString(5, employee.getFullName());
@@ -32,16 +32,19 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public void update(Employee employee) throws SQLException {
-        String query = "update employee set department_id = ?, user_name = ?, password = ?, role = ?, full_name = ? where emp_id = ?";
+        String query = "update employee set department_id = ?, username = ?, password = ?, role = ?, full_name = ? where emp_id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, employee.getDepartmentId());
-            ps.setString(2, employee.getUserName());
+            ps.setString(2, employee.getUsername());
             ps.setString(3, employee.getPassword());
             ps.setString(4, employee.getRole());
             ps.setString(5, employee.getFullName());
             ps.setInt(6, employee.getEmpId());
-            ps.executeUpdate();
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SQLException("No employee found with ID: " + employee.getEmpId());
+            }
         }
     }
 
@@ -56,6 +59,28 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
+    public Employee findById(int empId) throws SQLException {
+        String query = "select * from employee where emp_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, empId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Employee(
+                        rs.getInt("emp_id"),
+                        rs.getInt("department_id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("full_name")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<Employee> findAll() throws SQLException {
         List<Employee> employees = new ArrayList<>();
         String query = "select * from employee";
@@ -64,9 +89,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Employee employee = new Employee(
-                    rs.getInt("empID"),
-                    rs.getInt("departmentId"),
-                    rs.getString("userName"),
+                    rs.getInt("empId"),
+                    rs.getInt("department_id"),
+                    rs.getString("user_name"),
                     rs.getString("password"),
                     rs.getString("role"),
                     rs.getString("fullName")
@@ -80,16 +105,25 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public List<Employee> findWithAttribute(String attribute, String value) throws SQLException {
         List<Employee> employees = new ArrayList<>();
-        String query = "select * from employee where " + attribute + " = ?";
+        String query;
+        if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("user_name")) {
+            query = "select * from employee where " + attribute + " like ?";
+        } else {
+            query = "select * from employee where " + attribute + " = ?";
+        }
         try (Connection conn = DBUtil.getConnection();
-            PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, value);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("user_name")) {
+                ps.setString(1, "%" + value + "%");
+            } else {
+                ps.setString(1, value);
+            }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Employee employee = new Employee(
                         rs.getInt("empId"),
                         rs.getInt("departmentId"),
-                        rs.getString("userName"),
+                        rs.getString("user_name"),
                         rs.getString("password"),
                         rs.getString("role"),
                         rs.getString("fullName")
@@ -97,6 +131,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
                     employees.add(employee);
                 }
             }
+        } catch (NumberFormatException e) {
+            throw new SQLException("Numeric attribute requires a number: " + attribute, e);
         }
         return employees;
     }
