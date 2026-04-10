@@ -9,7 +9,6 @@ import java.util.List;
 import dao.intfc.EmployeeDAO;
 import dao.model.Employee;
 import dao.dao_util.DBUtil;
-
 public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
@@ -82,19 +81,10 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public List<Employee> findWithAttribute(String attribute, String value) throws SQLException {
         List<Employee> employees = new ArrayList<>();
-        String query;
-        if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("user_name")) {
-            query = "select * from employee where " + attribute + " like ?";
-        } else {
-            query = "select * from employee where " + attribute + " = ?";
-        }
+        String query = "select * from employee where " + attribute + " = ?";
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-            if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("user_name")) {
-                ps.setString(1, "%" + value + "%");
-            } else {
-                ps.setString(1, value);
-            }
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, value);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Employee employee = new Employee(

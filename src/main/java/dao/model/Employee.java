@@ -1,5 +1,6 @@
+package dao.model;
 
-public class Users {
+public class Employee {
     private int empId;
     private int departmentId;
     private String userName;
@@ -7,7 +8,7 @@ public class Users {
     private String role;
     private String fullName;
 
-    public Users(int userId, int department_id, String departmentId, String userName, String password, String role, String fullName){
+    public Employee(int userId, int department_id, String departmentId, String userName, String password, String role, String fullName){
         this.empId = userId;
         this.departmentId = department_id;
         this.userName = userName;
