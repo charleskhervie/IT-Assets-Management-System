@@ -15,13 +15,14 @@ public class EquipmentDAOImpl implements EquipmentDAO {
 
     @Override
     public void add(Equipment equipment) throws SQLException {
-        String query = "insert into equipment (equipment_name, brand, model, category_id) values (?, ?, ?, ?)";
+        String query = "insert into equipment (equipment_name, brand, model, specifications, category_id) values (?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, equipment.getEquipmentName());
             ps.setString(2, equipment.getBrand());
             ps.setString(3, equipment.getModel());
-            ps.setInt(4, equipment.getCategoryId());
+            ps.setString(4, equipment.getSpecifications());
+            ps.setInt(5, equipment.getCategoryId());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -33,14 +34,15 @@ public class EquipmentDAOImpl implements EquipmentDAO {
 
     @Override
     public void update(Equipment equipment) throws SQLException {
-        String query = "update equipment set equipment_name = ?, brand = ?, model = ?, category_id = ? where equipment_id = ?";
+        String query = "update equipment set equipment_name = ?, brand = ?, model = ?, specifications = ?, category_id = ? where equipment_id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, equipment.getEquipmentName());
             ps.setString(2, equipment.getBrand());
             ps.setString(3, equipment.getModel());
-            ps.setInt(4, equipment.getCategoryId());
-            ps.setInt(5, equipment.getEquipmentId());
+            ps.setString(4, equipment.getSpecifications());
+            ps.setInt(5, equipment.getCategoryId());
+            ps.setInt(6, equipment.getEquipmentId());
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {
                 throw new SQLException("No equipment found with ID: " + equipment.getEquipmentId());
@@ -71,6 +73,7 @@ public class EquipmentDAOImpl implements EquipmentDAO {
                     rs.getString("equipment_name"),
                     rs.getString("brand"),
                     rs.getString("model"),
+                    rs.getString("specifications"),
                     rs.getInt("category_id")
                 );
                 equipmentList.add(equipment);
@@ -92,6 +95,7 @@ public class EquipmentDAOImpl implements EquipmentDAO {
                         rs.getString("equipment_name"),
                         rs.getString("brand"),
                         rs.getString("model"),
+                        rs.getString("specifications"),
                         rs.getInt("category_id")
                     );
                 }
@@ -105,7 +109,7 @@ public class EquipmentDAOImpl implements EquipmentDAO {
         List<Equipment> equipmentList = new ArrayList<>();
         String query;
 
-        if ("equipment_name".equals(attribute) || "brand".equals(attribute) || "model".equals(attribute)) {
+        if ("equipment_name".equals(attribute) || "brand".equals(attribute) || "model".equals(attribute) || "specifications".equals(attribute)) {
             query = "select * from equipment where " + attribute + " like ?";
         } else if ("equipment_id".equals(attribute) || "category_id".equals(attribute)) {
             query = "select * from equipment where " + attribute + " = ?";
@@ -115,7 +119,7 @@ public class EquipmentDAOImpl implements EquipmentDAO {
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            if ("equipment_name".equals(attribute) || "brand".equals(attribute) || "model".equals(attribute)) {
+            if ("equipment_name".equals(attribute) || "brand".equals(attribute) || "model".equals(attribute) || "specifications".equals(attribute)) {
                 ps.setString(1, "%" + value + "%");
             } else {
                 ps.setInt(1, Integer.parseInt(value));
@@ -128,6 +132,7 @@ public class EquipmentDAOImpl implements EquipmentDAO {
                         rs.getString("equipment_name"),
                         rs.getString("brand"),
                         rs.getString("model"),
+                        rs.getString("specifications"),
                         rs.getInt("category_id")
                     );
                     equipmentList.add(equipment);

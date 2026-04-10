@@ -5,13 +5,15 @@ public class Equipment {
     private String equipmentName;
     private String brand;
     private String model;
+    private String specifications;
     private int categoryId;
 
-    public Equipment(int equipmentId, String equipmentName, String brand, String model, int categoryId) {
+    public Equipment(int equipmentId, String equipmentName, String brand, String model, String specifications, int categoryId) {
         this.equipmentId = equipmentId;
         this.equipmentName = equipmentName;
         this.brand = brand;
         this.model = model;
+        this.specifications = specifications;
         this.categoryId = categoryId;
     }
 
@@ -45,6 +47,14 @@ public class Equipment {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getSpecifications() {
+        return specifications;
+    }
+
+    public void setSpecifications(String specifications) {
+        this.specifications = specifications;
     }
 
     public int getCategoryId() {

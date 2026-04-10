@@ -9,14 +9,16 @@ public class Unit {
     private String status;
     private int addedBy;
     private LocalDateTime createdAt;
+    private Integer assignedTo;
 
-    public Unit(int unitId, int equipmentId, String serialNumber, String status, int addedBy, LocalDateTime createdAt) {
+    public Unit(int unitId, int equipmentId, String serialNumber, String status, int addedBy, LocalDateTime createdAt, Integer assignedTo) {
         this.unitId = unitId;
         this.equipmentId = equipmentId;
         this.serialNumber = serialNumber;
         this.status = status;
         this.addedBy = addedBy;
         this.createdAt = createdAt;
+        this.assignedTo = assignedTo;
     }
 
     public int getUnitId() {
@@ -65,5 +67,13 @@ public class Unit {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(Integer assignedTo) {
+        this.assignedTo = assignedTo;
     }
 }
