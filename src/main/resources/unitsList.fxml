@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="620.0" prefWidth="1120.0" style="-fx-background-color: linear-gradient(to bottom, #f8fafc, #eef2f7);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
+   <top>
+      <VBox spacing="20.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" left="32.0" right="32.0" top="28.0" />
+         </padding>
+         <children>
+            <Label style="-fx-font-size: 34px; -fx-font-weight: 800; -fx-text-fill: #0f172a;" text="Units List" />
+            <HBox alignment="CENTER_LEFT" spacing="16.0">
+               <children>
+                  <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #334155;" text="Status:" />
+                  <ComboBox fx:id="statusFilter" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #334155;" text="Search" />
+                  <TextField fx:id="searchField" prefWidth="240.0" promptText="Search unit, equipment, category..." style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox BorderPane.alignment="CENTER">
+         <padding>
+            <Insets left="32.0" right="32.0" />
+         </padding>
+         <children>
+            <TableView fx:id="unitsTable" prefHeight="420.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 8;">
+               <columns>
+                  <TableColumn fx:id="idColumn" prefWidth="70.0" text="ID" />
+                  <TableColumn fx:id="serialColumn" prefWidth="170.0" text="Serial No." />
+                  <TableColumn fx:id="equipmentColumn" prefWidth="210.0" text="Equipment" />
+                  <TableColumn fx:id="categoryColumn" prefWidth="140.0" text="Category" />
+                  <TableColumn fx:id="statusColumn" prefWidth="130.0" text="Status" />
+                  <TableColumn fx:id="assignedToColumn" prefWidth="160.0" text="Assigned To" />
+                  <TableColumn fx:id="actionsColumn" prefWidth="180.0" text="Actions" />
+               </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" spacing="14.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="28.0" left="32.0" right="32.0" top="22.0" />
+         </padding>
+         <children>
+            <Button fx:id="checkInOutButton" mnemonicParsing="false" onAction="#handleCheckInOut" style="-fx-background-color: #1d4ed8; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: 700; -fx-background-radius: 10; -fx-padding: 12 24 12 24;" text="Check-out/in" />
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" style="-fx-background-color: white; -fx-text-fill: #0f172a; -fx-font-size: 15px; -fx-font-weight: 700; -fx-border-color: #94a3b8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 12 22 12 22;" text="Back" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
