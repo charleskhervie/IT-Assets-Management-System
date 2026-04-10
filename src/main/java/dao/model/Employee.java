@@ -1,5 +1,8 @@
 package dao.model;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6b4fa582ee676dfd47e14ca9ca68de9158bbc419
 public class Employee {
     private int empId;
     private int departmentId;
@@ -8,9 +11,15 @@ public class Employee {
     private String role;
     private String fullName;
 
+<<<<<<< HEAD
     public Employee(int userId, int department_id, String departmentId, String userName, String password, String role, String fullName){
         this.empId = userId;
         this.departmentId = department_id;
+=======
+    public Employee(int empID, int departmentId, String userName, String password, String role, String fullName){
+        this.empId = empID;
+        this.departmentId = departmentId;
+>>>>>>> 6b4fa582ee676dfd47e14ca9ca68de9158bbc419
         this.userName = userName;
         this.password = password;
         this.role = role;
