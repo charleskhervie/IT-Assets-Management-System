@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   
+   <top>
+      <HBox alignment="CENTER" prefHeight="55.0" prefWidth="890.0" style="-fx-background-color: #cfcfcf; -fx-border-color: #4a4a4a; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="DASHBOARD">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+
+   <left>
+      <VBox maxHeight="-Infinity" prefHeight="560.0" prefWidth="252.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 0 1 1 0;" BorderPane.alignment="TOP_LEFT">
+         <children>
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Units" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Transactions" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="292.0" text="Employees" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Reports" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Import/Export" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Exit" />
+         </children>
+      </VBox>
+   </left>
+
+   <center>
+      <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="569.0" prefWidth="751.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="108.0" prefWidth="122.0" spacing="10.0" style="-fx-background-color: rgba(187, 255, 190, 0.456); -fx-background-radius: 15; -fx-border-color: #4a4a4a; -fx-border-radius: 15;">
+               <children>
+                  <Label text="Total Units">
+                     <font><Font name="System Bold" size="14.0" /></font>
+                  </Label>
+                  <TextField alignment="CENTER" editable="false" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;" text="128">
+                     <font>
+                        <Font name="System Bold" size="32.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </VBox>
+
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="106.0" prefWidth="126.0" spacing="10.0" style="-fx-background-color: rgba(255, 239, 203, 0.7); -fx-background-radius: 15; -fx-border-color: #4a4a4a; -fx-border-radius: 15;">
+               <children>
+                  <Label text="Available">
+                     <font><Font name="System Bold" size="14.0" /></font>
+                  </Label>
+                  <TextField alignment="CENTER" editable="false" prefHeight="74.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;" text="45">
+                     <font><Font name="System Bold" size="32.0" /></font>
+                  </TextField>
+               </children>
+            </VBox>
+
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="105.0" prefWidth="128.0" spacing="10.0" style="-fx-background-color: rgba(255, 229, 229, 0.64); -fx-background-radius: 15; -fx-border-color: #4a4a4a; -fx-border-radius: 15;">
+               <children>
+                  <Label text="Check-out">
+                     <font><Font name="System Bold" size="14.0" /></font>
+                  </Label>
+                  <TextField alignment="CENTER" editable="false" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;" text="7">
+                     <font><Font name="System Bold" size="32.0" /></font>
+                  </TextField>
+               </children>
+            </VBox>
+
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="104.0" prefWidth="120.0" spacing="10.0" style="-fx-background-color: rgba(161, 238, 255, 0.63); -fx-background-radius: 15; -fx-border-color: #4a4a4a; -fx-border-radius: 15;">
+               <children>
+                  <Label text="Maintenance">
+                     <font><Font name="System Bold" size="14.0" /></font>
+                  </Label>
+                  <TextField alignment="CENTER" editable="false" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;" text="76">
+                     <font><Font name="System Bold" size="32.0" /></font>
+                  </TextField>
+               </children>
+            </VBox>
+
+         </children>
+         <padding>
+            <Insets top="40.0" />
+         </padding>
+      </HBox>
+   </center>
+</BorderPane>
