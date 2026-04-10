@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class UnitDAOImpl implements UnitDAO {
 
     @Override
     public void add(Unit unit) throws SQLException {
-        String query = "insert into units (equipment_id, serial_number, status, added_by, created_at) values (?, ?, ?, ?, ?)";
+        String query = "insert into units (equipment_id, serial_number, status, added_by, created_at, assigned_to) values (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, unit.getEquipmentId());
@@ -25,6 +24,7 @@ public class UnitDAOImpl implements UnitDAO {
             ps.setString(3, unit.getStatus());
             ps.setInt(4, unit.getAddedBy());
             ps.setObject(5, unit.getCreatedAt());
+            ps.setObject(6, unit.getAssignedTo());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -36,14 +36,15 @@ public class UnitDAOImpl implements UnitDAO {
 
     @Override
     public void update(Unit unit) throws SQLException {
-        String query = "update units set equipment_id = ?, serial_number = ?, status = ?, added_by = ? where unit_id = ?";
+        String query = "update units set equipment_id = ?, serial_number = ?, status = ?, added_by = ?, assigned_to = ? where unit_id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, unit.getEquipmentId());
             ps.setString(2, unit.getSerialNumber());
             ps.setString(3, unit.getStatus());
             ps.setInt(4, unit.getAddedBy());
-            ps.setInt(5, unit.getUnitId());
+            ps.setObject(5, unit.getAssignedTo());
+            ps.setInt(6, unit.getUnitId());
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {
                 throw new SQLException("No unit found with ID: " + unit.getUnitId());
@@ -75,7 +76,8 @@ public class UnitDAOImpl implements UnitDAO {
                     rs.getString("serial_number"),
                     rs.getString("status"),
                     rs.getInt("added_by"),
-                    rs.getObject("created_at", LocalDateTime.class)
+                    rs.getObject("created_at", LocalDateTime.class),
+                    (Integer) rs.getObject("assigned_to")
                 );
                 units.add(unit);
             }
@@ -97,7 +99,8 @@ public class UnitDAOImpl implements UnitDAO {
                         rs.getString("serial_number"),
                         rs.getString("status"),
                         rs.getInt("added_by"),
-                        rs.getObject("created_at", LocalDateTime.class)
+                        rs.getObject("created_at", LocalDateTime.class),
+                        (Integer) rs.getObject("assigned_to")
                     );
                 }
             }
@@ -127,7 +130,7 @@ public class UnitDAOImpl implements UnitDAO {
 
         if ("serial_number".equals(attribute) || "status".equals(attribute) || "created_at".equals(attribute)) {
             query = "select * from units where " + attribute + " like ?";
-        } else if ("unit_id".equals(attribute) || "equipment_id".equals(attribute) || "added_by".equals(attribute)) {
+        } else if ("unit_id".equals(attribute) || "equipment_id".equals(attribute) || "added_by".equals(attribute) || "assigned_to".equals(attribute)) {
             query = "select * from units where " + attribute + " = ?";
         } else {
             throw new SQLException("Unsupported attribute: " + attribute);
@@ -149,7 +152,8 @@ public class UnitDAOImpl implements UnitDAO {
                         rs.getString("serial_number"),
                         rs.getString("status"),
                         rs.getInt("added_by"),
-                        rs.getObject("created_at", LocalDateTime.class)
+                        rs.getObject("created_at", LocalDateTime.class),
+                        (Integer) rs.getObject("assigned_to")
                     );
                     units.add(unit);
                 }
