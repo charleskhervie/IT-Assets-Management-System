@@ -1,13 +1,26 @@
 package itams;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class App extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // Points to your FXML in src/main/resources
+        // Adjust the path if your FXML is inside a subfolder in resources
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
+        Parent root = loader.load();
+        
+        primaryStage.setTitle("IT Assets Management System");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

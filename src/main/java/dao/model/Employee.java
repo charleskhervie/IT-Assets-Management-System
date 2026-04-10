@@ -32,7 +32,7 @@ public class Employee {
         this.departmentId = departmentId;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return userName;
     }
 

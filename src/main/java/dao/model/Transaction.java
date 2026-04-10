@@ -1,20 +1,17 @@
 package dao.model;
-
 public class Transaction {
     private int transactionId;
     private int unitId;
     private int empId;
     private String transactionType;
     private String transactionDate;
-    
-    public Transaction(int transactionId, int unitId, int empId, String transactionType, String transactionDate) {
+    public Transaction(int transactionId, int unitId, int empId, String transactionType, String transactionDate){
         this.transactionId = transactionId;
         this.unitId = unitId;
         this.empId = empId;
         this.transactionType = transactionType;
         this.transactionDate = transactionDate;
     }
-        
     public int getTransactionId() {
         return transactionId;
     }
@@ -30,12 +27,6 @@ public class Transaction {
     public int getEmpId() {
         return empId;
     }
-    public String getTransactionDate() {
-        return transactionDate;
-    }
-    public void setTransactionDate(String transactionDate) {
-        this.transactionDate = transactionDate;
-    }
     public void setEmpId(int empId) {
         this.empId = empId;
     }
@@ -45,4 +36,12 @@ public class Transaction {
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
+    public String getTransactionDate() {
+        return transactionDate;
+    }
+    public void setTransactionDate(String transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    
 }
