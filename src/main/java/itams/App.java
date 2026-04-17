@@ -10,9 +10,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Points to your FXML in src/main/resources
-        // Adjust the path if your FXML is inside a subfolder in resources
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
         Parent root = loader.load();
         
         primaryStage.setTitle("IT Assets Management System");
