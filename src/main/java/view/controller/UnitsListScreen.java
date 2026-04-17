@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import itams.auth.SessionContext;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
@@ -62,24 +60,10 @@ public class UnitsListScreen implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         statusFilter.getItems().addAll("All", "available", "checked-out", "maintenance");
         statusFilter.setValue("All");
-
-        if (!SessionContext.isAdmin()) {
-            checkInOutButton.setDisable(true);
-            checkInOutButton.setText("Check-out/in (Admin only)");
-        }
     }
 
     @FXML
     private void handleCheckInOut(ActionEvent event) {
-        if (!SessionContext.isAdmin()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Access Denied");
-            alert.setHeaderText("Admin Access Required");
-            alert.setContentText("Only admins can process check-out/check-in.");
-            alert.showAndWait();
-            return;
-        }
-
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/checkInOut.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
