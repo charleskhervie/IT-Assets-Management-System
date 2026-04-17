@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.DashboardScreen">
+    <top>
+        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="1100.0" style="-fx-background-color: #cfcfcf; -fx-border-color: #4a4a4a; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
+            <Label text="DASHBOARD">
+                <font><Font name="System Bold" size="22.0" /></font>
+            </Label>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox maxHeight="-Infinity" prefHeight="560.0" prefWidth="252.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 0 1 1 0;" BorderPane.alignment="TOP_LEFT">
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleUnits" prefHeight="80.0" prefWidth="234.0" text="Units" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Transactions" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="292.0" text="Employees" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Reports" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" style="-fx-font-weight: bold;" text="Import / Export" />
+            <Region VBox.vgrow="ALWAYS" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" style="-fx-text-fill: #e05555;" text="Exit" />
+        </VBox>
+    </left>
+
+    <center>
+        <VBox style="-fx-background-color: #1e1e1e;" BorderPane.alignment="CENTER">
+            <TabPane fx:id="importExportTabPane" prefHeight="558.0" prefWidth="848.0" style="-fx-background-color: #1e1e1e; -fx-tab-min-width: 90; -fx-tab-max-width: 90;" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                <Tab text="Import">
+                    <content>
+                        <BorderPane style="-fx-background-color: white; -fx-padding: 20 24 0 24;">
+                            <center>
+                                <ScrollPane prefHeight="450.0" prefWidth="801.0">
+                                    <content>
+                                        <HBox alignment="TOP_LEFT" prefWidth="771.0" spacing="20" style="-fx-padding: 16 0 0 0;">
+                                            <VBox prefHeight="434.0" prefWidth="291.0" spacing="16">
+                                                <VBox>
+                                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-font-weight: bold;" text="Upload file">
+                                                        <padding><Insets bottom="8" /></padding>
+                                                    </Label>
+                                                    <StackPane prefHeight="170.0" prefWidth="220.0" style="-fx-background-color: #2a2a2a; -fx-border-color: #555555; -fx-border-style: dashed; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-background-radius: 6;">
+                                                        <VBox alignment="CENTER" spacing="8" style="-fx-background-color: #cfcfcf; -fx-border-color: white;">
+                                                            <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="123.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #3d5afe; -fx-text-fill: white;" text="Import">
+                                                                <font><Font name="System Bold" size="15.0" /></font>
+                                                            </Button>
+                                                            <Label style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="Click to import" />
+                                                            <Label style="-fx-text-fill: #666666; -fx-font-size: 10px;" text="Supported formats" />
+                                                            <HBox alignment="CENTER" spacing="6">
+                                                                <Label style="-fx-background-color: #2e4a2e; -fx-text-fill: #7ec87e; -fx-padding: 2 8 2 8; -fx-background-radius: 4; -fx-font-size: 10px;" text=".csv" />
+                                                                <Label style="-fx-background-color: #2a3a5e; -fx-text-fill: #7eaee8; -fx-padding: 2 8 2 8; -fx-background-radius: 4; -fx-font-size: 10px;" text=".json" />
+                                                                <Label style="-fx-background-color: #4a3a1e; -fx-text-fill: #d4a55a; -fx-padding: 2 8 2 8; -fx-background-radius: 4; -fx-font-size: 10px;" text=".sql" />
+                                                            </HBox>
+                                                        </VBox>
+                                                    </StackPane>
+                                                </VBox>
+                                                <VBox style="-fx-background-color: #cfcfcf; -fx-background-radius: 6; -fx-padding: 14;">
+                                                    <Label style="-fx-text-fill: #888888; -fx-font-size: 10px; -fx-font-weight: bold;" text="IMPORT OPTIONS">
+                                                        <padding><Insets bottom="12" /></padding>
+                                                    </Label>
+                                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                        <VBox prefHeight="41.0" prefWidth="239.0" spacing="2.0" HBox.hgrow="ALWAYS">
+                                                            <Label style="-fx-text-fill: black; -fx-font-size: 12px;" text="Skip duplicate records" />
+                                                            <Label prefHeight="20.0" prefWidth="182.0" style="-fx-text-fill: #777777; -fx-font-size: 10px;" text="Ignores rows with existing serial no." wrapText="true" />
+                                                        </VBox>
+                                                        <CheckBox mnemonicParsing="false" textOverrun="CLIP" />
+                                                    </HBox>
+                                                    <Separator style="-fx-background-color: #cfcfcf;">
+                                                        <padding><Insets bottom="10" top="10" /></padding>
+                                                    </Separator>
+                                                    <HBox alignment="CENTER_LEFT" spacing="8">
+                                                        <VBox prefHeight="43.0" prefWidth="254.0" spacing="2" HBox.hgrow="ALWAYS">
+                                                            <Label style="-fx-text-fill: black; -fx-font-size: 12px;" text="Validate before import" />
+                                                            <Label prefHeight="21.0" prefWidth="198.0" style="-fx-text-fill: #777777; -fx-font-size: 10px;" text="Preview errors before committing" wrapText="true" />
+                                                        </VBox>
+                                                        <CheckBox mnemonicParsing="false" />
+                                                    </HBox>
+                                                    <Separator style="-fx-background-color: #cfcfcf;">
+                                                        <padding><Insets bottom="10" top="10" /></padding>
+                                                    </Separator>
+                                                </VBox>
+                                            </VBox>
+                                            <VBox spacing="12" HBox.hgrow="ALWAYS">
+                                                <VBox>
+                                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-font-weight: bold;" text="File preview">
+                                                        <padding><Insets bottom="8" /></padding>
+                                                    </Label>
+                                                    <ScrollPane hbarPolicy="NEVER" vbarPolicy="NEVER">
+                                                        <content>
+                                                            <VBox prefHeight="326.0" prefWidth="456.0" spacing="10" style="-fx-background-color: #cfcfcf; -fx-background-radius: 6; -fx-padding: 14;">
+                                                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                                                    <Label style="-fx-background-color: #2e4a2e; -fx-text-fill: #7ec87e; -fx-padding: 3 8 3 8; -fx-background-radius: 4; -fx-font-size: 11px; -fx-font-weight: bold;" text="file" />
+                                                                    <Label fx:id="fileNameLabel" style="-fx-text-fill: black; -fx-font-size: 13px;" text="No file imported." HBox.hgrow="ALWAYS" />
+                                                                    <Region HBox.hgrow="ALWAYS" />
+                                                                    <Label fx:id="rowCountLabel" style="-fx-text-fill: #666666; -fx-font-size: 11px;" text="0 rows" />
+                                                                </HBox>
+                                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                                    <GridPane hgap="10">
+                                                                        <columnConstraints>
+                                                                            <ColumnConstraints minWidth="25" prefWidth="25" />
+                                                                            <ColumnConstraints minWidth="70" prefWidth="70" />
+                                                                            <ColumnConstraints hgrow="ALWAYS" minWidth="90" prefWidth="90" />
+                                                                            <ColumnConstraints minWidth="80" prefWidth="80" />
+                                                                            <ColumnConstraints minWidth="60" prefWidth="60" />
+                                                                        </columnConstraints>
+                                                                        <rowConstraints><RowConstraints /></rowConstraints>
+                                                                        <Label style="-fx-text-fill: black; -fx-font-size: 11px;" text="#" GridPane.columnIndex="0" />
+                                                                        <Label style="-fx-text-fill: black; -fx-font-size: 11px;" text="Serial No." GridPane.columnIndex="1" />
+                                                                        <Label style="-fx-text-fill: black; -fx-font-size: 11px;" text="Equipment" GridPane.columnIndex="2" />
+                                                                        <Label style="-fx-text-fill: black; -fx-font-size: 11px;" text="Category" GridPane.columnIndex="3" />
+                                                                        <Label style="-fx-text-fill: black; -fx-font-size: 11px;" text="Status" GridPane.columnIndex="4" />
+                                                                    </GridPane>
+                                                                    <Separator style="-fx-background-color: black;" />
+                                                                </VBox>
+                                                            </VBox>
+                                                        </content>
+                                                    </ScrollPane>
+                                                </VBox>
+                                                <HBox spacing="10">
+                                                    <VBox alignment="CENTER" prefHeight="64" style="-fx-background-color: #2a2a2a; -fx-background-radius: 6; -fx-padding: 10;" HBox.hgrow="ALWAYS">
+                                                        <Label style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="pl" />
+                                                        <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Total rows" />
+                                                    </VBox>
+                                                    <VBox alignment="CENTER" prefHeight="64" style="-fx-background-color: #1e3a1e; -fx-background-radius: 6; -fx-padding: 10;" HBox.hgrow="ALWAYS">
+                                                        <Label style="-fx-text-fill: #5cb85c; -fx-font-size: 22px; -fx-font-weight: bold;" text="pl" />
+                                                        <Label style="-fx-text-fill: #5cb85c; -fx-font-size: 11px;" text="Valid" />
+                                                    </VBox>
+                                                    <VBox alignment="CENTER" prefHeight="64" style="-fx-background-color: #3a1a1a; -fx-background-radius: 6; -fx-padding: 10;" HBox.hgrow="ALWAYS">
+                                                        <Label style="-fx-text-fill: #e05555; -fx-font-size: 22px; -fx-font-weight: bold;" text="pl" />
+                                                        <Label style="-fx-text-fill: #e05555; -fx-font-size: 11px;" text="Issues" />
+                                                    </VBox>
+                                                </HBox>
+                                            </VBox>
+                                        </HBox>
+                                    </content>
+                                </ScrollPane>
+                            </center>
+                            <bottom>
+                                <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-border-color: #3a3a3a; -fx-border-width: 1 0 0 0; -fx-padding: 14 0 10 0;">
+                                    <Button prefHeight="36" prefWidth="130" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-border-color: #555555; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5; -fx-font-size: 12px;" text="Cancel" />
+                                    <Button prefHeight="36" prefWidth="150" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-border-color: #555555; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5; -fx-font-size: 12px;" text="Confirm import" />
+                                </HBox>
+                            </bottom>
+                        </BorderPane>
+                    </content>
+                </Tab>
+
+                <Tab text="Export">
+                    <content>
+                        <BorderPane style="-fx-background-color: white; -fx-padding: 20 24 0 24;">
+                            <center>
+                                <VBox alignment="TOP_LEFT" spacing="0" style="-fx-padding: 16 0 0 0;">
+                                    <Label style="-fx-text-fill: #aaaaaa; -fx-font-size: 13px; -fx-font-weight: bold;" text="Export format">
+                                        <padding><Insets bottom="8" /></padding>
+                                    </Label>
+                                    <VBox fx:id="export" spacing="8" style="-fx-background-color: #cfcfcf; -fx-background-radius: 6; -fx-padding: 14;">
+                                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #d6ead6; -fx-background-radius: 5; -fx-padding: 10 12 10 12; -fx-border-color: #7ec87e; -fx-border-width: 1; -fx-border-radius: 5;">
+                                            <VBox spacing="1" HBox.hgrow="ALWAYS">
+                                                <Label style="-fx-text-fill: #2a5a2a; -fx-font-size: 12px; -fx-font-weight: bold;" text="CSV" />
+                                            </VBox>
+                                            <CheckBox fx:id="exportCsv" mnemonicParsing="false" selected="true" />
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #e8e8e8; -fx-background-radius: 5; -fx-padding: 10 12 10 12;">
+                                            <VBox spacing="1" HBox.hgrow="ALWAYS">
+                                                <Label style="-fx-text-fill: #333333; -fx-font-size: 12px; -fx-font-weight: bold;" text="JSON" />
+                                            </VBox>
+                                            <CheckBox fx:id="exportJson" mnemonicParsing="false" />
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #e8e8e8; -fx-background-radius: 5; -fx-padding: 10 12 10 12;">
+                                            <VBox spacing="1" HBox.hgrow="ALWAYS">
+                                                <Label style="-fx-text-fill: #333333; -fx-font-size: 12px; -fx-font-weight: bold;" text="SQL" />
+                                            </VBox>
+                                            <CheckBox fx:id="exportSql" mnemonicParsing="false" />
+                                        </HBox>
+                                    </VBox>
+                                </VBox>
+                            </center>
+
+                            <bottom>
+                                <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-border-color: #3a3a3a; -fx-border-width: 1 0 0 0; -fx-padding: 14 0 10 0;">
+                                    <Button prefHeight="36" prefWidth="130" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-border-color: #555555; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5; -fx-font-size: 12px;" text="Cancel" />
+                                    <Button prefHeight="36" prefWidth="150" style="-fx-background-color: #2a2a2a; -fx-text-fill: white; -fx-border-color: #555555; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5; -fx-font-size: 12px;" text="Confirm export" />
+                                </HBox>
+                            </bottom>
+                        </BorderPane>
+                    </content>
+                </Tab>
+
+            </TabPane>
+        </VBox>
+    </center>
+</BorderPane>
