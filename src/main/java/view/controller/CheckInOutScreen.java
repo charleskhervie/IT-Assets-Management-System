@@ -2,10 +2,9 @@ package view.controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
-import dao.dao_util.CredentialManager;
+import itams.auth.SessionContext;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -57,28 +57,28 @@ public class CheckInOutScreen implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         actionComboBox.getItems().addAll("Check-out", "Check-in");
         actionComboBox.setValue("Check-out");
-        loadProcessedBy();
-        statusLabel.setText("Ready to process a check-out/check-in transaction.");
-    }
+        processedByField.setText(SessionContext.getUsername());
 
-    private void loadProcessedBy() {
-        CredentialManager credentialManager = new CredentialManager();
-        if (!credentialManager.exists()) {
-            processedByField.setText("Unknown Admin");
+        if (!SessionContext.isAdmin()) {
+            processButton.setDisable(true);
+            statusLabel.setText("Employee mode: only admins can process check-out/check-in.");
             return;
         }
 
-        try {
-            Properties properties = credentialManager.load();
-            String username = properties.getProperty("username", "Unknown Admin");
-            processedByField.setText(username);
-        } catch (IOException exception) {
-            processedByField.setText("Unknown Admin");
-        }
+        statusLabel.setText("Ready to process a check-out/check-in transaction.");
     }
 
     @FXML
     private void handleProcess() {
+        if (!SessionContext.isAdmin()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Access Denied");
+            alert.setHeaderText("Admin Access Required");
+            alert.setContentText("Only admins can process check-out/check-in.");
+            alert.showAndWait();
+            return;
+        }
+
         statusLabel.setText("Transaction preview only for now.");
     }
 
