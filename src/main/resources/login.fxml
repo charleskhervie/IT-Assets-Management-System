@@ -39,7 +39,6 @@
             <VBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="295.0">
                <children>
                   <ComboBox fx:id="roleComboBox" prefWidth="150.0" promptText="Select role" style="-fx-background-color: #27AE60;" />
-                  <ComboBox fx:id="roleComboBox" prefWidth="150.0" promptText="Select role" />
                </children>
             </VBox>
          </children>
@@ -49,7 +48,7 @@
       </VBox>
       <VBox alignment="TOP_CENTER" prefHeight="76.0" prefWidth="391.0" spacing="5.0">
          <children>
-            <Button fx:id="loginButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" style="-fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: #27AE60;" text="LOGIN" textFill="WHITE">
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" prefHeight="30.0" prefWidth="150.0" style="-fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: #27AE60;" text="LOGIN" textFill="WHITE">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>

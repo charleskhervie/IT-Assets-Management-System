@@ -26,13 +26,13 @@
    <left>
       <VBox maxHeight="-Infinity" prefHeight="560.0" prefWidth="252.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 0 1 1 0;" BorderPane.alignment="TOP_LEFT">
          <children>
-            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
             <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleUnits" prefHeight="80.0" prefWidth="234.0" text="Units" />
-            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Transactions" />
-            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="292.0" text="Employees" />
-            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Reports" />
-            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Import/Export" />
-            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" prefHeight="80.0" prefWidth="234.0" text="Exit" />
+            <Button fx:id="transactionsButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleTransactions" prefHeight="80.0" prefWidth="234.0" text="Transactions" />
+            <Button fx:id="employeesButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleEmployees" prefHeight="80.0" prefWidth="292.0" text="Employees" />
+            <Button fx:id="reportsButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleReports" prefHeight="80.0" prefWidth="234.0" text="Reports" />
+            <Button fx:id="importExportButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleImportExport" prefHeight="80.0" prefWidth="234.0" text="Import/Export" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleExit" prefHeight="80.0" prefWidth="234.0" text="Exit" />
          </children>
       </VBox>
    </left>

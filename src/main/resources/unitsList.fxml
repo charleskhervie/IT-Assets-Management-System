@@ -12,21 +12,25 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="620.0" prefWidth="1120.0" style="-fx-background-color: linear-gradient(to bottom, #f8fafc, #eef2f7);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
+<BorderPane prefHeight="620.0" prefWidth="1120.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
    <top>
-      <VBox spacing="20.0" BorderPane.alignment="CENTER">
+      <VBox spacing="12.0" BorderPane.alignment="CENTER">
          <padding>
-            <Insets bottom="20.0" left="32.0" right="32.0" top="28.0" />
+            <Insets bottom="14.0" left="24.0" right="24.0" top="14.0" />
          </padding>
          <children>
-            <Label style="-fx-font-size: 34px; -fx-font-weight: 800; -fx-text-fill: #0f172a;" text="Units List" />
+            <HBox alignment="CENTER" prefHeight="48.0" style="-fx-background-color: #cfcfcf; -fx-border-color: #4a4a4a; -fx-border-width: 1;">
+               <children>
+                  <Label style="-fx-font-size: 22px; -fx-font-weight: 700;" text="UNITS LIST" />
+               </children>
+            </HBox>
             <HBox alignment="CENTER_LEFT" spacing="16.0">
                <children>
-                  <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #334155;" text="Status:" />
-                  <ComboBox fx:id="statusFilter" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                  <Label style="-fx-font-size: 14px; -fx-font-weight: 700;" text="Status:" />
+                  <ComboBox fx:id="statusFilter" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a;" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <Label style="-fx-font-size: 15px; -fx-font-weight: 700; -fx-text-fill: #334155;" text="Search" />
-                  <TextField fx:id="searchField" prefWidth="240.0" promptText="Search unit, equipment, category..." style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                  <Label style="-fx-font-size: 14px; -fx-font-weight: 700;" text="Search" />
+                  <TextField fx:id="searchField" prefWidth="240.0" promptText="Search unit, equipment, category..." style="-fx-background-color: white; -fx-border-color: #4a4a4a;" />
                </children>
             </HBox>
          </children>
@@ -35,10 +39,10 @@
    <center>
       <VBox BorderPane.alignment="CENTER">
          <padding>
-            <Insets left="32.0" right="32.0" />
+            <Insets left="24.0" right="24.0" />
          </padding>
          <children>
-            <TableView fx:id="unitsTable" prefHeight="420.0" style="-fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 8;">
+            <TableView fx:id="unitsTable" prefHeight="420.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 1;">
                <columns>
                   <TableColumn fx:id="idColumn" prefWidth="70.0" text="ID" />
                   <TableColumn fx:id="serialColumn" prefWidth="170.0" text="Serial No." />
@@ -55,11 +59,15 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" spacing="14.0" BorderPane.alignment="CENTER">
          <padding>
-            <Insets bottom="28.0" left="32.0" right="32.0" top="22.0" />
+            <Insets bottom="22.0" left="24.0" right="24.0" top="18.0" />
          </padding>
          <children>
-            <Button fx:id="checkInOutButton" mnemonicParsing="false" onAction="#handleCheckInOut" style="-fx-background-color: #1d4ed8; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: 700; -fx-background-radius: 10; -fx-padding: 12 24 12 24;" text="Check-out/in" />
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" style="-fx-background-color: white; -fx-text-fill: #0f172a; -fx-font-size: 15px; -fx-font-weight: 700; -fx-border-color: #94a3b8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 12 22 12 22;" text="Back" />
+            <Button fx:id="checkOutButton" mnemonicParsing="false" onAction="#handleCheckOut" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Check-out" />
+            <Button fx:id="checkInButton" mnemonicParsing="false" onAction="#handleCheckIn" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Check-in" />
+            <Button fx:id="addUnitButton" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Unit" />
+            <Button fx:id="addEquipmentButton" mnemonicParsing="false" onAction="#handleAddEquipment" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Equipment" />
+            <Button fx:id="addCategoryButton" mnemonicParsing="false" onAction="#handleAddCategory" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Category" />
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" prefHeight="34.0" prefWidth="110.0" text="Back" />
          </children>
       </HBox>
    </bottom>
