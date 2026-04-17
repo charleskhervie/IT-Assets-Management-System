@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="620.0" prefWidth="1120.0" style="-fx-background-color: linear-gradient(to bottom, #f8fafc, #eef2f7);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
+<BorderPane prefHeight="620.0" prefWidth="1120.0" style="-fx-background-color: linear-gradient(to bottom, #f8fafc, #eef2f7);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
    <top>
       <VBox spacing="20.0" BorderPane.alignment="CENTER">
          <padding>
