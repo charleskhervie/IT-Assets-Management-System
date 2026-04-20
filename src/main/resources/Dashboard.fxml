@@ -38,7 +38,7 @@
    </left>
 
    <center>
-      <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="569.0" prefWidth="751.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="569.0" prefWidth="751.0" spacing="20.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
             
             <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="108.0" prefWidth="122.0" spacing="10.0" style="-fx-background-color: rgba(187, 255, 190, 0.456); -fx-background-radius: 15; -fx-border-color: #4a4a4a; -fx-border-radius: 15;">
