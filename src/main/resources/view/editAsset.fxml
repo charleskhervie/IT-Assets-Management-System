@@ -17,7 +17,7 @@
 
     <VBox alignment="CENTER" prefHeight="34.0" prefWidth="400.0">
         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add Unit">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Unit">
                 <font>
                     <Font name="Arial Rounded MT Bold" size="14.0" />
                 </font>
@@ -44,20 +44,6 @@
                 <children>
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Serial Number" />
                     <TextField fx:id="serialNumberField" promptText="Enter serial number" />
-                </children>
-            </VBox>
-
-            <VBox spacing="4.0">
-                <children>
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Added By" />
-                    <TextField fx:id="addedByField" promptText="Auto-filled" editable="false" />
-                </children>
-            </VBox>
-
-            <VBox spacing="4.0">
-                <children>
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Created At" />
-                    <TextField fx:id="createdAtField" promptText="Auto-filled" editable="false" />
                 </children>
             </VBox>
 

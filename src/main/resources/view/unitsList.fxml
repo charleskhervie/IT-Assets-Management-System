@@ -49,8 +49,8 @@
                      <columns>
                         <TableColumn fx:id="idColumn" prefWidth="70.0" text="ID" />
                         <TableColumn fx:id="serialColumn" prefWidth="170.0" text="Serial No." />
-                        <TableColumn fx:id="equipmentColumn" prefWidth="210.0" text="Equipment" />
-                        <TableColumn fx:id="categoryColumn" prefWidth="140.0" text="Category" />
+                        <TableColumn fx:id="equipmentColumn" prefWidth="210.0" text="Equipment ID" />
+                        <TableColumn fx:id="addedByColumn" prefWidth="140.0" text="Added By" />
                         <TableColumn fx:id="statusColumn" prefWidth="130.0" text="Status" />
                         <TableColumn fx:id="assignedToColumn" prefWidth="160.0" text="Assigned To" />
                         <TableColumn fx:id="actionsColumn" prefWidth="180.0" text="Actions" />
