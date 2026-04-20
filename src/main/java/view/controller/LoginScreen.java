@@ -67,7 +67,7 @@ public class LoginScreen implements Initializable{
             CredentialManager credentialManager = new CredentialManager();
             credentialManager.write(username, password, role);
 
-            Parent root = FXMLLoader.load(getClass().getResource("/Dashboard.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/Dashboard.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

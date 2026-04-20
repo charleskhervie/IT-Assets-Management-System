@@ -88,27 +88,27 @@ public class UnitsListScreen implements Initializable {
 
     @FXML
     private void handleCheckOut(ActionEvent event) {
-        openModal(event, "/Check-out.fxml", "Check-out");
+        openModal(event, "/view/Check-out.fxml", "Check-out");
     }
 
     @FXML
     private void handleCheckIn(ActionEvent event) {
-        openModal(event, "/Check-in.fxml", "Check-in");
+        openModal(event, "/view/Check-in.fxml", "Check-in");
     }
 
     @FXML
     private void handleAddUnit(ActionEvent event) {
-        openModal(event, "/addAsset.fxml", "Add Unit");
+        openModal(event, "/view/addAsset.fxml", "Add Unit");
     }
 
     @FXML
     private void handleAddEquipment(ActionEvent event) {
-        openModal(event, "/AddEquipment.fxml", "Add Equipment");
+        openModal(event, "/view/AddEquipment.fxml", "Add Equipment");
     }
 
     @FXML
     private void handleAddCategory(ActionEvent event) {
-        openModal(event, "/AddCategory.fxml", "Add Category");
+        openModal(event, "/view/AddCategory.fxml", "Add Category");
     }
 
     private void openModal(ActionEvent event, String resourcePath, String title) {

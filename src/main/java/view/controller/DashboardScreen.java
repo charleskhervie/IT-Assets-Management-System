@@ -69,14 +69,14 @@ public class DashboardScreen implements Initializable {
         }
 
         if (!adminMode) {
-            setCenterContentFromResource("/unitsList.fxml", "Failed to load unitsList.fxml");
+            setCenterContentFromResource("/view/unitsList.fxml", "Failed to load unitsList.fxml");
         }
     }
 
     @FXML
     private void handleImportExport(ActionEvent event) {
         try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/importExport.fxml"));
+            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/importExport.fxml"));
             Scene currentScene = ((Node) event.getSource()).getScene();
             Parent currentRoot = currentScene.getRoot();
 
@@ -93,7 +93,7 @@ public class DashboardScreen implements Initializable {
             stage.setScene(new Scene(loadedRoot));
             stage.show();
         } catch (IOException exception) {
-            throw new RuntimeException("Failed to load importExport.fxml", exception);
+            throw new RuntimeException("Failed to load /view/importExport.fxml", exception);
         }
     }
 
@@ -114,13 +114,13 @@ public class DashboardScreen implements Initializable {
 
     @FXML
     private void handleUnits(ActionEvent event) {
-        replaceCenterContent(event, "/unitsList.fxml", "Failed to load unitsList.fxml");
+        replaceCenterContent(event, "/view/unitsList.fxml", "Failed to load unitsList.fxml");
     }
 
     @FXML
     private void handleTransactions(ActionEvent event) {
         try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/Transaction.fxml"));
+            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/Transaction.fxml"));
             Scene currentScene = ((Node) event.getSource()).getScene();
             Parent currentRoot = currentScene.getRoot();
 
@@ -137,14 +137,14 @@ public class DashboardScreen implements Initializable {
             stage.setScene(new Scene(loadedRoot));
             stage.show();
         } catch (IOException exception) {
-            throw new RuntimeException("Failed to load Transaction.fxml", exception);
+            throw new RuntimeException("Failed to load /view/Transaction.fxml", exception);
         }
     }
 
     @FXML
     private void handleEmployees(ActionEvent event) {
         try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/Employee.fxml"));
+            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/Employee.fxml"));
             Scene currentScene = ((Node) event.getSource()).getScene();
             Parent currentRoot = currentScene.getRoot();
 
@@ -161,14 +161,14 @@ public class DashboardScreen implements Initializable {
             stage.setScene(new Scene(loadedRoot));
             stage.show();
         } catch (IOException exception) {
-            throw new RuntimeException("Failed to load Employee.fxml", exception);
+            throw new RuntimeException("Failed to load /view/Employee.fxml", exception);
         }
     }
 
     @FXML
     private void handleReports(ActionEvent event) {
         try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/report.fxml"));
+            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/report.fxml"));
             Scene currentScene = ((Node) event.getSource()).getScene();
             Parent currentRoot = currentScene.getRoot();
 
@@ -185,19 +185,19 @@ public class DashboardScreen implements Initializable {
             stage.setScene(new Scene(loadedRoot));
             stage.show();
         } catch (IOException exception) {
-            throw new RuntimeException("Failed to load report.fxml", exception);
+            throw new RuntimeException("Failed to load /view/report.fxml", exception);
         }
     }
 
     @FXML
     private void handleBackToDashboard(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Dashboard.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/Dashboard.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException exception) {
-            throw new RuntimeException("Failed to load Dashboard.fxml", exception);
+            throw new RuntimeException("Failed to load /view/Dashboard.fxml", exception);
         }
     }
 
@@ -219,12 +219,12 @@ public class DashboardScreen implements Initializable {
         }
 
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException exception) {
-            throw new RuntimeException("Failed to load login.fxml", exception);
+            throw new RuntimeException("Failed to load /view/login.fxml", exception);
         }
     }
 
