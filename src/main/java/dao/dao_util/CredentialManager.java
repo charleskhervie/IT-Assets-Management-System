@@ -10,7 +10,7 @@ public class CredentialManager {
 
     public void write(String user, String pass, String mode) throws IOException {
         Properties props = new Properties();
-        props.setProperty("username", user);
+        props.setProperty("user", user);
         props.setProperty("password", pass);
         props.setProperty("app_mode", mode);
         try (OutputStream output = new FileOutputStream(ENV_FILE)) {

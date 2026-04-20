@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBUtil {
-    private static final String URL = "jdbc:mysql://localhost:3306/itams"
+    private static final String URL = "jdbc:mysql://localhost:3306/itams_db"
     + "?useSSL=false&allowPublicKeyRetrieval=true";
     private static final CredentialManager envFile = new CredentialManager();
     private DBUtil() {}
@@ -13,7 +13,9 @@ public class DBUtil {
     public static Connection getConnection() throws SQLException {
         try {
             Properties props = envFile.load();
-            return DriverManager.getConnection(URL, props.getProperty("username"), props.getProperty("password"));
+            String user = props.getProperty("user");     // key name in your .env file
+            String pass = props.getProperty("password"); // key name in your .env file
+            return DriverManager.getConnection(URL, user, pass);
         } catch (Exception e) {
             throw new SQLException("Failed to connect: " + e.getMessage());
         }
