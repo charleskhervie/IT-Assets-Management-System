@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.DashboardScreen">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.DashboardScreen">
    
    <top>
       <HBox alignment="CENTER" prefHeight="55.0" prefWidth="890.0" style="-fx-background-color: #cfcfcf; -fx-border-color: #4a4a4a; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
@@ -26,7 +26,7 @@
    <left>
       <VBox maxHeight="-Infinity" prefHeight="560.0" prefWidth="252.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 0 1 1 0;" BorderPane.alignment="TOP_LEFT">
          <children>
-            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
+            <Button fx:id="dashboardButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
             <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleUnits" prefHeight="80.0" prefWidth="234.0" text="Units" />
             <Button fx:id="transactionsButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleTransactions" prefHeight="80.0" prefWidth="234.0" text="Transactions" />
             <Button fx:id="employeesButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleEmployees" prefHeight="80.0" prefWidth="292.0" text="Employees" />

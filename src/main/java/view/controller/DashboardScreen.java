@@ -24,6 +24,12 @@ import java.util.Optional;
 public class DashboardScreen implements Initializable {
 
     @FXML
+    private BorderPane rootPane;
+
+    @FXML
+    private Button dashboardButton;
+
+    @FXML
     private Button importExportButton;
 
     @FXML
@@ -38,13 +44,20 @@ public class DashboardScreen implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boolean adminMode = isAdminMode();
+
+        if (dashboardButton != null) {
+            dashboardButton.setVisible(adminMode);
+            dashboardButton.setManaged(adminMode);
+        }
+
         if (importExportButton != null) {
             importExportButton.setVisible(adminMode);
             importExportButton.setManaged(adminMode);
         }
         if (transactionsButton != null) {
-            transactionsButton.setVisible(adminMode);
-            transactionsButton.setManaged(adminMode);
+            transactionsButton.setVisible(true);
+            transactionsButton.setManaged(true);
+            transactionsButton.setText(adminMode ? "Transactions" : "History");
         }
         if (employeesButton != null) {
             employeesButton.setVisible(adminMode);
@@ -53,6 +66,10 @@ public class DashboardScreen implements Initializable {
         if (reportsButton != null) {
             reportsButton.setVisible(adminMode);
             reportsButton.setManaged(adminMode);
+        }
+
+        if (!adminMode) {
+            setCenterContentFromResource("/unitsList.fxml", "Failed to load unitsList.fxml");
         }
     }
 
@@ -225,6 +242,23 @@ public class DashboardScreen implements Initializable {
             Stage stage = (Stage) currentScene.getWindow();
             stage.setScene(new Scene(content));
             stage.show();
+        } catch (IOException exception) {
+            throw new RuntimeException(errorMessage, exception);
+        }
+    }
+
+    private void setCenterContentFromResource(String resourcePath, String errorMessage) {
+        try {
+            Parent loadedRoot = FXMLLoader.load(getClass().getResource(resourcePath));
+            if (rootPane == null) {
+                return;
+            }
+
+            if (loadedRoot instanceof BorderPane loadedBorderPane) {
+                rootPane.setCenter(loadedBorderPane.getCenter());
+            } else {
+                rootPane.setCenter(loadedRoot);
+            }
         } catch (IOException exception) {
             throw new RuntimeException(errorMessage, exception);
         }
