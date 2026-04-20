@@ -68,9 +68,6 @@ public class UnitsListScreen implements Initializable {
     @FXML
     private Button addCategoryButton;
 
-    @FXML
-    private Button backButton;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         statusFilter.getItems().addAll("All", "available", "checked-out", "maintenance");
@@ -146,15 +143,4 @@ public class UnitsListScreen implements Initializable {
         }
     }
 
-    @FXML
-    private void handleBack(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Dashboard.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load Dashboard.fxml", exception);
-        }
-    }
 }

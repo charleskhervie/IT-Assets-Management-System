@@ -67,7 +67,6 @@
             <Button fx:id="addUnitButton" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Unit" />
             <Button fx:id="addEquipmentButton" mnemonicParsing="false" onAction="#handleAddEquipment" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Equipment" />
             <Button fx:id="addCategoryButton" mnemonicParsing="false" onAction="#handleAddCategory" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Category" />
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" prefHeight="34.0" prefWidth="110.0" text="Back" />
          </children>
       </HBox>
    </bottom>
