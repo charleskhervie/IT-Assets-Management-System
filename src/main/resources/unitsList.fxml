@@ -7,12 +7,13 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="620.0" prefWidth="1120.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
+<BorderPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
    <top>
       <VBox spacing="12.0" BorderPane.alignment="CENTER">
          <padding>
@@ -42,17 +43,24 @@
             <Insets left="24.0" right="24.0" />
          </padding>
          <children>
-            <TableView fx:id="unitsTable" prefHeight="420.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 1;">
-               <columns>
-                  <TableColumn fx:id="idColumn" prefWidth="70.0" text="ID" />
-                  <TableColumn fx:id="serialColumn" prefWidth="170.0" text="Serial No." />
-                  <TableColumn fx:id="equipmentColumn" prefWidth="210.0" text="Equipment" />
-                  <TableColumn fx:id="categoryColumn" prefWidth="140.0" text="Category" />
-                  <TableColumn fx:id="statusColumn" prefWidth="130.0" text="Status" />
-                  <TableColumn fx:id="assignedToColumn" prefWidth="160.0" text="Assigned To" />
-                  <TableColumn fx:id="actionsColumn" prefWidth="180.0" text="Actions" />
-               </columns>
-            </TableView>
+            <ScrollPane fitToHeight="true" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+               <content>
+                  <TableView fx:id="unitsTable" prefHeight="420.0" prefWidth="1060.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 1;">
+                     <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="70.0" text="ID" />
+                        <TableColumn fx:id="serialColumn" prefWidth="170.0" text="Serial No." />
+                        <TableColumn fx:id="equipmentColumn" prefWidth="210.0" text="Equipment" />
+                        <TableColumn fx:id="categoryColumn" prefWidth="140.0" text="Category" />
+                        <TableColumn fx:id="statusColumn" prefWidth="130.0" text="Status" />
+                        <TableColumn fx:id="assignedToColumn" prefWidth="160.0" text="Assigned To" />
+                        <TableColumn fx:id="actionsColumn" prefWidth="180.0" text="Actions" />
+                     </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </center>
