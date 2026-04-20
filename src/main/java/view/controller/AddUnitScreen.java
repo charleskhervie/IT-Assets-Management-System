@@ -8,86 +8,130 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import dao.dao_util.CredentialManager;
+import dao.handler.unitHandler;
 import dao.impl.UnitDAOImpl;
+import dao.intfc.UnitDAO;
 import dao.model.Unit;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 public class AddUnitScreen implements Initializable {
 
-    @FXML
-    private TextField equipmentIdField;
 
-    @FXML
-    private TextField serialNumberField;
+    @FXML private TextField equipmentIdField;
+    @FXML private TextField serialNumberField;
+    @FXML private TextField addedByField;
+    @FXML private TextField createdAtField;
+    @FXML private Button saveButton;
+    @FXML private Button cancelButton;
 
-    @FXML
-    private ComboBox<String> statusComboBox;
 
-    @FXML
-    private TextField addedByField;
+    private static final String DEFAULT_STATUS = "available";
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String FALLBACK_USER_ID = "1";
 
-    @FXML
-    private TextField assignedToField;
 
-    @FXML
-    private TextField createdAtField;
+    private final CredentialManager credentialManager = new CredentialManager();
 
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button cancelButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        statusComboBox.getItems().addAll("available", "checked-out", "maintenance");
-        statusComboBox.setValue("available");
-        createdAtField.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        addedByField.setText(getCurrentUserId());
+        initReadOnlyFields();
     }
+
+
+    private void initReadOnlyFields() {
+        createdAtField.setText(currentTimestamp());
+        createdAtField.setEditable(false);
+
+        addedByField.setText(getCurrentUserId());
+        addedByField.setEditable(false);
+    }
+
 
     @FXML
     private void handleSave() {
-        String equipmentText = equipmentIdField.getText().trim();
-        String serialNumber = serialNumberField.getText().trim();
-        String addedByText = addedByField.getText().trim();
-
-        if (equipmentText.isEmpty() || serialNumber.isEmpty() || addedByText.isEmpty()) {
+        System.out.println("Save button clicked.");
+        if (!isInputValid()){
+            System.out.println("Input is not valid.");
             return;
         }
 
         try {
-            int equipmentId = Integer.parseInt(equipmentText);
-            int addedBy = Integer.parseInt(addedByText);
-            Integer assignedTo = assignedToField.getText().trim().isEmpty() ? null : Integer.valueOf(assignedToField.getText().trim());
+            Unit unit = buildUnitFromFields();
+            System.out.println("Unit built: " + unit.getEquipmentId() + " " + unit.getSerialNumber());
+            unitHandler handler = new unitHandler();
+            UnitDAO dao = new UnitDAOImpl();
 
-            Unit unit = new Unit(
-                0,
-                equipmentId,
-                serialNumber,
-                statusComboBox.getValue(),
-                addedBy,
-                LocalDateTime.now(),
-                assignedTo
-            );
+            String result = handler.addUnit(dao, unit);
+            System.out.println("Handler result: " + result);
 
-            new UnitDAOImpl().add(unit);
+            if (result != null) {
+                showError("Save Failed", result);
+                return;
+            }
+
             closeWindow();
-        } catch (Exception exception) {
-            throw new RuntimeException("Failed to save unit", exception);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Number format error: " + e.getMessage());
+            showError("Invalid Input", "Equipment ID must be a number.");
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+            showError("Unexpected Error", e.getMessage());
         }
     }
 
     @FXML
-    private void handleCancel(ActionEvent event) {
+    private void handleCancel() {
         closeWindow();
+    }
+
+
+    private Unit buildUnitFromFields() {
+        int equipmentId = Integer.parseInt(equipmentIdField.getText().trim());
+        String serial = serialNumberField.getText().trim();
+        int addedBy = Integer.parseInt(addedByField.getText().trim());
+
+        return new Unit(0, equipmentId, serial, DEFAULT_STATUS, addedBy, LocalDateTime.now(), null);
+    }
+
+
+    private boolean isInputValid() {
+        String equipmentId = equipmentIdField.getText().trim();
+        String serial = serialNumberField.getText().trim();
+        String addedBy = addedByField.getText().trim();
+
+        if (equipmentId.isEmpty() || serial.isEmpty() || addedBy.isEmpty()) {
+            showError("Missing Fields", "Equipment ID, Serial Number, and Added By are required.");
+            return false;
+        }
+
+        if (!isNumeric(equipmentId)) {
+            showError("Invalid Input", "Equipment ID must be a number.");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private String currentTimestamp() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
+    }
+
+
+    private boolean isNumeric(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private void closeWindow() {
@@ -95,18 +139,23 @@ public class AddUnitScreen implements Initializable {
         stage.close();
     }
 
-    private String getCurrentUserId() {
-        CredentialManager credentialManager = new CredentialManager();
-        if (!credentialManager.exists()) {
-            return "1";
-        }
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
+
+    private String getCurrentUserId() {
+        if (!credentialManager.exists()) return FALLBACK_USER_ID;
         try {
-            Properties properties = credentialManager.load();
-            String userId = properties.getProperty("emp_id");
-            return userId == null || userId.isBlank() ? "1" : userId;
-        } catch (IOException exception) {
-            return "1";
+            Properties props = credentialManager.load();
+            String userId    = props.getProperty("emp_id");
+            return (userId == null || userId.isBlank()) ? FALLBACK_USER_ID : userId;
+        } catch (IOException e) {
+            return FALLBACK_USER_ID;
         }
     }
 }

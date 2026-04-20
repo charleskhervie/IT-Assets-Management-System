@@ -254,7 +254,6 @@ public class DashboardScreen implements Initializable {
                 return;
             }
 
-            // Employee entry should render the full units panel (top/center/bottom), not center-only.
             rootPane.setCenter(loadedRoot);
         } catch (IOException exception) {
             throw new RuntimeException(errorMessage, exception);
