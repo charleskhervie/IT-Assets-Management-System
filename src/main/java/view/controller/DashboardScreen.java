@@ -68,22 +68,26 @@ public class DashboardScreen implements Initializable {
         NavigationUtil.loadIntoDashboard(event, "/view/unitsList.fxml"); 
     }
     @FXML private void handleImportExport(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/view/importExport.fxml"); 
+        NavigationUtil.loadScene(event, "/view/importExport.fxml"); 
     }
     @FXML private void handleTransactions(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/view/Transaction.fxml"); 
+        NavigationUtil.loadScene(event, "/view/Transaction.fxml"); 
     }
     @FXML private void handleEmployees(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/view/Employee.fxml"); 
+        NavigationUtil.loadScene(event, "/view/Employee.fxml"); 
     }
     @FXML private void handleReports(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/view/report.fxml"); 
+        NavigationUtil.loadScene(event, "/view/report.fxml"); 
     }
     @FXML private void handleDashboard(ActionEvent event){ 
         NavigationUtil.loadScene(event, "/view/Dashboard.fxml"); 
     }
     @FXML private void handleBackToDashboard(ActionEvent event){ 
         NavigationUtil.loadScene(event, "/view/Dashboard.fxml"); 
+    }
+
+    public void loadContent(String fxmlPath) {
+        NavigationUtil.loadIntoDashboardFromPane(rootPane, fxmlPath);
     }
 
     @FXML private void handleExit(ActionEvent event) {

@@ -8,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import view.controller.DashboardScreen;
+import view.controller.DashboardScreen;
 
 public class NavigationUtil {
 
@@ -49,6 +51,21 @@ public class NavigationUtil {
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to load: " + fxmlPath, e);
+        }
+    }
+    public static void loadDashboardWithContent(ActionEvent event, String contentFxmlPath) {
+        try {
+            FXMLLoader dashboardLoader = new FXMLLoader(NavigationUtil.class.getResource("/view/Dashboard.fxml"));
+            Parent dashboardRoot = dashboardLoader.load();
+
+            DashboardScreen dashboardController = dashboardLoader.getController();
+            dashboardController.loadContent(contentFxmlPath);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(dashboardRoot));
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load dashboard with content: " + contentFxmlPath, e);
         }
     }
 }

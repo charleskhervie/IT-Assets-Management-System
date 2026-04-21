@@ -15,9 +15,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.DashboardScreen">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.ReportScreen">
 
-   <!-- ===== TOP HEADER ===== -->
    <top>
       <HBox alignment="CENTER" prefHeight="55.0" style="-fx-background-color: #cfcfcf; -fx-border-color: #4a4a4a; -fx-border-width: 0 0 1 0;">
          <children>
@@ -30,22 +29,20 @@
       </HBox>
    </top>
 
-   <!-- ===== LEFT SIDEBAR ===== -->
    <left>
       <VBox prefWidth="252.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 0 1 1 0;">
          <children>
-            <Button maxWidth="Infinity" prefHeight="80.0" text="Dashboard" />
-            <Button maxWidth="Infinity" prefHeight="80.0" text="Units" />
-            <Button maxWidth="Infinity" prefHeight="80.0" text="Transactions" />
-            <Button maxWidth="Infinity" prefHeight="80.0" text="Employees" />
-            <Button maxWidth="Infinity" prefHeight="80.0" text="Reports" />
-            <Button maxWidth="Infinity" prefHeight="80.0" text="Import/Export" />
-            <Button maxWidth="Infinity" prefHeight="80.0" text="Exit" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleUnits" prefHeight="80.0" prefWidth="234.0" text="Units" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleTransactions" prefHeight="80.0" prefWidth="234.0" text="Transactions" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleEmployees" prefHeight="80.0" prefWidth="292.0" text="Employees" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleReports" prefHeight="80.0" prefWidth="234.0" text="Reports" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleImportExport" prefHeight="80.0" prefWidth="234.0" text="Import/Export" />
+            <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleExit" prefHeight="80.0" prefWidth="234.0" text="Exit" />
          </children>
       </VBox>
    </left>
 
-   <!-- ===== CENTER CONTENT ===== -->
    <center>
       <ScrollPane>
          <content>
@@ -90,7 +87,6 @@
                   </children>
                </VBox>
    
-                  <!-- PIE CHART -->
                <VBox prefWidth="500.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
                   <Label text="Usage Overview">
                      <font>
@@ -101,7 +97,6 @@
                      <PieChart prefHeight="300.0" />
                </VBox>
    
-                  <!-- BAR CHART -->
                <VBox prefWidth="500.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
                   <Label text="Equipment Distribution">
                      <font>

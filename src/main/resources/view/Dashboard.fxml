@@ -29,9 +29,9 @@
             <Button fx:id="dashboardButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="80.0" prefWidth="234.0" text="Dashboard" />
             <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleUnits" prefHeight="80.0" prefWidth="234.0" text="Units" />
             <Button fx:id="transactionsButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleTransactions" prefHeight="80.0" prefWidth="234.0" text="Transactions" />
-            <Button fx:id="employeesButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleEmployees" prefHeight="80.0" prefWidth="292.0" text="Employees" />
-            <Button fx:id="reportsButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleReports" prefHeight="80.0" prefWidth="234.0" text="Reports" />
-            <Button fx:id="importExportButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleImportExport" prefHeight="80.0" prefWidth="234.0" text="Import/Export" />
+            <Button fx:id="employeesButton"  maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleEmployees" prefHeight="80.0" prefWidth="292.0" text="Employees" />
+            <Button fx:id="reportsButton"  maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleReports" prefHeight="80.0" prefWidth="234.0" text="Reports" />
+            <Button  fx:id="importExportButton" maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleImportExport" prefHeight="80.0" prefWidth="234.0" text="Import/Export" />
             <Button maxHeight="-Infinity" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleExit" prefHeight="80.0" prefWidth="234.0" text="Exit" />
          </children>
       </VBox>
