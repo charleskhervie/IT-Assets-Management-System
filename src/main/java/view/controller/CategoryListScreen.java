@@ -1,5 +1,6 @@
 package view.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import view.util.AlertUtil;
 import view.util.CategoryFilter;
 import view.util.CategoryTableUtil;
@@ -97,8 +103,25 @@ public class CategoryListScreen implements Initializable {
         Category category = unitsTable11.getSelectionModel().getSelectedItem();
         if (category == null) return;
 
-        // TODO: open edit category modal when EditCategoryScreen is ready
-        AlertUtil.showError("Not Implemented", "Edit category coming soon.");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/editCategory.fxml"));
+            Parent root = loader.load();
+
+            EditCategoryModalScreen controller = loader.getController();
+            controller.setCategory(category);
+
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable11.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Edit Category");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+
+            loadData();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load editCategory.fxml", e);
+        }
     }
 
     private void handleDeleteSelected() {

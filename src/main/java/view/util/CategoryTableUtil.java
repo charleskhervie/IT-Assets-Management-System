@@ -1,7 +1,6 @@
 package view.util;
 
 import dao.model.Category;
-import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -19,11 +18,13 @@ public class CategoryTableUtil {
         ContextMenu contextMenu = new ContextMenu(items);
         table.setRowFactory(t -> {
             TableRow<Category> row = new TableRow<>();
-            row.contextMenuProperty().bind(
-                Bindings.when(row.emptyProperty())
-                    .then((ContextMenu) null)
-                    .otherwise(contextMenu)
-            );
+            row.setOnContextMenuRequested(event -> {
+                if (!row.isEmpty()) {
+                    table.getSelectionModel().select(row.getItem());
+                    contextMenu.show(row, event.getScreenX(), event.getScreenY());
+                }
+                event.consume();
+            });
             return row;
         });
     }

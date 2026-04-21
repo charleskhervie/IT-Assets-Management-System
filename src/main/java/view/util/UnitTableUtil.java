@@ -28,14 +28,15 @@ public class UnitTableUtil {
     public static void setupContextMenu(TableView<Unit> table, MenuItem... items) {
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ContextMenu contextMenu = new ContextMenu(items);
-
         table.setRowFactory(t -> {
             TableRow<Unit> row = new TableRow<>();
-            row.contextMenuProperty().bind(
-                Bindings.when(row.emptyProperty())
-                    .then((ContextMenu) null)
-                    .otherwise(contextMenu)
-            );
+            row.setOnContextMenuRequested(event -> {
+                if (!row.isEmpty()) {
+                    table.getSelectionModel().select(row.getItem());
+                    contextMenu.show(row, event.getScreenX(), event.getScreenY());
+                }
+                event.consume();
+            });
             return row;
         });
     }

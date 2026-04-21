@@ -1,5 +1,6 @@
 package view.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import view.util.AlertUtil;
 import view.util.EquipmentFilter;
 import view.util.EquipmentTableUtil;
@@ -100,12 +106,27 @@ public class EquipmentListScreen implements Initializable {
             return;
         }
         Equipment equipment = unitsTable1.getSelectionModel().getSelectedItem();
-        if (equipment == null) {
-            return;
-        }
+        if (equipment == null) return;
 
-        // TODO: open edit equipment modal when EditEquipmentScreen is ready
-        AlertUtil.showError("Not Implemented", "Edit equipment coming soon.");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/editEquipment.fxml"));
+            Parent root = loader.load();
+
+            EditEquipmentModalScreen controller = loader.getController();
+            controller.setEquipment(equipment);
+
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable1.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Edit Equipment");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+
+            loadData();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load editEquipment.fxml", e);
+        }
     }
 
     private void handleDeleteSelected() {
