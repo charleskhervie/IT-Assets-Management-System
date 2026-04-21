@@ -53,7 +53,7 @@
             </AnchorPane>
             <AnchorPane layoutX="20.0" layoutY="20.0" prefHeight="40.0" prefWidth="808.0" style="-fx-background-color: #E8E8E8; -fx-border-color: transparent transparent #DCDCDC transparent; -fx-border-width: 0 0 1 0;">
                <children>
-                  <Button layoutX="11.0" layoutY="5.0" mnemonicParsing="false" opacity="0.83" text="+ Add Employee" textAlignment="CENTER">
+                  <Button layoutX="11.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleAddEmployee" opacity="0.83" text="+ Add Employee" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
@@ -62,16 +62,16 @@
             </AnchorPane>
             <ScrollPane fitToHeight="true" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
                <content>
-                  <TableView prefHeight="456.0" prefWidth="900.0" minWidth="900.0">
+                  <TableView fx:id="employeeTable" minWidth="900.0" prefHeight="456.0" prefWidth="900.0">
                     <columns>
-                      <TableColumn prefWidth="90.0" text="ID" />
-                      <TableColumn prefWidth="220.0" text="Username" />
-                      <TableColumn prefWidth="260.0" text="Full Name" />
-                      <TableColumn prefWidth="120.0" text="Role" />
-                      <TableColumn prefWidth="180.0" text="Department" />
+                      <TableColumn fx:id="idColumn" prefWidth="90.0" text="ID" />
+                      <TableColumn fx:id="usernameColumn" prefWidth="180.0" text="Username" />
+                      <TableColumn fx:id="fullNameColumn" prefWidth="212.00006103515625" text="Full Name" />
+                      <TableColumn fx:id="roleColumn" prefWidth="108.7999267578125" text="Role" />
+                      <TableColumn fx:id="departmentColumn" prefWidth="259.20001220703125" text="Department" />
                     </columns>
                      <columnResizePolicy>
-                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
                </content>

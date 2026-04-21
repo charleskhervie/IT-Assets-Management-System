@@ -1,19 +1,52 @@
 package ui.controller;
 
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import dao.handler.EmployeeHandler;
+import dao.impl.EmployeeDAOImpl;
+import dao.intfc.EmployeeDAO;
+import dao.model.Employee;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
+import ui.util.EmployeeTableUtil;
+import ui.util.ModalUtil;
 import ui.util.NavigationUtil;
+
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class EmployeeScreen implements Initializable {
 
+    @FXML private TableView<Employee> employeeTable;
+    @FXML private TableColumn<Employee, Integer> idColumn;
+    @FXML private TableColumn<Employee, String> usernameColumn;
+    @FXML private TableColumn<Employee, String> fullNameColumn;
+    @FXML private TableColumn<Employee, String> roleColumn;
+    @FXML private TableColumn<Employee, Integer> departmentColumn;
+
+    private final EmployeeHandler handler = new EmployeeHandler();
+    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private final ObservableList<Employee> masterList = FXCollections.observableArrayList();
+
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
+    public void initialize(URL location, ResourceBundle resources) {
+        EmployeeTableUtil.setupColumns(idColumn, usernameColumn, fullNameColumn, roleColumn, departmentColumn);
+        loadData();
+    }
+    public void loadData() {
+        
+        masterList.setAll(handler.getEmployees(employeeDAO));
+        employeeTable.setItems(masterList);
+        
+    }
+    @FXML
+    private void handleAddEmployee(ActionEvent event) { 
+        ModalUtil.openModal(event, "/fxml/AddEmployee.fxml", "Add Employee"); 
+        loadData(); 
+    }
 
     @FXML private void handleUnits(ActionEvent event){ 
         NavigationUtil.loadIntoDashboard(event, "/fxml/unitsList.fxml"); 

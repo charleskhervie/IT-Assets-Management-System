@@ -13,7 +13,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public void add(Employee employee) throws SQLException {
-        String query = "insert into employee (department_id, username, password, role, full_name) values (?, ?, ?, ?, ?)";
+        String query = "insert into employee(department_id, username, password, role, full_name) values (?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, employee.getDepartmentId());
@@ -89,12 +89,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Employee employee = new Employee(
-                    rs.getInt("empId"),
+                    rs.getInt("emp_id"),
                     rs.getInt("department_id"),
-                    rs.getString("user_name"),
+                    rs.getString("username"),
                     rs.getString("password"),
                     rs.getString("role"),
-                    rs.getString("fullName")
+                    rs.getString("full_name")
                 );
                 employees.add(employee);
             }
@@ -121,12 +121,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Employee employee = new Employee(
-                        rs.getInt("empId"),
-                        rs.getInt("departmentId"),
-                        rs.getString("user_name"),
+                        rs.getInt("emp_id"),
+                        rs.getInt("department_id"),
+                        rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("role"),
-                        rs.getString("fullName")
+                        rs.getString("full_name")
                     );
                     employees.add(employee);
                 }
