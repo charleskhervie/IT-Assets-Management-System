@@ -101,14 +101,10 @@ public class UnitsListScreen implements Initializable {
     }
 
     private void setUserButtonVisibility(boolean visible) {
-        if (checkOutButton != null) {
-            checkOutButton.setVisible(visible);
-            checkOutButton.setManaged(visible);
-        }
-        if (checkInButton != null) {
-            checkInButton.setVisible(visible);
-            checkInButton.setManaged(visible);
-        }
+        checkOutButton.setVisible(visible);
+        checkOutButton.setManaged(visible);
+        checkInButton.setVisible(visible);
+        checkInButton.setManaged(visible);
     }
 
     private void setAdminButtonVisibility(boolean visible) {
