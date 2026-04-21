@@ -16,7 +16,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import view.util.AlertUtil;
 import view.util.CategoryFilter;
 import view.util.CategoryTableUtil;

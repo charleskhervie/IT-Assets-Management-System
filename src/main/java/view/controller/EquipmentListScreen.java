@@ -11,7 +11,6 @@ import dao.intfc.EquipmentDAO;
 import dao.model.Equipment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.stage.Stage;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,7 +100,9 @@ public class EquipmentListScreen implements Initializable {
             return;
         }
         Equipment equipment = unitsTable1.getSelectionModel().getSelectedItem();
-        if (equipment == null) return;
+        if (equipment == null) {
+            return;
+        }
 
         // TODO: open edit equipment modal when EditEquipmentScreen is ready
         AlertUtil.showError("Not Implemented", "Edit equipment coming soon.");

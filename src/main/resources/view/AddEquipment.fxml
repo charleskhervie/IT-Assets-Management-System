@@ -27,31 +27,31 @@
             <VBox prefHeight="34.0" prefWidth="320.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Equipment Name" />
-                  <TextField />
+                  <TextField fx:id="equipmentNameField" />
                </children>
             </VBox>
             <VBox prefHeight="34.0" prefWidth="320.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Brand" />
-                  <TextField />
+                  <TextField fx:id="brandField" />
                </children>
             </VBox>
             <VBox prefHeight="28.0" prefWidth="320.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Model" />
-                  <TextField />
+                  <TextField fx:id="modelField" />
                </children>
             </VBox>
             <VBox prefHeight="41.0" prefWidth="320.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category" />
-                  <TextField />
+                  <TextField fx:id="categoryIdField" />
                </children>
             </VBox>
             <VBox prefHeight="83.0" prefWidth="320.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Specifications" />
-                  <TextArea prefHeight="100.0" prefWidth="320.0" />
+                  <TextArea fx:id="specificationsArea" prefHeight="100.0" prefWidth="320.0" />
                </children>
             </VBox>
          </children>
@@ -61,7 +61,7 @@
       </VBox>
       <HBox alignment="CENTER" prefHeight="29.0" prefWidth="400.0" spacing="50.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="115.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Save" />
+            <Button mnemonicParsing="false" onAction="#handleSave" prefHeight="34.0" prefWidth="115.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Save" />
             <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="34.0" prefWidth="115.0" text="Cancel" />
          </children>
          <VBox.margin>
