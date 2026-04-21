@@ -43,6 +43,8 @@ public class UnitsListScreen implements Initializable {
     @FXML private Button checkOutButton;
     @FXML private Button checkInButton;
     @FXML private Button addUnitButton;
+    @FXML private Button navEquipmentButton;
+    @FXML private Button navCategoryButton;
     @FXML private Button addEquipmentButton;
     @FXML private Button addCategoryButton;
 
