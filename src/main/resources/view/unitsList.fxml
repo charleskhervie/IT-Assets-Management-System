@@ -75,8 +75,8 @@
                   <Button fx:id="checkOutButton" mnemonicParsing="false" onAction="#handleCheckOut" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Check-out" />
                   <Button fx:id="checkInButton" mnemonicParsing="false" onAction="#handleCheckIn" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Check-in" />
                   <Button fx:id="addUnitButton" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Unit" />
-                  <Button fx:id="navEquipmentButton" mnemonicParsing="false" onAction="#handleAddEquipment" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Equipment" />
-                  <Button fx:id="navCategoryButton" mnemonicParsing="false" onAction="#handleAddCategory" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Category" />
+                  <Button fx:id="addEquipmentButton" mnemonicParsing="false" onAction="#handleAddEquipment" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Equipment" />
+                  <Button fx:id="addCategoryButton" mnemonicParsing="false" onAction="#handleAddCategory" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Category" />
                </children>
             </HBox>
          </children>
