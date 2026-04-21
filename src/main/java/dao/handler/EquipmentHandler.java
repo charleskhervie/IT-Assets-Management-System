@@ -3,6 +3,7 @@ package dao.handler;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import dao.intfc.CategoryDAO;
 import dao.intfc.EquipmentDAO;
 import dao.model.Equipment;
 
@@ -21,6 +22,7 @@ public class EquipmentHandler {
         if (!isInputValid(equipment)) {
             return "Equipment name and category ID must not be empty.";
         }
+        
         try {
             dao.add(equipment);
             return null;
@@ -50,6 +52,8 @@ public class EquipmentHandler {
             return "Failed to delete equipment: " + e.getMessage();
         }
     }
+
+    
 
     private boolean isInputValid(Equipment equipment) {
         return equipment.getEquipmentName() != null
