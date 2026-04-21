@@ -1,23 +1,17 @@
 package view.controller;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
-import dao.dao_util.CredentialManager;
+import view.util.AdminUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+import view.util.NavigationUtil;
 
 import java.util.Optional;
 
@@ -40,223 +34,67 @@ public class DashboardScreen implements Initializable {
 
     @FXML
     private Button reportsButton;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        boolean adminMode = isAdminMode();
+        boolean adminMode = AdminUtil.isAdminMode();
 
-        if (dashboardButton != null) {
-            dashboardButton.setVisible(adminMode);
-            dashboardButton.setManaged(adminMode);
+        if (dashboardButton != null){ 
+            dashboardButton.setVisible(adminMode);    
+            dashboardButton.setManaged(adminMode); 
         }
-
-        if (importExportButton != null) {
-            importExportButton.setVisible(adminMode);
-            importExportButton.setManaged(adminMode);
+        if (importExportButton != null) { 
+            importExportButton.setVisible(adminMode); importExportButton.setManaged(adminMode); 
+        }
+        if (employeesButton != null){ 
+            employeesButton.setVisible(adminMode);    
+            employeesButton.setManaged(adminMode); 
+        }
+        if (reportsButton != null){ 
+            reportsButton.setVisible(adminMode);      
+            reportsButton.setManaged(adminMode); 
         }
         if (transactionsButton != null) {
             transactionsButton.setVisible(true);
             transactionsButton.setManaged(true);
             transactionsButton.setText(adminMode ? "Transactions" : "History");
         }
-        if (employeesButton != null) {
-            employeesButton.setVisible(adminMode);
-            employeesButton.setManaged(adminMode);
-        }
-        if (reportsButton != null) {
-            reportsButton.setVisible(adminMode);
-            reportsButton.setManaged(adminMode);
-        }
 
         if (!adminMode) {
-            setCenterContentFromResource("/view/unitsList.fxml", "Failed to load unitsList.fxml");
+            NavigationUtil.loadIntoDashboardFromPane(rootPane, "/view/unitsList.fxml");
         }
     }
 
-    @FXML
-    private void handleImportExport(ActionEvent event) {
-        try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/importExport.fxml"));
-            Scene currentScene = ((Node) event.getSource()).getScene();
-            Parent currentRoot = currentScene.getRoot();
-
-            if (currentRoot instanceof BorderPane dashboardPane) {
-                if (loadedRoot instanceof BorderPane importExportPane) {
-                    dashboardPane.setCenter(importExportPane.getCenter());
-                } else {
-                    dashboardPane.setCenter(loadedRoot);
-                }
-                return;
-            }
-
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(loadedRoot));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load /view/importExport.fxml", exception);
-        }
+    @FXML private void handleUnits(ActionEvent event){ 
+        NavigationUtil.loadIntoDashboard(event, "/view/unitsList.fxml"); 
+    }
+    @FXML private void handleImportExport(ActionEvent event){ 
+        NavigationUtil.loadIntoDashboard(event, "/view/importExport.fxml"); 
+    }
+    @FXML private void handleTransactions(ActionEvent event){ 
+        NavigationUtil.loadIntoDashboard(event, "/view/Transaction.fxml"); 
+    }
+    @FXML private void handleEmployees(ActionEvent event){ 
+        NavigationUtil.loadIntoDashboard(event, "/view/Employee.fxml"); 
+    }
+    @FXML private void handleReports(ActionEvent event){ 
+        NavigationUtil.loadIntoDashboard(event, "/view/report.fxml"); 
+    }
+    @FXML private void handleDashboard(ActionEvent event){ 
+        NavigationUtil.loadScene(event, "/view/Dashboard.fxml"); 
+    }
+    @FXML private void handleBackToDashboard(ActionEvent event){ 
+        NavigationUtil.loadScene(event, "/view/Dashboard.fxml"); 
     }
 
-    private boolean isAdminMode() {
-        CredentialManager credentialManager = new CredentialManager();
-        if (!credentialManager.exists()) {
-            return true;
-        }
-
-        try {
-            Properties properties = credentialManager.load();
-            String mode = properties.getProperty("app_mode", "Admin");
-            return "Admin".equalsIgnoreCase(mode);
-        } catch (IOException exception) {
-            return true;
-        }
-    }
-
-    @FXML
-    private void handleUnits(ActionEvent event) {
-        replaceCenterContent(event, "/view/unitsList.fxml", "Failed to load unitsList.fxml");
-    }
-
-    @FXML
-    private void handleTransactions(ActionEvent event) {
-        try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/Transaction.fxml"));
-            Scene currentScene = ((Node) event.getSource()).getScene();
-            Parent currentRoot = currentScene.getRoot();
-
-            if (currentRoot instanceof BorderPane dashboardPane) {
-                if (loadedRoot instanceof BorderPane transactionPane) {
-                    dashboardPane.setCenter(transactionPane.getCenter());
-                } else {
-                    dashboardPane.setCenter(loadedRoot);
-                }
-                return;
-            }
-
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(loadedRoot));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load /view/Transaction.fxml", exception);
-        }
-    }
-
-    @FXML
-    private void handleEmployees(ActionEvent event) {
-        try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/Employee.fxml"));
-            Scene currentScene = ((Node) event.getSource()).getScene();
-            Parent currentRoot = currentScene.getRoot();
-
-            if (currentRoot instanceof BorderPane dashboardPane) {
-                if (loadedRoot instanceof BorderPane employeePane) {
-                    dashboardPane.setCenter(employeePane.getCenter());
-                } else {
-                    dashboardPane.setCenter(loadedRoot);
-                }
-                return;
-            }
-
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(loadedRoot));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load /view/Employee.fxml", exception);
-        }
-    }
-
-    @FXML
-    private void handleReports(ActionEvent event) {
-        try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource("/view/report.fxml"));
-            Scene currentScene = ((Node) event.getSource()).getScene();
-            Parent currentRoot = currentScene.getRoot();
-
-            if (currentRoot instanceof BorderPane dashboardPane) {
-                if (loadedRoot instanceof BorderPane reportsPane) {
-                    dashboardPane.setCenter(reportsPane.getCenter());
-                } else {
-                    dashboardPane.setCenter(loadedRoot);
-                }
-                return;
-            }
-
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(loadedRoot));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load /view/report.fxml", exception);
-        }
-    }
-
-    @FXML
-    private void handleBackToDashboard(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/Dashboard.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load /view/Dashboard.fxml", exception);
-        }
-    }
-
-    @FXML
-    private void handleDashboard(ActionEvent event) {
-        handleBackToDashboard(event);
-    }
-
-    @FXML
-    private void handleExit(ActionEvent event) {
+    @FXML private void handleExit(ActionEvent event) {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Confirm Exit");
         confirmAlert.setHeaderText("Exit to Login");
         confirmAlert.setContentText("Are you sure you want to exit and return to the login page?");
 
         Optional<ButtonType> response = confirmAlert.showAndWait();
-        if (response.isEmpty() || response.get() != ButtonType.OK) {
-            return;
-        }
+        if (response.isEmpty() || response.get() != ButtonType.OK) return;
 
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load /view/login.fxml", exception);
-        }
-    }
-
-    private void replaceCenterContent(ActionEvent event, String resourcePath, String errorMessage) {
-        try {
-            Parent content = FXMLLoader.load(getClass().getResource(resourcePath));
-            Scene currentScene = ((Node) event.getSource()).getScene();
-            Parent rootNode = currentScene.getRoot();
-
-            if (rootNode instanceof BorderPane borderPane) {
-                borderPane.setCenter(content);
-                return;
-            }
-
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(content));
-            stage.show();
-        } catch (IOException exception) {
-            throw new RuntimeException(errorMessage, exception);
-        }
-    }
-
-    private void setCenterContentFromResource(String resourcePath, String errorMessage) {
-        try {
-            Parent loadedRoot = FXMLLoader.load(getClass().getResource(resourcePath));
-            if (rootPane == null) {
-                return;
-            }
-
-            rootPane.setCenter(loadedRoot);
-        } catch (IOException exception) {
-            throw new RuntimeException(errorMessage, exception);
-        }
+        NavigationUtil.loadScene(event, "/view/login.fxml");
     }
 }

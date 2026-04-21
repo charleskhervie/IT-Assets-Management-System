@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.UnitsListScreen">
+<BorderPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controller.CategoryListScreen">
    <top>
       <VBox prefHeight="79.0" prefWidth="1110.0" spacing="12.0" BorderPane.alignment="CENTER">
          <padding>
@@ -63,8 +63,8 @@
                   <Insets bottom="22.0" left="24.0" right="24.0" top="18.0" />
                </padding>
                <children>
-                  <Button fx:id="addUnitButton11" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Category" />
-                  <Button fx:id="addUnitButton111" layoutX="918.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Back" />
+                  <Button fx:id="addCategoryButton" mnemonicParsing="false" onAction="#handleAddCategory" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Category" />
+                  <Button fx:id="backButton" layoutX="918.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Back" />
                </children>
             </HBox>
          </children>

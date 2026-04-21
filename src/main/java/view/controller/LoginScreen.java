@@ -40,7 +40,6 @@ public class LoginScreen implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize your ComboBox values
         roleComboBox.getItems().addAll("Admin", "Employee");
         errorLabel.setVisible(false);
     }

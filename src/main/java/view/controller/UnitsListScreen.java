@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import view.util.AdminUtil;
 import view.util.AlertUtil;
 import view.util.ModalUtil;
+import view.util.NavigationUtil;
 import view.util.UnitFilter;
 import view.util.UnitTableUtil;;
 
@@ -45,8 +46,6 @@ public class UnitsListScreen implements Initializable {
     @FXML private Button addUnitButton;
     @FXML private Button navEquipmentButton;
     @FXML private Button navCategoryButton;
-    @FXML private Button addEquipmentButton;
-    @FXML private Button addCategoryButton;
 
     private static final String STATUS_ALL = "All";
     private static final String STATUS_AVAILABLE = "available";
@@ -72,6 +71,13 @@ public class UnitsListScreen implements Initializable {
     }
     @FXML private void handleAddCategory(ActionEvent event) { 
         ModalUtil.openModal(event, "/view/AddCategory.fxml", "Add Category"); 
+    }
+    @FXML private void handleNavEquipment(ActionEvent event) {
+        NavigationUtil.loadIntoDashboard(event, "/view/equipmentList.fxml");
+    }
+
+    @FXML private void handleNavCategory(ActionEvent event) {
+        NavigationUtil.loadIntoDashboard(event, "/view/categoryList.fxml");
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -108,10 +114,6 @@ public class UnitsListScreen implements Initializable {
     private void setAdminButtonVisibility(boolean visible) {
         addUnitButton.setVisible(visible);
         addUnitButton.setManaged(visible);
-        addEquipmentButton.setVisible(visible);
-        addEquipmentButton.setManaged(visible);
-        addCategoryButton.setVisible(visible);
-        addCategoryButton.setManaged(visible);
     }    
 
     private void initDAO() {
@@ -205,5 +207,7 @@ public class UnitsListScreen implements Initializable {
         }
         return errors;
     }
+
+    
 
 }

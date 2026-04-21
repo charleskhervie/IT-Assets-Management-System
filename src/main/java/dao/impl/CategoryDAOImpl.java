@@ -14,7 +14,7 @@ public class CategoryDAOImpl  implements CategoryDAO{
     
     @Override
     public void add(Category category) throws SQLException {
-     String query = "insert into category (categoryName) values (?)";
+     String query = "insert into categories (category_name) values (?)";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, category.getCategoryName());
@@ -29,7 +29,7 @@ public class CategoryDAOImpl  implements CategoryDAO{
     }
      @Override
     public void update(Category category) throws SQLException {
-        String query = "update category set categoryName = ? where categoryId = ?";
+        String query = "update categories set category_name = ? where category_id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, category.getCategoryName());
@@ -39,7 +39,7 @@ public class CategoryDAOImpl  implements CategoryDAO{
     }
     @Override
     public void delete(int categoryId) throws SQLException {
-        String query = "delete from category where categoryId = ?";
+        String query = "delete from categories where category_id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, categoryId);
@@ -49,14 +49,14 @@ public class CategoryDAOImpl  implements CategoryDAO{
     @Override
     public List<Category> findAll() throws SQLException {
         List<Category> categories = new ArrayList<>();
-        String query = "select * from category";
+        String query = "select * from categories";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 categories.add(new Category(
-                    rs.getInt("categoryId"),
-                    rs.getString("categoryName")
+                    rs.getInt("category_id"),
+                    rs.getString("category_name")
                 ));
             }
         }
@@ -69,16 +69,16 @@ public class CategoryDAOImpl  implements CategoryDAO{
         String query;
         
         // Only checking for categoryName for the "LIKE" search
-        if (attribute.equals("categoryName")) {
-            query = "select * from category where " + attribute + " like ?";
+        if (attribute.equals("category_name")) {
+            query = "select * from categories where " + attribute + " like ?";
         } else {
-            query = "select * from category where " + attribute + " = ?";
+            query = "select * from categories where " + attribute + " = ?";
         }
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
-            if (attribute.equals("categoryName")) {
+            if (attribute.equals("category_name")) {
                 ps.setString(1, "%" + value + "%");
             } else {
                 ps.setString(1, value);
@@ -87,8 +87,8 @@ public class CategoryDAOImpl  implements CategoryDAO{
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     categories.add(new Category(
-                        rs.getInt("categoryId"),
-                        rs.getString("categoryName")
+                        rs.getInt("category_id"),
+                        rs.getString("category_name")
                     ));
                 }
             }
