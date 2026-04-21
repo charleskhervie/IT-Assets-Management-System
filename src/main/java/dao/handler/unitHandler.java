@@ -44,6 +44,23 @@ public class unitHandler {
             return "Failed to delete: " + e.getMessage();
         }
     }
+    public String updateUnit(UnitDAO dao, Unit unit) {
+        if (!isUpdateInputValid(unit)) {
+            return "Equipment ID must be greater than 0 and serial number cannot be empty.";
+        }
+        try {
+            dao.update(unit);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to update unit: " + e.getMessage();
+        }
+    }
+
+    private boolean isUpdateInputValid(Unit unit) {
+        return unit.getEquipmentId() > 0
+            && unit.getSerialNumber() != null
+            && !unit.getSerialNumber().isBlank();
+    }
 
     private boolean isAddInputValid(int equipmentId, String serialNumber) {
         return equipmentId > 0 && serialNumber != null && !serialNumber.isBlank();
