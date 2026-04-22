@@ -46,11 +46,16 @@ public class TransactionTableUtil {
         });
     }
 
-    public static void setupContextMenu(TableView<Transaction> table, MenuItem... items) {
+    public static void setupContextMenu(TableView<Transaction> table, Runnable onDoubleClick, MenuItem... items) {
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ContextMenu contextMenu = new ContextMenu(items);
         table.setRowFactory(t -> {
             TableRow<Transaction> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    onDoubleClick.run();
+                }
+            });
             row.setOnContextMenuRequested(event -> {
                 if (!row.isEmpty()) {
                     table.getSelectionModel().select(row.getItem());

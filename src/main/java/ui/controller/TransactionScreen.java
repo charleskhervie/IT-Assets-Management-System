@@ -1,5 +1,6 @@
 package ui.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
@@ -11,8 +12,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import ui.util.TransactionFilter;
 import ui.util.TransactionTableUtil;
 
@@ -48,6 +54,18 @@ public class TransactionScreen implements Initializable {
         initFilterListeners();
         loadData();
     }
+    private void initTable() {
+        TransactionTableUtil.setupColumns(idColumn, unitIdColumn, borrowedByColumn,
+                processedByColumn, borrowDateColumn, returnDateColumn, statusColumn, remarksColumn);
+
+        MenuItem viewItem = new MenuItem("View Transaction");
+        viewItem.setOnAction(e -> handleViewSelected());
+
+        TransactionTableUtil.setupContextMenu(transactionTable, this::handleViewSelected, viewItem);
+
+        filteredList = new FilteredList<>(masterList, t -> true);
+        transactionTable.setItems(filteredList);
+    }
 
     private void initDAO() {
         if (transactionDAO == null) {
@@ -56,15 +74,8 @@ public class TransactionScreen implements Initializable {
     }
 
     private void initStatusFilter() {
-        statusFilter.getItems().addAll(STATUS_ALL, STATUS_BORROWED, STATUS_RETURNED);
+        statusFilter.getItems().addAll(STATUS_ALL, STATUS_BORROWED, STATUS_RETURNED, STATUS_PENDING);
         statusFilter.setValue(STATUS_ALL);
-    }
-
-    private void initTable() {
-        TransactionTableUtil.setupColumns(idColumn, unitIdColumn, borrowedByColumn,
-                processedByColumn, borrowDateColumn, returnDateColumn, statusColumn, remarksColumn);
-        filteredList = new FilteredList<>(masterList, t -> true);
-        transactionTable.setItems(filteredList);
     }
 
     private void initFilterListeners() {
@@ -77,6 +88,30 @@ public class TransactionScreen implements Initializable {
         String status = statusFilter.getValue();
         filteredList.setPredicate(t -> TransactionFilter.matches(t, status, keyword));
     }
+    
+
+    private void handleViewSelected() {
+        Transaction transaction = transactionTable.getSelectionModel().getSelectedItem();
+        if (transaction == null) return;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/viewTransaction.fxml"));
+            Parent root = loader.load();
+
+            ViewTransactionModalScreen controller = loader.getController();
+            controller.setTransaction(transaction);
+
+            Stage modal = new Stage();
+            modal.initOwner(transactionTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("View Transaction");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load viewTransaction.fxml", e);
+        }
+}
 
     public void loadData() {
         masterList.setAll(handler.getTransactions(transactionDAO));
