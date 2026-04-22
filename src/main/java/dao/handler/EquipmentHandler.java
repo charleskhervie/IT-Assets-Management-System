@@ -3,7 +3,6 @@ package dao.handler;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-import dao.intfc.CategoryDAO;
 import dao.intfc.EquipmentDAO;
 import dao.model.Equipment;
 

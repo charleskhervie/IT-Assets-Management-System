@@ -64,7 +64,7 @@ public class UnitsListScreen implements Initializable {
         NavigationUtil.loadScene(event, "/fxml/importExport.fxml"); 
     }
     @FXML private void handleTransactions(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/Transaction.fxml"); 
+        NavigationUtil.loadIntoDashboard(event, "/fxml/Transaction.fxml"); 
     }
     @FXML private void handleEmployees(ActionEvent event){ 
         NavigationUtil.loadScene(event, "/fxml/Employee.fxml"); 
