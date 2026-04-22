@@ -22,6 +22,7 @@ public class AddEmployeeModalScreen {
 
     private final EmployeeHandler handler = new EmployeeHandler();
     private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+    private Employee existingEmployee;
 
     @FXML
     public void initialize() {
@@ -65,16 +66,30 @@ public class AddEmployeeModalScreen {
         };
 
   
-        Employee employee = new Employee(0, deptId, username, password, role, fullName);
+        Employee employee = new Employee(
+            existingEmployee != null ? existingEmployee.getEmpId() : 0,
+            deptId,
+            username,
+            password,
+            role,
+            fullName
+        );
 
-        String error = handler.addEmployee(employeeDAO, employee);
-        
-        if (error == null) {
-            
+        if (existingEmployee == null) {
+            String error = handler.addEmployee(employeeDAO, employee);
+            if (error == null) {
+                close(event);
+            } else {
+                AlertUtil.showError("Save Failed", error);
+            }
+            return;
+        }
+
+        try {
+            employeeDAO.update(employee);
             close(event);
-        } else {
-           
-            AlertUtil.showError("Save Failed", error);
+        } catch (Exception e) {
+            AlertUtil.showError("Update Failed", e.getMessage());
         }
     }
 
@@ -86,5 +101,27 @@ public class AddEmployeeModalScreen {
     private void close(ActionEvent event) {
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    public void setEmployee(Employee employee) {
+        this.existingEmployee = employee;
+
+        fullNameField.setText(employee.getFullName());
+        usernameField.setText(employee.getUsername());
+        passwordField.setText(employee.getPassword());
+        roleChoiceBox.setValue(employee.getRole());
+        departmentChoiceBox.setValue(departmentNameFromId(employee.getDepartmentId()));
+    }
+
+    private String departmentNameFromId(int departmentId) {
+        return switch (departmentId) {
+            case 1 -> "IT Services";
+            case 2 -> "Human Resources";
+            case 3 -> "Accounting";
+            case 4 -> "Marketing";
+            case 5 -> "Academic Affairs";
+            case 6 -> "Research and Development";
+            default -> null;
+        };
     }
 }

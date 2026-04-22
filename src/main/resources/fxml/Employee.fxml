@@ -58,6 +58,16 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Button>
+                  <Button layoutX="140.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleEditEmployee" opacity="0.83" text="Edit Selected" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="266.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleDeleteEmployee" opacity="0.83" text="Delete Selected" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
             <ScrollPane fitToHeight="true" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
