@@ -26,10 +26,10 @@ public class AddEmployeeModalScreen {
 
     @FXML
     public void initialize() {
-        // Updated Roles: Just Admin and Employee
+        
         roleChoiceBox.getItems().addAll("Admin", "Employee");
 
-        // Departments directly from your database
+        
         departmentChoiceBox.getItems().addAll(
             "IT Services", 
             "Human Resources", 
@@ -48,13 +48,12 @@ public class AddEmployeeModalScreen {
         String role = roleChoiceBox.getValue();
         String deptName = departmentChoiceBox.getValue();
 
-        // 1. Validation
         if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || role == null || deptName == null) {
             AlertUtil.showError("Validation Error", "All fields are required.");
             return;
         }
 
-        // 2. Department ID Mapping (Matches your SQL screenshot)
+       
         int deptId = switch (deptName) {
             case "IT Services" -> 1;
             case "Human Resources" -> 2;
