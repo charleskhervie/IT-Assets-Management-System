@@ -68,7 +68,8 @@
                   <Insets bottom="22.0" left="24.0" right="24.0" top="18.0" />
                </padding>
                <children>
-                  
+                  <Button fx:id="checkOutButton" mnemonicParsing="false" onAction="#handleCheckOut" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #2980B9; -fx-text-fill: white;" text="Check Out" />
+                  <Button fx:id="checkInButton" mnemonicParsing="false" onAction="#handleCheckIn" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #2980B9; -fx-text-fill: white;" text="Check In" />
                   <Button fx:id="addUnitButton" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Add Unit" />
                   <Button fx:id="navEquipmentButton" mnemonicParsing="false" onAction="#handleNavEquipment" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Equipment" />
                   <Button fx:id="navCategoryButton" mnemonicParsing="false" onAction="#handleNavCategory" prefHeight="34.0" prefWidth="130.0" style="-fx-background-color: #27AE60; -fx-text-fill: white;" text="Category" />

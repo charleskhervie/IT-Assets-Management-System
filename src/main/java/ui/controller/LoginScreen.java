@@ -71,8 +71,11 @@ public class LoginScreen implements Initializable{
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException exception) {
-            errorLabel.setText("Failed to continue login.");
+            exception.printStackTrace();
+            errorLabel.setText("Failed to continue login");
             errorLabel.setVisible(true);
+            System.out.println(exception);
+
         }
 
     }

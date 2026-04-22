@@ -108,8 +108,8 @@ public class UnitsListScreen implements Initializable {
 
     private void setUserButtonVisibility(boolean visible) {
         if (checkOutButton != null) {
-        checkOutButton.setVisible(visible);
-        checkOutButton.setManaged(visible);
+            checkOutButton.setVisible(visible);
+            checkOutButton.setManaged(visible);
         }
         if (checkInButton != null) {
             checkInButton.setVisible(visible);
@@ -118,8 +118,18 @@ public class UnitsListScreen implements Initializable {
     }
 
     private void setAdminButtonVisibility(boolean visible) {
-        addUnitButton.setVisible(visible);
-        addUnitButton.setManaged(visible);
+        if (addUnitButton != null) {
+            addUnitButton.setVisible(visible);
+            addUnitButton.setManaged(visible);
+        }
+        if (navEquipmentButton != null) {
+            navEquipmentButton.setVisible(visible);
+            navEquipmentButton.setManaged(visible);
+        }
+        if (navCategoryButton != null) {
+            navCategoryButton.setVisible(visible);
+            navCategoryButton.setManaged(visible);
+        }
     }    
 
     private void initDAO() {
@@ -243,6 +253,39 @@ public class UnitsListScreen implements Initializable {
         if (response.isEmpty() || response.get() != ButtonType.OK) return;
 
         NavigationUtil.loadScene(event, "/fxml/login.fxml");
+    }
+    @FXML private void handleCheckOut(ActionEvent event) { 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
+            Parent root = loader.load();
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Check Out");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+            loadData();
+        } catch (IOException e) {
+            AlertUtil.showError("Error", "Could not load Check-out screen.");
+        }
+    }
+
+    @FXML private void handleCheckIn(ActionEvent event) { 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-in.fxml"));
+            Parent root = loader.load();
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Check In");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+            loadData();
+        } catch (IOException e) {
+            AlertUtil.showError("Error", "Could not load Check-in screen.");
+        }
     }
 
     
