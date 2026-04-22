@@ -123,12 +123,12 @@ public class UnitsListScreen implements Initializable {
             addUnitButton.setManaged(visible);
         }
         if (navEquipmentButton != null) {
-            navEquipmentButton.setVisible(visible);
-            navEquipmentButton.setManaged(visible);
+            navEquipmentButton.setVisible(true);
+            navEquipmentButton.setManaged(true);
         }
         if (navCategoryButton != null) {
-            navCategoryButton.setVisible(visible);
-            navCategoryButton.setManaged(visible);
+            navCategoryButton.setVisible(true);
+            navCategoryButton.setManaged(true);
         }
     }    
 
