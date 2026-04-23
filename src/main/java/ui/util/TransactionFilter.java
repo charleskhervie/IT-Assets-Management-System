@@ -1,8 +1,9 @@
 package ui.util;
 
-import dao.model.Transaction;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import dao.model.Transaction;
 
 public class TransactionFilter {
 

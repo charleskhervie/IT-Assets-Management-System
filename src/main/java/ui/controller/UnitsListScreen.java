@@ -143,18 +143,20 @@ public class UnitsListScreen implements Initializable {
         statusFilter.setValue(STATUS_ALL);
     }
 
+   @SuppressWarnings("unchecked")
     private void initTable() {
-        UnitTableUtil.setupColumns(idColumn, serialColumn, equipmentColumn, addedByColumn, statusColumn, assignedToColumn);
-        
-        MenuItem editItem = new MenuItem("Edit Unit");
-        MenuItem deleteItem = new MenuItem("Delete Selected");
-        editItem.setOnAction(event -> handleEditSelected());
-        deleteItem.setOnAction(event -> handleDeleteSelected());
-        
-        UnitTableUtil.setupContextMenu(unitsTable, editItem, deleteItem);
+        UnitTableUtil.setupColumns((TableView<Object>) (TableView<?>) unitsTable);
 
-        filteredList = new FilteredList<>(masterList, unit -> true);
-        unitsTable.setItems(filteredList);
+        if (AdminUtil.isAdminMode()) {
+            MenuItem editItem = new MenuItem("Edit Unit");
+            MenuItem deleteItem = new MenuItem("Delete Selected");
+            editItem.setOnAction(e -> handleEditSelected());
+            deleteItem.setOnAction(e -> handleDeleteSelected());
+            UnitTableUtil.setupContextMenu((TableView<Object>) (TableView<?>) unitsTable, editItem, deleteItem);
+        }
+
+        filteredList = new FilteredList<>(masterList, u -> true);
+        unitsTable.setItems((ObservableList) filteredList);
     }
 
     public void loadData() {

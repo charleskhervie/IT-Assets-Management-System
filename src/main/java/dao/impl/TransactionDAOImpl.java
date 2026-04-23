@@ -69,6 +69,8 @@ public class TransactionDAOImpl implements TransactionDAO {
         }
     }
 
+    //old find all to display data directly taken from data
+    /* 
     @Override
     public List<Transaction> findAll() throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
@@ -76,6 +78,31 @@ public class TransactionDAOImpl implements TransactionDAO {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                transactions.add(mapRow(rs));
+            }
+        }
+        return transactions;
+    }
+    */
+   @Override
+    public List<Transaction> findAll() throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
+        String query = """
+            select t.transaction_id, t.unit_id, t.borrowed_by, t.processed_by,
+                t.borrowed_date, t.return_date, t.status, t.remarks,
+                coalesce(e.equipment_name, 'Unknown') as equipment_name,
+                coalesce(borrower.full_name, 'Unknown') as borrowed_by_name,
+                coalesce(processor.full_name, '-') as processed_by_name
+            from transaction t
+            left join units u on t.unit_id = u.unit_id
+            left join equipment e on u.equipment_id = e.equipment_id
+            left join employees borrower on t.borrowed_by = borrower.emp_id
+            left join employees processor on t.processed_by = processor.emp_id
+        """;
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 transactions.add(mapRow(rs));
             }
@@ -100,18 +127,20 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     private Transaction mapRow(ResultSet rs) throws SQLException {
-        Timestamp borrowedTs = rs.getTimestamp("borrowed_date");
-        Timestamp returnTs = rs.getTimestamp("return_date");
-        return new Transaction(
+        Transaction t = new Transaction(
             rs.getInt("transaction_id"),
             rs.getInt("unit_id"),
             rs.getInt("borrowed_by"),
             rs.getInt("processed_by"),
-            borrowedTs != null ? borrowedTs.toLocalDateTime() : null,
-            returnTs != null ? returnTs.toLocalDateTime() : null,
+            rs.getObject("borrowed_date", LocalDateTime.class),
+            rs.getObject("return_date", LocalDateTime.class),
             rs.getString("status"),
             rs.getString("remarks")
         );
+        t.setEquipmentName(rs.getString("equipment_name"));
+        t.setBorrowedByName(rs.getString("borrowed_by_name"));
+        t.setProcessedByName(rs.getString("processed_by_name"));
+        return t;
     }
 
     @Override
@@ -148,7 +177,19 @@ public class TransactionDAOImpl implements TransactionDAO {
     @Override
     public List<Transaction> findByEmployee(int empId) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
-        String query = "select * from transaction where borrowed_by = ?";
+        String query = """
+            select t.transaction_id, t.unit_id, t.borrowed_by, t.processed_by,
+                t.borrowed_date, t.return_date, t.status, t.remarks,
+                coalesce(e.equipment_name, 'Unknown') as equipment_name,
+                coalesce(borrower.full_name, 'Unknown') as borrowed_by_name,
+                coalesce(processor.full_name, '-') as processed_by_name
+            from transaction t
+            left join units u on t.unit_id = u.unit_id
+            left join equipment e on u.equipment_id = e.equipment_id
+            left join employees borrower on t.borrowed_by = borrower.emp_id
+            left join employees processor on t.processed_by = processor.emp_id
+            where t.borrowed_by = ?
+        """;
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, empId);
@@ -191,4 +232,5 @@ public class TransactionDAOImpl implements TransactionDAO {
             }
         }
     }
+   
 }

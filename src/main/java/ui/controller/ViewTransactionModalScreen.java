@@ -23,13 +23,13 @@ public class ViewTransactionModalScreen {
     public void setTransaction(Transaction transaction) {
         transactionIdLabel.setText(String.valueOf(transaction.getTransactionId()));
         unitIdLabel.setText(String.valueOf(transaction.getUnitId()));
-        borrowedByLabel.setText(String.valueOf(transaction.getBorrower()));
-        processedByLabel.setText(String.valueOf(transaction.getProcessedBy()));
+        borrowedByLabel.setText(transaction.getBorrowedByName() != null ? transaction.getBorrowedByName() : "-");
+        processedByLabel.setText(transaction.getProcessedByName() != null ? transaction.getProcessedByName() : "-");
         borrowedDateLabel.setText(transaction.getBorrowedDate() != null
                 ? transaction.getBorrowedDate().format(FORMATTER) : "-");
         returnDateLabel.setText(transaction.getReturnDate() != null
                 ? transaction.getReturnDate().format(FORMATTER) : "-");
-        statusLabel.setText(transaction.getStatus());
+        statusLabel.setText(transaction.getStatus() != null ? transaction.getStatus() : "-");
         remarksLabel.setText(transaction.getRemarks() != null ? transaction.getRemarks() : "-");
     }
 

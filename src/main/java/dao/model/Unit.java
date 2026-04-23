@@ -10,8 +10,13 @@ public class Unit {
     private int addedBy;
     private LocalDateTime createdAt;
     private Integer assignedTo;
+    // display fields
+    private String equipmentName;
+    private String addedByName;
+    private String assignedToName;
 
-    public Unit(int unitId, int equipmentId, String serialNumber, String status, int addedBy, LocalDateTime createdAt, Integer assignedTo) {
+    public Unit(int unitId, int equipmentId, String serialNumber, String status,
+                int addedBy, LocalDateTime createdAt, Integer assignedTo) {
         this.unitId = unitId;
         this.equipmentId = equipmentId;
         this.serialNumber = serialNumber;
@@ -21,59 +26,24 @@ public class Unit {
         this.assignedTo = assignedTo;
     }
 
-    public int getUnitId() {
-        return unitId;
-    }
-
-    public void setUnitId(int unitId) {
-        this.unitId = unitId;
-    }
-
-    public int getEquipmentId() {
-        return equipmentId;
-    }
-
-    public void setEquipmentId(int equipmentId) {
-        this.equipmentId = equipmentId;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getAddedBy() {
-        return addedBy;
-    }
-
-    public void setAddedBy(int addedBy) {
-        this.addedBy = addedBy;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Integer getAssignedTo() {
-        return assignedTo;
-    }
-
-    public void setAssignedTo(Integer assignedTo) {
-        this.assignedTo = assignedTo;
-    }
+    public int getUnitId() { return unitId; }
+    public void setUnitId(int unitId) { this.unitId = unitId; }
+    public int getEquipmentId() { return equipmentId; }
+    public void setEquipmentId(int equipmentId) { this.equipmentId = equipmentId; }
+    public String getSerialNumber() { return serialNumber; }
+    public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public int getAddedBy() { return addedBy; }
+    public void setAddedBy(int addedBy) { this.addedBy = addedBy; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public Integer getAssignedTo() { return assignedTo; }
+    public void setAssignedTo(Integer assignedTo) { this.assignedTo = assignedTo; }
+    public String getEquipmentName() { return equipmentName; }
+    public void setEquipmentName(String equipmentName) { this.equipmentName = equipmentName; }
+    public String getAddedByName() { return addedByName; }
+    public void setAddedByName(String addedByName) { this.addedByName = addedByName; }
+    public String getAssignedToName() { return assignedToName; }
+    public void setAssignedToName(String assignedToName) { this.assignedToName = assignedToName; }
 }

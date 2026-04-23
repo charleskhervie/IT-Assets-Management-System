@@ -59,23 +59,29 @@ public class TransactionScreen implements Initializable {
         initFilterListeners();
         loadData();
     }
+    @SuppressWarnings("unchecked")
     private void initTable() {
-        TransactionTableUtil.setupColumns(idColumn, unitIdColumn, borrowedByColumn,
-                processedByColumn, borrowDateColumn, returnDateColumn, statusColumn, remarksColumn);
-
-        TransactionTableUtil.setupActionsColumn(
-                actionsColumn,
-                this::handleApprove,
-                this::handleDecline,
-                AdminUtil.isAdminMode()
-        );
+        TableView<Object> table = (TableView<Object>) (TableView<?>) transactionTable;
+        
+        TransactionTableUtil.setupColumns(table);
+        
+        if (AdminUtil.isAdminMode()) {
+            TableColumn<Object, Void> actionsColumn = new TableColumn<>("Actions");
+            TransactionTableUtil.setupActionsColumn(
+                    actionsColumn,
+                    t -> handleApprove((Transaction) t),
+                    t -> handleDecline((Transaction) t),
+                    true
+            );
+            table.getColumns().add(actionsColumn);
+        }
 
         MenuItem viewItem = new MenuItem("View Transaction");
         viewItem.setOnAction(e -> handleViewSelected());
-        TransactionTableUtil.setupContextMenu(transactionTable, this::handleViewSelected, viewItem);
+        TransactionTableUtil.setupContextMenu(table, this::handleViewSelected, viewItem);
 
         filteredList = new FilteredList<>(masterList, t -> true);
-        transactionTable.setItems(filteredList);
+        table.setItems((ObservableList) filteredList);
     }
 
     private void initDAO() {

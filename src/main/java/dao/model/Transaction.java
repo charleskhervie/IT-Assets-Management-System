@@ -11,9 +11,14 @@ public class Transaction {
     private LocalDateTime returnDate;
     private String status;
     private String remarks;
+    // display fields
+    private String equipmentName;
+    private String borrowedByName;
+    private String processedByName;
 
     public Transaction(int transactionId, int unitId, int borrowedBy, int processedBy,
-                        LocalDateTime borrowedDate, LocalDateTime returnDate, String status, String remarks) {
+                       LocalDateTime borrowedDate, LocalDateTime returnDate,
+                       String status, String remarks) {
         this.transactionId = transactionId;
         this.unitId = unitId;
         this.borrowedBy = borrowedBy;
@@ -33,11 +38,17 @@ public class Transaction {
     public int getProcessedBy() { return processedBy; }
     public void setProcessedBy(int processedBy) { this.processedBy = processedBy; }
     public LocalDateTime getBorrowedDate() { return borrowedDate; }
-    public void setTransactionDate(LocalDateTime borrowedDate) { this.borrowedDate = borrowedDate; }
+    public void setBorrowedDate(LocalDateTime borrowedDate) { this.borrowedDate = borrowedDate; }
     public LocalDateTime getReturnDate() { return returnDate; }
     public void setReturnDate(LocalDateTime returnDate) { this.returnDate = returnDate; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     public String getRemarks() { return remarks; }
     public void setRemarks(String remarks) { this.remarks = remarks; }
+    public String getEquipmentName() { return equipmentName; }
+    public void setEquipmentName(String equipmentName) { this.equipmentName = equipmentName; }
+    public String getBorrowedByName() { return borrowedByName; }
+    public void setBorrowedByName(String borrowedByName) { this.borrowedByName = borrowedByName; }
+    public String getProcessedByName() { return processedByName; }
+    public void setProcessedByName(String processedByName) { this.processedByName = processedByName; }
 }

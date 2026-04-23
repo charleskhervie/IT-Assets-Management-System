@@ -3,6 +3,7 @@ package dao.intfc;
 
 import java.sql.SQLException;
 import java.util.List;
+
 import dao.model.Category;
 
 public interface CategoryDAO {

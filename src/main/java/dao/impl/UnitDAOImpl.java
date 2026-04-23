@@ -61,7 +61,8 @@ public class UnitDAOImpl implements UnitDAO {
             ps.executeUpdate();
         }
     }
-
+    //original findall for data taken from database
+    /* 
     @Override
     public List<Unit> findAll() throws SQLException {
         List<Unit> units = new ArrayList<>();
@@ -79,6 +80,31 @@ public class UnitDAOImpl implements UnitDAO {
                     rs.getObject("created_at", LocalDateTime.class),
                     (Integer) rs.getObject("assigned_to")
                 );
+                units.add(unit);
+            }
+        }
+        return units;
+    }
+        */
+    @Override
+    public List<Unit> findAll() throws SQLException {
+        List<Unit> units = new ArrayList<>();
+        String query = """
+            select u.unit_id, u.equipment_id, u.serial_number, u.status,
+                u.added_by, u.created_at, u.assigned_to,
+                coalesce(e.equipment_name, 'Unknown') as equipment_name,
+                coalesce(emp.full_name, 'Unknown') as added_by_name,
+                coalesce(assigned_emp.full_name, '-') as assigned_to_name
+            from units u
+            left join equipment e on u.equipment_id = e.equipment_id
+            left join employees emp on u.added_by = emp.emp_id
+            left join employees assigned_emp on u.assigned_to = assigned_emp.emp_id
+        """;
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Unit unit = mapRow(rs);
                 units.add(unit);
             }
         }
@@ -164,4 +190,22 @@ public class UnitDAOImpl implements UnitDAO {
 
         return units;
     }
+   
+    private Unit mapRow(ResultSet rs) throws SQLException {
+        Unit unit = new Unit(
+            rs.getInt("unit_id"),
+            rs.getInt("equipment_id"),
+            rs.getString("serial_number"),
+            rs.getString("status"),
+            rs.getInt("added_by"),
+            rs.getObject("created_at", LocalDateTime.class),
+            rs.getObject("assigned_to", Integer.class)
+        );
+        unit.setEquipmentName(rs.getString("equipment_name"));
+        unit.setAddedByName(rs.getString("added_by_name"));
+        unit.setAssignedToName(rs.getString("assigned_to_name"));
+        return unit;
+    }
+
+    
 }
