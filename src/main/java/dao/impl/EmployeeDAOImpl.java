@@ -89,12 +89,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Employee employee = new Employee(
-                    rs.getInt("empId"),
+                    rs.getInt("emp_id"),
                     rs.getInt("department_id"),
-                    rs.getString("user_name"),
+                    rs.getString("username"),
                     rs.getString("password"),
                     rs.getString("role"),
-                    rs.getString("fullName")
+                    rs.getString("full_name")
                 );
                 employees.add(employee);
             }
@@ -106,14 +106,14 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     public List<Employee> findWithAttribute(String attribute, String value) throws SQLException {
         List<Employee> employees = new ArrayList<>();
         String query;
-        if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("user_name")) {
+        if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("username")) {
             query = "select * from employee where " + attribute + " like ?";
         } else {
             query = "select * from employee where " + attribute + " = ?";
         }
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
-            if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("user_name")) {
+            if (attribute.equals("full_name") || attribute.equals("role") || attribute.equals("username")) {
                 ps.setString(1, "%" + value + "%");
             } else {
                 ps.setString(1, value);
@@ -121,12 +121,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Employee employee = new Employee(
-                        rs.getInt("empId"),
-                        rs.getInt("departmentId"),
-                        rs.getString("user_name"),
+                        rs.getInt("emp_id"),
+                        rs.getInt("department_id"),
+                        rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("role"),
-                        rs.getString("fullName")
+                        rs.getString("full_name")
                     );
                     employees.add(employee);
                 }
@@ -135,5 +135,28 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             throw new SQLException("Numeric attribute requires a number: " + attribute, e);
         }
         return employees;
+    }
+
+    @Override
+    public Employee authenticate(String username, String password) throws SQLException {
+        String query = "select * from employee where username = ? and password = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Employee(
+                        rs.getInt("emp_id"),
+                        rs.getInt("department_id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("full_name")
+                    );
+                }
+            }
+        }
+        return null;
     }
 }
