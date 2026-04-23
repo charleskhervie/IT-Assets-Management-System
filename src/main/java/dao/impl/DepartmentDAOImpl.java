@@ -16,7 +16,7 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     
     @Override
     public void add(Department department) throws SQLException {
-        String query = "insert into department ( departmentName, location) values (?, ?)";
+        String query = "insert into departments ( department_name, location) values (?, ?)";
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, department.getDepartmentName());
@@ -32,7 +32,7 @@ public class DepartmentDAOImpl implements DepartmentDAO {
 
      @Override
     public void update (Department department) throws SQLException{
-        String query = "update department set departmentName = ? , location = ? where departmentId = ?";
+        String query = "update departments set department_name = ? , location = ? where department_id = ?";
         try (Connection conn =  DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query)){
             ps.setString(1,department.getDepartmentName());
@@ -43,7 +43,7 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     }
      @Override
     public void delete(int departmentId) throws SQLException{
-        String query = "delete from department where departmentId = ?";
+        String query = "delete from departments where department_id = ?";
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query)){
             ps.setInt(1,departmentId);
@@ -53,7 +53,7 @@ public class DepartmentDAOImpl implements DepartmentDAO {
      @Override
     public List <Department> findAll() throws SQLException{
         List <Department> departments = new ArrayList<>();
-        String query = "select * from department";
+        String query = "select * from departments";
 
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query)){
@@ -61,8 +61,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
 
                 while (rs.next()){
                     Department department = new Department(
-                        rs.getInt("departmentId"),
-                        rs.getString("departmentName"),
+                        rs.getInt("department_id"),
+                        rs.getString("department_name"),
                         rs.getString("location")
                     );
                     departments.add(department);
@@ -75,9 +75,9 @@ public class DepartmentDAOImpl implements DepartmentDAO {
         String query;
 
         if (attribute.equals("departmentName")|| attribute.equals("location")){
-            query = "select * from department where " + attribute + " like ?";
+            query = "select * from departments where " + attribute + " like ?";
         }else {
-            query = "select * from department where " + attribute + " = ?";
+            query = "select * from departments where " + attribute + " = ?";
         }
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query)){
@@ -90,8 +90,8 @@ public class DepartmentDAOImpl implements DepartmentDAO {
             try(ResultSet rs = ps.executeQuery()){
                 while(rs.next()) {
                     Department department = new Department(
-                        rs.getInt("departmentId"),
-                        rs.getString("departmentName"),
+                        rs.getInt("department_id"),
+                        rs.getString("department_name"),
                         rs.getString("location")
                     );
                     departments.add(department);
