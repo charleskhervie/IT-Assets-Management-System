@@ -10,7 +10,8 @@ public interface UnitDAO {
     void update(Unit unit) throws SQLException;
     void delete(int unitId) throws SQLException;
     Unit findById(int unitId) throws SQLException;
-    List<Unit> findAll() throws SQLException;
+    List<Unit> findAllRaw() throws SQLException;
+    List<Unit> findAllDisplay() throws SQLException;
     List<Unit> findWithAttribute(String attribute, String value) throws SQLException;
     boolean hasUnitsByEquipmentId(int equipmentId) throws SQLException;
 }

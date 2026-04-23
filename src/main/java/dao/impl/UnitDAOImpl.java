@@ -62,32 +62,25 @@ public class UnitDAOImpl implements UnitDAO {
         }
     }
     //original findall for data taken from database
-    /* 
+    
     @Override
-    public List<Unit> findAll() throws SQLException {
+    public List<Unit> findAllRaw() throws SQLException {
         List<Unit> units = new ArrayList<>();
         String query = "select * from units";
+
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
-                Unit unit = new Unit(
-                    rs.getInt("unit_id"),
-                    rs.getInt("equipment_id"),
-                    rs.getString("serial_number"),
-                    rs.getString("status"),
-                    rs.getInt("added_by"),
-                    rs.getObject("created_at", LocalDateTime.class),
-                    (Integer) rs.getObject("assigned_to")
-                );
-                units.add(unit);
+                units.add(mapRowRaw(rs));
             }
         }
+
         return units;
     }
-        */
     @Override
-    public List<Unit> findAll() throws SQLException {
+    public List<Unit> findAllDisplay() throws SQLException {
         List<Unit> units = new ArrayList<>();
         String query = """
             select u.unit_id, u.equipment_id, u.serial_number, u.status,
@@ -104,7 +97,7 @@ public class UnitDAOImpl implements UnitDAO {
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Unit unit = mapRow(rs);
+                Unit unit = mapRowDisplay(rs);
                 units.add(unit);
             }
         }
@@ -190,8 +183,19 @@ public class UnitDAOImpl implements UnitDAO {
 
         return units;
     }
-   
-    private Unit mapRow(ResultSet rs) throws SQLException {
+    private Unit mapRowRaw(ResultSet rs) throws SQLException {
+        return new Unit(
+            rs.getInt("unit_id"),
+            rs.getInt("equipment_id"),
+            rs.getString("serial_number"),
+            rs.getString("status"),
+            rs.getInt("added_by"),
+            rs.getObject("created_at", LocalDateTime.class),
+            rs.getObject("assigned_to", Integer.class)
+        );
+    }
+    
+    private Unit mapRowDisplay(ResultSet rs) throws SQLException {
         Unit unit = new Unit(
             rs.getInt("unit_id"),
             rs.getInt("equipment_id"),

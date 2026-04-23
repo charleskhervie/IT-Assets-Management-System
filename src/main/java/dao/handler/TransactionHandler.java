@@ -10,14 +10,23 @@ import ui.util.SessionManager;
 
 public class TransactionHandler {
 
-    public List<Transaction> getTransactions(TransactionDAO dao) {
+    public List<Transaction> getTransactionDisplay(TransactionDAO dao) {
         try {
-            return dao.findAll();
+            return dao.findAllDisplay();
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
             return Collections.emptyList();
         }
     }
+    public List<Transaction> getTransactionRaw(TransactionDAO dao) {
+        try {
+            return dao.findAllRaw();
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+    
 
     public String addTransaction(TransactionDAO dao, Transaction transaction) {
         if (!isInputValid(transaction)) {

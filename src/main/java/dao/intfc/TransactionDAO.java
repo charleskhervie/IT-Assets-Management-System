@@ -9,7 +9,8 @@ public interface TransactionDAO {
     void add(Transaction transaction) throws SQLException;
     void update(Transaction transaction) throws SQLException;
     void delete(int transactionId) throws SQLException;
-    List<Transaction> findAll() throws SQLException;
+    List<Transaction> findAllRaw() throws SQLException;
+    List<Transaction> findAllDisplay() throws SQLException;
     List<Transaction> findWithAttribute(String attribute, String value) throws SQLException;
     List<Transaction> findByEmployee(int empId) throws SQLException;
     List<Transaction> findCheckedOutByEmployee(int empId) throws SQLException;

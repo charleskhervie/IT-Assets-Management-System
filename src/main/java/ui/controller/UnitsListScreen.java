@@ -160,7 +160,7 @@ public class UnitsListScreen implements Initializable {
     }
 
     public void loadData() {
-        masterList.setAll(handler.getUnits(unitDAO));
+        masterList.setAll(handler.getUnitsDisplay(unitDAO));
     }
 
     private void applyFilters() {

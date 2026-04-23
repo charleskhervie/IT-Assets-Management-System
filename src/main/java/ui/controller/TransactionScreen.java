@@ -175,7 +175,7 @@ public class TransactionScreen implements Initializable {
     public void loadData() {
         boolean isAdmin = AdminUtil.isAdminMode();
         if (isAdmin) {
-            masterList.setAll(handler.getTransactions(transactionDAO));
+            masterList.setAll(handler.getTransactionDisplay(transactionDAO));
         } else {
             Employee emp = SessionManager.getLoggedInEmployee();
             if (emp != null) {

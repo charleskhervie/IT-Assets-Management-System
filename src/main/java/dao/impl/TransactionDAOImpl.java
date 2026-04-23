@@ -70,9 +70,9 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     //old find all to display data directly taken from data
-    /* 
+    
     @Override
-    public List<Transaction> findAll() throws SQLException {
+    public List<Transaction> findAllRaw() throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
         String query = "select * from transaction";
         try (Connection conn = DBUtil.getConnection();
@@ -84,9 +84,9 @@ public class TransactionDAOImpl implements TransactionDAO {
         }
         return transactions;
     }
-    */
+    
    @Override
-    public List<Transaction> findAll() throws SQLException {
+    public List<Transaction> findAllDisplay() throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
         String query = """
             select t.transaction_id, t.unit_id, t.borrowed_by, t.processed_by,
@@ -104,7 +104,7 @@ public class TransactionDAOImpl implements TransactionDAO {
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                transactions.add(mapRow(rs));
+                transactions.add(mapRowDisplay(rs));
             }
         }
         return transactions;
@@ -127,6 +127,18 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     private Transaction mapRow(ResultSet rs) throws SQLException {
+        return new Transaction(
+            rs.getInt("transaction_id"),
+            rs.getInt("unit_id"),
+            rs.getInt("borrowed_by"),
+            rs.getInt("processed_by"),
+            rs.getObject("borrowed_date", LocalDateTime.class),
+            rs.getObject("return_date", LocalDateTime.class),
+            rs.getString("status"),
+            rs.getString("remarks")
+        );
+    }
+    private Transaction mapRowDisplay(ResultSet rs) throws SQLException {
         Transaction t = new Transaction(
             rs.getInt("transaction_id"),
             rs.getInt("unit_id"),
@@ -141,7 +153,7 @@ public class TransactionDAOImpl implements TransactionDAO {
         t.setBorrowedByName(rs.getString("borrowed_by_name"));
         t.setProcessedByName(rs.getString("processed_by_name"));
         return t;
-    }
+}
 
     @Override
     public void approveCheckout(int transactionId, int processedBy, String remarks) throws SQLException {

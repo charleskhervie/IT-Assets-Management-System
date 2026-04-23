@@ -9,9 +9,19 @@ import dao.model.Unit;
 
 public class unitHandler {
     
-    public List<Unit> getUnits(UnitDAO dao){
+    public List<Unit> getUnitsDisplay(UnitDAO dao){
         try{
-            List<Unit> allUnits = dao.findAll();
+            List<Unit> allUnits = dao.findAllDisplay();
+            return allUnits;
+        }catch(SQLException e){
+            System.out.println("Database " + e.getMessage());
+            return Collections.emptyList();
+        }
+        
+    }
+    public List<Unit> getUnitsRaw(UnitDAO dao){
+        try{
+            List<Unit> allUnits = dao.findAllRaw();
             return allUnits;
         }catch(SQLException e){
             System.out.println("Database " + e.getMessage());
