@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import dao.handler.TransactionHandler;
 import dao.impl.TransactionDAOImpl;
 import dao.intfc.TransactionDAO;
+import dao.model.Employee;
 import dao.model.Transaction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ui.util.AdminUtil;
 import ui.util.AlertUtil;
+import ui.util.SessionManager;
 import ui.util.TransactionFilter;
 import ui.util.TransactionTableUtil;
 
@@ -165,6 +167,14 @@ public class TransactionScreen implements Initializable {
     }
 
     public void loadData() {
-        masterList.setAll(handler.getTransactions(transactionDAO));
+        boolean isAdmin = AdminUtil.isAdminMode();
+        if (isAdmin) {
+            masterList.setAll(handler.getTransactions(transactionDAO));
+        } else {
+            Employee emp = SessionManager.getLoggedInEmployee();
+            if (emp != null) {
+                masterList.setAll(handler.getTransactionsByEmployee(transactionDAO, emp.getEmpId()));
+            }
+        }
     }
 }

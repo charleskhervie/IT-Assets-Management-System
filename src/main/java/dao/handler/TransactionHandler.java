@@ -77,4 +77,12 @@ public class TransactionHandler {
             return "Failed to decline: " + e.getMessage();
         }
     }
+    public List<Transaction> getTransactionsByEmployee(TransactionDAO dao, int empId) {
+        try {
+            return dao.findByEmployee(empId);
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
 }

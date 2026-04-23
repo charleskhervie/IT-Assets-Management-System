@@ -144,4 +144,19 @@ public class TransactionDAOImpl implements TransactionDAO {
             ps.executeUpdate();
         }
     }
+    @Override
+    public List<Transaction> findByEmployee(int empId) throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
+        String query = "select * from transaction where borrowed_by = ?";
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, empId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    transactions.add(mapRow(rs));
+                }
+            }
+        }
+        return transactions;
+    }
 }
