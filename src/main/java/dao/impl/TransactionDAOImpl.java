@@ -114,13 +114,18 @@ public class TransactionDAOImpl implements TransactionDAO {
     }
 
     @Override
-    public void approveCheckout(int transactionId, int processedBy) throws SQLException {
-        String updateTransaction = "update transaction set status = 'checked-out', processed_by = ? where transaction_id = ?";
+    public void approveCheckout(int transactionId, int processedBy, String remarks) throws SQLException {
+        String updateTransaction = "update transaction set status = 'checked-out', processed_by = ?, remarks = ? where transaction_id = ?";
         String updateUnit = "update units set status = 'checked-out' where unit_id = (select unit_id from transaction where transaction_id = ?)";
         try (Connection conn = DBUtil.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
-                ps.setInt(1, processedBy);
-                ps.setInt(2, transactionId);
+                if (processedBy > 0) {
+                    ps.setInt(1, processedBy);
+                } else {
+                    ps.setNull(1, java.sql.Types.INTEGER);
+                }
+                ps.setString(2, remarks);
+                ps.setInt(3, transactionId);
                 ps.executeUpdate();
             }
             try (PreparedStatement ps = conn.prepareStatement(updateUnit)) {

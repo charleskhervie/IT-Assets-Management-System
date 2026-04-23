@@ -58,11 +58,11 @@ public class TransactionHandler {
         return transaction.getUnitId() > 0 && transaction.getBorrower() > 0;
     }
 
-    public String approveCheckout(TransactionDAO dao, int transactionId) {
+    public String approveCheckout(TransactionDAO dao, int transactionId, String remarks) {
         Employee admin = SessionManager.getLoggedInEmployee();
         int processedBy = admin != null ? admin.getEmpId() : 0;
         try {
-            dao.approveCheckout(transactionId, processedBy);
+            dao.approveCheckout(transactionId, processedBy, remarks);
             return null;
         } catch (SQLException e) {
             return "Failed to approve: " + e.getMessage();

@@ -125,18 +125,39 @@ public class TransactionScreen implements Initializable {
         boolean confirmed = AlertUtil.showConfirmation("Approve",
                 "Approve checkout for unit " + transaction.getUnitId() + "?");
         if (!confirmed) return;
-        String error = handler.approveCheckout(transactionDAO, transaction.getTransactionId());
-        if (error != null) {
-            AlertUtil.showError("Error", error);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addRemarks.fxml"));
+            Parent root = loader.load();
+
+            AddRemarksModal controller = loader.getController();
+
+            Stage modal = new Stage();
+            modal.initOwner(transactionTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Add Remarks");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+
+            if (!controller.isSaved()) return;
+
+            String error = handler.approveCheckout(transactionDAO, transaction.getTransactionId(), controller.getRemarks());
+            if (error != null) {
+                AlertUtil.showError("Error", error);
+            }
+            loadData();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load addRemarks.fxml", e);
         }
-        loadData();
     }
 
     private void handleDecline(Transaction transaction) {
         boolean confirmed = AlertUtil.showConfirmation("Decline",
                 "Decline checkout for unit " + transaction.getUnitId() + "?");
         if (!confirmed) return;
-        String error = handler.declineCheckout(transactionDAO, transaction.getTransactionId());
+
+        String error = handler.deleteTransaction(transactionDAO, transaction.getTransactionId());
         if (error != null) {
             AlertUtil.showError("Error", error);
         }

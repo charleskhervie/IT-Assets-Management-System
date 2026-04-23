@@ -9,8 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ui.controller.DashboardScreen;
-
-
 public class NavigationUtil {
 
     public static void loadIntoDashboard(ActionEvent event, String fxmlPath) {
