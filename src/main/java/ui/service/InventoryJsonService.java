@@ -1,284 +1,217 @@
 package ui.service;
 
-import dao.dao_util.CredentialManager;
-import dao.impl.EmployeeDAOImpl;
-import dao.impl.EquipmentDAOImpl;
-import dao.impl.UnitDAOImpl;
-import dao.intfc.EmployeeDAO;
-import dao.intfc.EquipmentDAO;
-import dao.intfc.UnitDAO;
-import dao.model.Unit;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.*;
-import ui.util.*;
+import java.util.List;
+
+import dao.model.Category;
+import dao.model.Department;
+import dao.model.Employee;
+import dao.model.Equipment;
+import dao.model.Transaction;
+import dao.model.Unit;
+import ui.util.InventoryExportUtil;
 
 public class InventoryJsonService {
 
-    private static final String DEFAULT_STATUS = "Available";
+    private final InventoryExportUtil exportUtil = new InventoryExportUtil();
 
-    private final UnitDAO unitDAO = new UnitDAOImpl();
-    private final EquipmentDAO equipmentDAO = new EquipmentDAOImpl();
-    private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
-    private final CredentialManager credentialManager = new CredentialManager();
-
-    public ExportSummary exportUnits(Path targetFile) throws IOException, SQLException {
-        List<InventoryExportUtil.InventoryRecord> records =
-                InventoryExportUtil.fetchExportRecords();
+    public ExportSummary exportToJson(Path targetFile) throws IOException {
+        List<Category> categories = exportUtil.getCategories();
+        List<Department> departments = exportUtil.getDepartments();
+        List<Employee> employees = exportUtil.getEmployees();
+        List<Equipment> equipments = exportUtil.getEquipments();
+        List<Unit> units = exportUtil.getUnitsRaw();
+        List<Transaction> transactions = exportUtil.getTransactionsRaw();
 
         StringBuilder json = new StringBuilder();
+
         json.append("{\n");
-        json.append("  \"exportedAt\": ")
-                .append(InventoryExportUtil.jsonQuote(LocalDateTime.now().toString())).append(",\n");
-        json.append("  \"recordCount\": ").append(records.size()).append(",\n");
-        json.append("  \"units\": [\n");
-
-        for (int i = 0; i < records.size(); i++) {
-            var r = records.get(i);
-
-            json.append("    {\n");
-            json.append("      \"unitId\": ").append(r.unitId()).append(",\n");
-            json.append("      \"serialNumber\": ").append(InventoryExportUtil.jsonQuote(r.serialNumber())).append(",\n");
-            json.append("      \"status\": ").append(InventoryExportUtil.jsonQuote(r.status())).append(",\n");
-            json.append("      \"equipmentId\": ").append(r.equipmentId()).append(",\n");
-            json.append("      \"equipmentName\": ").append(InventoryExportUtil.jsonQuote(r.equipmentName())).append(",\n");
-            json.append("      \"brand\": ").append(InventoryExportUtil.jsonQuote(r.brand())).append(",\n");
-            json.append("      \"model\": ").append(InventoryExportUtil.jsonQuote(r.model())).append(",\n");
-            json.append("      \"categoryId\": ").append(r.categoryId()).append(",\n");
-            json.append("      \"categoryName\": ").append(InventoryExportUtil.jsonQuote(r.categoryName())).append(",\n");
-            json.append("      \"addedBy\": ").append(r.addedBy()).append(",\n");
-            json.append("      \"assignedTo\": ")
-                    .append(r.assignedTo() == null ? "null" : r.assignedTo()).append(",\n");
-            json.append("      \"createdAt\": ")
-                    .append(InventoryExportUtil.jsonQuote(r.createdAt())).append("\n");
-            json.append("    }");
-
-            if (i < records.size() - 1) json.append(",");
-            json.append("\n");
-        }
-
-        json.append("  ]\n");
+        json.append("  \"departments\": ").append(buildDepartmentsJson(departments)).append(",\n");
+        json.append("  \"employees\": ").append(buildEmployeesJson(employees)).append(",\n");
+        json.append("  \"categories\": ").append(buildCategoriesJson(categories)).append(",\n");
+        json.append("  \"equipment\": ").append(buildEquipmentJson(equipments)).append(",\n");
+        json.append("  \"units\": ").append(buildUnitsJson(units)).append(",\n");
+        json.append("  \"transactions\": ").append(buildTransactionsJson(transactions)).append("\n");
         json.append("}\n");
 
         Files.writeString(targetFile, json.toString(), StandardCharsets.UTF_8);
-        return new ExportSummary(targetFile, records.size());
+
+        int total =
+                categories.size()
+                + departments.size()
+                + employees.size()
+                + equipments.size()
+                + units.size()
+                + transactions.size();
+
+        return new ExportSummary(targetFile, total);
     }
 
-    public ImportPreview loadPreview(Path sourceFile) throws IOException, SQLException {
-        String json = Files.readString(sourceFile, StandardCharsets.UTF_8);
-        Object parsed = SimpleJsonParser.parse(json);
-        List<Map<String, Object>> rawRecords = extractRecords(parsed);
-        return buildPreview(rawRecords);
-    }
+    private String buildDepartmentsJson(List<Department> departments) {
+        StringBuilder json = new StringBuilder();
+        json.append("[\n");
 
-    public ImportExecution importRecords(ImportPreview preview,
-                                         boolean skipDuplicates,
-                                         boolean validateBeforeImport) throws SQLException {
+        for (int i = 0; i < departments.size(); i++) {
+            Department d = departments.get(i);
 
-        if (preview.records().isEmpty()) {
-            return new ImportExecution(0, preview.invalidCount(),
-                    List.of("No records found."));
-        }
+            json.append("    {\n");
+            json.append("      \"departmentId\": ").append(d.getDepartmentId()).append(",\n");
+            json.append("      \"departmentName\": ").append(quote(d.getDepartmentName())).append(",\n");
+            json.append("      \"location\": ").append(quote(d.getLocation())).append("\n");
+            json.append("    }");
 
-        List<String> issues = new ArrayList<>();
-        int imported = 0;
-
-        for (PreviewRecord record : preview.records()) {
-            if (!record.issues().isEmpty()) {
-                if (!skipDuplicates || !isDuplicateOnly(record.issues())) {
-                    issues.add("Row " + record.rowNumber() + ": " +
-                            String.join("; ", record.issues()));
-                }
-                continue;
+            if (i < departments.size() - 1) {
+                json.append(",");
             }
+            json.append("\n");
+        }
 
-            try {
-                unitDAO.add(record.toUnit());
-                imported++;
-            } catch (SQLException e) {
-                if (!skipDuplicates || !isDuplicateException(e)) {
-                    issues.add("Row " + record.rowNumber() + ": " + e.getMessage());
-                }
+        json.append("  ]");
+        return json.toString();
+    }
+
+    private String buildEmployeesJson(List<Employee> employees) {
+        StringBuilder json = new StringBuilder();
+        json.append("[\n");
+
+        for (int i = 0; i < employees.size(); i++) {
+            Employee e = employees.get(i);
+
+            json.append("    {\n");
+            json.append("      \"empId\": ").append(e.getEmpId()).append(",\n");
+            json.append("      \"departmentId\": ").append(e.getDepartmentId()).append(",\n");
+            json.append("      \"username\": ").append(quote(e.getUsername())).append(",\n");
+            json.append("      \"password\": ").append(quote(e.getPassword())).append(",\n");
+            json.append("      \"role\": ").append(quote(e.getRole())).append(",\n");
+            json.append("      \"fullName\": ").append(quote(e.getFullName())).append("\n");
+            json.append("    }");
+
+            if (i < employees.size() - 1) {
+                json.append(",");
             }
+            json.append("\n");
         }
 
-        return new ImportExecution(imported, preview.invalidCount(), issues);
+        json.append("  ]");
+        return json.toString();
     }
+    
+    private String buildCategoriesJson(List<Category> categories) {
+        StringBuilder json = new StringBuilder();
+        json.append("[\n");
 
-    private ImportPreview buildPreview(List<Map<String, Object>> rawRecords)
-            throws SQLException {
+        for (int i = 0; i < categories.size(); i++) {
+            Category c = categories.get(i);
 
-        List<PreviewRecord> previewRecords = new ArrayList<>();
-        Set<String> seenSerials = new HashSet<>();
-        int valid = 0;
+            json.append("    {\n");
+            json.append("      \"categoryId\": ").append(c.getCategoryId()).append(",\n");
+            json.append("      \"categoryName\": ").append(quote(c.getCategoryName())).append("\n");
+            json.append("    }");
 
-        for (int i = 0; i < rawRecords.size(); i++) {
-            NormalizedRecord n = normalizeRecord(rawRecords.get(i), i + 1);
-            List<String> issues = validateRecord(n, seenSerials);
-            if (issues.isEmpty()) valid++;
-            previewRecords.add(new PreviewRecord(i + 1, n, issues));
-        }
-
-        return new ImportPreview(previewRecords, valid,
-                rawRecords.size() - valid);
-    }
-
-    private List<String> validateRecord(NormalizedRecord r,
-                                        Set<String> seenSerials)
-            throws SQLException {
-
-        List<String> issues = new ArrayList<>();
-
-        if (r.equipmentId() <= 0 ||
-                equipmentDAO.findById(r.equipmentId()) == null) {
-            issues.add("Invalid equipmentId");
-        }
-
-        if (r.serialNumber() == null || r.serialNumber().isBlank()) {
-            issues.add("serialNumber is required");
-        } else {
-            String s = r.serialNumber().toLowerCase();
-            if (!seenSerials.add(s)) {
-                issues.add("Duplicate serialNumber");
+            if (i < categories.size() - 1) {
+                json.append(",");
             }
-            if (!unitDAO.findWithAttribute("serial_number", r.serialNumber()).isEmpty()) {
-                issues.add("Already exists");
+            json.append("\n");
+        }
+
+        json.append("  ]");
+        return json.toString();
+    }
+
+    private String buildEquipmentJson(List<Equipment> equipments) {
+        StringBuilder json = new StringBuilder();
+        json.append("[\n");
+
+        for (int i = 0; i < equipments.size(); i++) {
+            Equipment e = equipments.get(i);
+
+            json.append("    {\n");
+            json.append("      \"equipmentId\": ").append(e.getEquipmentId()).append(",\n");
+            json.append("      \"equipmentName\": ").append(quote(e.getEquipmentName())).append(",\n");
+            json.append("      \"brand\": ").append(quote(e.getBrand())).append(",\n");
+            json.append("      \"model\": ").append(quote(e.getModel())).append(",\n");
+            json.append("      \"specifications\": ").append(quote(e.getSpecifications())).append(",\n");
+            json.append("      \"categoryId\": ").append(e.getCategoryId()).append("\n");
+            json.append("    }");
+
+            if (i < equipments.size() - 1) {
+                json.append(",");
             }
+            json.append("\n");
         }
 
-        if (r.addedBy() <= 0 ||
-                employeeDAO.findById(r.addedBy()) == null) {
-            issues.add("Invalid addedBy");
-        }
-
-        return issues;
+        json.append("  ]");
+        return json.toString();
     }
 
-    private NormalizedRecord normalizeRecord(Map<String, Object> rawRecord, int rowNumber) {
-        int equipmentId = toInt(rawRecord, "equipmentId", "equipment_id");
+    private String buildUnitsJson(List<Unit> units) {
+        StringBuilder json = new StringBuilder();
+        json.append("[\n");
 
-        int addedBy = toInt(rawRecord, "addedBy", "added_by");
-        if (addedBy <= 0) addedBy = currentUserId();
+        for (int i = 0; i < units.size(); i++) {
+            Unit u = units.get(i);
 
-        Integer assignedTo = toNullableInt(rawRecord, "assignedTo", "assigned_to");
+            json.append("    {\n");
+            json.append("      \"unitId\": ").append(u.getUnitId()).append(",\n");
+            json.append("      \"equipmentId\": ").append(u.getEquipmentId()).append(",\n");
+            json.append("      \"serialNumber\": ").append(quote(u.getSerialNumber())).append(",\n");
+            json.append("      \"status\": ").append(quote(u.getStatus())).append(",\n");
+            json.append("      \"addedBy\": ").append(u.getAddedBy()).append(",\n");
+            json.append("      \"createdAt\": ").append(quote(u.getCreatedAt() == null ? null : u.getCreatedAt().toString())).append(",\n");
+            json.append("      \"assignedTo\": ").append(u.getAssignedTo() == null ? "null" : u.getAssignedTo()).append("\n");
+            json.append("    }");
 
-        String serialNumber = toStringValue(rawRecord, "serialNumber", "serial_number");
-
-        String status = toStringValue(rawRecord, "status");
-        if (status == null || status.isBlank()) status = DEFAULT_STATUS;
-
-        LocalDateTime createdAt = parseDateTime(
-                toStringValue(rawRecord, "createdAt", "created_at"));
-        if (createdAt == null) createdAt = LocalDateTime.now();
-
-        return new NormalizedRecord(
-                rowNumber,
-                equipmentId,
-                serialNumber == null ? null : serialNumber.trim(),
-                status.trim(),
-                addedBy,
-                createdAt,
-                assignedTo
-        );
-    }
-
-    private String toStringValue(Map<String, Object> rawRecord, String... keys) {
-        for (String key : keys) {
-            Object value = rawRecord.get(key);
-            if (value != null) return String.valueOf(value);
-        }
-        return null;
-    }
-
-    private int toInt(Map<String, Object> rawRecord, String... keys) {
-        Integer value = toNullableInt(rawRecord, keys);
-        return value == null ? 0 : value;
-    }
-
-    private Integer toNullableInt(Map<String, Object> rawRecord, String... keys) {
-        for (String key : keys) {
-            Object value = rawRecord.get(key);
-            if (value == null) continue;
-
-            if (value instanceof Number number) return number.intValue();
-
-            try {
-                return Integer.parseInt(String.valueOf(value).trim());
-            } catch (Exception ignored) {
-                return 0;
+            if (i < units.size() - 1) {
+                json.append(",");
             }
+            json.append("\n");
         }
-        return null;
+
+        json.append("  ]");
+        return json.toString();
     }
 
-    private LocalDateTime parseDateTime(String value) {
-        if (value == null || value.isBlank()) return null;
-        try {
-            return LocalDateTime.parse(value);
-        } catch (DateTimeParseException ignored) {}
-        return null;
-    }
+    private String buildTransactionsJson(List<Transaction> transactions) {
+        StringBuilder json = new StringBuilder();
+        json.append("[\n");
 
-    private int currentUserId() {
-        try {
-            if (!credentialManager.exists()) return 1;
-            return Integer.parseInt(
-                    credentialManager.load().getProperty("emp_id", "1"));
-        } catch (Exception e) {
-            return 1;
-        }
-    }
+        for (int i = 0; i < transactions.size(); i++) {
+            Transaction t = transactions.get(i);
 
-    private boolean isDuplicateOnly(List<String> issues) {
-        return issues.stream().allMatch(i -> i.toLowerCase().contains("duplicate"));
-    }
+            json.append("    {\n");
+            json.append("      \"transactionId\": ").append(t.getTransactionId()).append(",\n");
+            json.append("      \"unitId\": ").append(t.getUnitId()).append(",\n");
+            json.append("      \"borrowedBy\": ").append(t.getBorrower()).append(",\n");
+            json.append("      \"processedBy\": ").append(t.getProcessedBy()).append(",\n");
+            json.append("      \"borrowedDate\": ").append(quote(t.getBorrowedDate() == null ? null : t.getBorrowedDate().toString())).append(",\n");
+            json.append("      \"returnDate\": ").append(quote(t.getReturnDate() == null ? null : t.getReturnDate().toString())).append(",\n");
+            json.append("      \"remarks\": ").append(quote(t.getRemarks())).append(",\n");
+            json.append("      \"status\": ").append(quote(t.getStatus())).append("\n");
+            json.append("    }");
 
-    private boolean isDuplicateException(SQLException e) {
-        return e.getMessage() != null &&
-                e.getMessage().toLowerCase().contains("duplicate");
-    }
-
-    private List<Map<String, Object>> extractRecords(Object parsed) {
-        if (parsed instanceof List<?> list) return (List<Map<String, Object>>) list;
-
-        if (parsed instanceof Map<?, ?> map) {
-            Object units = map.get("units");
-            if (units instanceof List<?> list) {
-                return (List<Map<String, Object>>) list;
+            if (i < transactions.size() - 1) {
+                json.append(",");
             }
+            json.append("\n");
         }
 
-        throw new IllegalArgumentException("Invalid JSON");
+        json.append("  ]");
+        return json.toString();
     }
 
-    public record ImportPreview(List<PreviewRecord> records,
-                                int validCount, int invalidCount) {}
-
-    public record ImportExecution(int importedCount,
-                                  int invalidCount,
-                                  List<String> issues) {}
-
-    public record PreviewRecord(int rowNumber,
-                                NormalizedRecord normalizedRecord,
-                                List<String> issues) {
-        public Unit toUnit() {
-            return normalizedRecord.toUnit();
+    private String quote(String value) {
+        if (value == null) {
+            return "null";
         }
-    }
 
-    public record NormalizedRecord(int rowNumber, int equipmentId,
-                                   String serialNumber, String status,
-                                   int addedBy, LocalDateTime createdAt,
-                                   Integer assignedTo) {
-        public Unit toUnit() {
-            return new Unit(0, equipmentId, serialNumber,
-                    status, addedBy, createdAt, assignedTo);
-        }
+        return "\"" + value
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t") + "\"";
     }
 }

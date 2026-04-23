@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -15,51 +14,43 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import ui.service.ExportSummary;
 import ui.service.InventoryCsvService;
 import ui.service.InventoryJsonService;
 import ui.service.InventorySqlService;
-import ui.service.InventoryJsonService.ImportExecution;
-import ui.service.InventoryJsonService.ImportPreview;
-import ui.service.InventoryJsonService.PreviewRecord;
 import ui.util.NavigationUtil;
 
 public class ImportExportScreen implements Initializable {
-
-    @FXML private Label fileNameLabel;
-    @FXML private Label rowCountLabel;
-    @FXML private Label totalRowsValueLabel;
-    @FXML private Label validRowsValueLabel;
-    @FXML private Label issuesValueLabel;
-    @FXML private VBox previewRowsContainer;
-
-    @FXML private CheckBox skipDuplicatesCheckBox;
-    @FXML private CheckBox validateBeforeImportCheckBox;
 
     @FXML private CheckBox exportJson;
     @FXML private CheckBox exportCsv;
     @FXML private CheckBox exportSql;
 
-    @FXML private Button confirmImportButton;
     @FXML private Button confirmExportButton;
 
     private final InventoryJsonService jsonService = new InventoryJsonService();
     private final InventoryCsvService csvService = new InventoryCsvService();
     private final InventorySqlService sqlService = new InventorySqlService();
 
-    private File selectedImportFile;
-    private ImportPreview currentPreview;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        updatePreviewState(null, null);
         initExportCheckboxes();
+
+        enforceSingleSelection(exportJson, exportCsv, exportSql);
+        enforceSingleSelection(exportCsv, exportJson, exportSql);
+        enforceSingleSelection(exportSql, exportJson, exportCsv);
+    }
+    private void enforceSingleSelection(CheckBox selected, CheckBox... others) {
+        selected.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+            if (isNowSelected) {
+                for (CheckBox cb : others) {
+                    cb.setSelected(false);
+                }
+            }
+        });
     }
 
     private void initExportCheckboxes() {
@@ -143,77 +134,6 @@ public class ImportExportScreen implements Initializable {
     }
 
     @FXML
-    private void handleChooseImportFile(ActionEvent event) {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Import Inventory JSON");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-
-        File file = fc.showOpenDialog(confirmImportButton.getScene().getWindow());
-        if (file == null) {
-            return;
-        }
-
-        try {
-            selectedImportFile = file;
-            currentPreview = jsonService.loadPreview(file.toPath());
-            updatePreviewState(file, currentPreview);
-        } catch (Exception e) {
-            selectedImportFile = null;
-            currentPreview = null;
-            updatePreviewState(null, null);
-            showError("Import Preview Failed", e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleConfirmImport(ActionEvent event) {
-        if (selectedImportFile == null || currentPreview == null) {
-            showError("No File Selected", "Choose a JSON file first.");
-            return;
-        }
-
-        if (validateBeforeImportCheckBox.isSelected() && currentPreview.invalidCount() > 0) {
-            showError("Validation Failed", "Fix issues or disable validation.");
-            return;
-        }
-
-        try {
-            ImportExecution result = jsonService.importRecords(
-                currentPreview,
-                skipDuplicatesCheckBox.isSelected(),
-                validateBeforeImportCheckBox.isSelected()
-            );
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Import Complete");
-            alert.setHeaderText(null);
-
-            StringBuilder message = new StringBuilder();
-            message.append("Imported ").append(result.importedCount()).append(" record(s).");
-
-            if (result.invalidCount() > 0) {
-                message.append("\nSkipped/invalid: ").append(result.invalidCount()).append(".");
-            }
-
-            if (!result.issues().isEmpty()) {
-                message.append("\n\nIssues:\n");
-                message.append(String.join("\n", result.issues().stream().limit(5).toList()));
-                if (result.issues().size() > 5) {
-                    message.append("\n...");
-                }
-            }
-
-            alert.setContentText(message.toString());
-            alert.showAndWait();
-
-            currentPreview = jsonService.loadPreview(selectedImportFile.toPath());
-            updatePreviewState(selectedImportFile, currentPreview);
-        } catch (Exception e) {
-            showError("Import Failed", e.getMessage());
-        }
-    }
-
-    @FXML
     private void handleConfirmExport(ActionEvent event) {
         if (!exportJson.isSelected() && !exportCsv.isSelected() && !exportSql.isSelected()) {
             showError("No Format Selected", "Select at least one format.");
@@ -222,7 +142,7 @@ public class ImportExportScreen implements Initializable {
 
         if (exportJson.isSelected()) {
             exportFormat("JSON", "inventory-export.json", "*.json",
-                path -> jsonService.exportUnits(path));
+                path -> jsonService.exportToJson(path));
         }
 
         if (exportCsv.isSelected()) {
@@ -238,7 +158,7 @@ public class ImportExportScreen implements Initializable {
 
     @FunctionalInterface
     private interface ExportAction {
-        ExportSummary execute(Path path) throws IOException, SQLException;
+        ExportSummary execute(Path path) throws IOException;
     }
 
     private void exportFormat(String format, String defaultName, String ext, ExportAction action) {
@@ -260,79 +180,9 @@ public class ImportExportScreen implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("Exported " + result.recordCount() + " record(s) to:\n" + result.targetFile());
             alert.showAndWait();
-        } catch (Exception e) {
+        } catch (IOException e) {
             showError(format + " Export Failed", e.getMessage());
         }
-    }
-
-    private void updatePreviewState(File file, ImportPreview preview) {
-        fileNameLabel.setText(file == null ? "No file imported." : file.getName());
-
-        int total = preview == null ? 0 : preview.records().size();
-        int valid = preview == null ? 0 : preview.validCount();
-        int issues = preview == null ? 0 : preview.invalidCount();
-
-        rowCountLabel.setText(total + " rows");
-        totalRowsValueLabel.setText(String.valueOf(total));
-        validRowsValueLabel.setText(String.valueOf(valid));
-        issuesValueLabel.setText(String.valueOf(issues));
-
-        renderPreviewRows(preview);
-    }
-
-    private void renderPreviewRows(ImportPreview preview) {
-        previewRowsContainer.getChildren().clear();
-
-        if (preview == null || preview.records().isEmpty()) {
-            Label empty = new Label("Import a JSON file to preview.");
-            empty.setStyle("-fx-text-fill: #666666; -fx-font-size: 12px;");
-            previewRowsContainer.getChildren().add(empty);
-            return;
-        }
-
-        preview.records().stream()
-            .limit(6)
-            .forEach(r -> previewRowsContainer.getChildren().add(buildPreviewRow(r)));
-
-        if (preview.records().size() > 6) {
-            Label more = new Label("Showing first 6 rows.");
-            more.setStyle("-fx-text-fill: #666666; -fx-font-size: 11px;");
-            previewRowsContainer.getChildren().add(more);
-        }
-    }
-
-    private HBox buildPreviewRow(PreviewRecord r) {
-        HBox row = new HBox(10);
-        row.setStyle("-fx-padding: 6 0 6 0;");
-
-        Label number = createCell(String.valueOf(r.rowNumber()), 30);
-        Label serial = createCell(nullToDash(r.normalizedRecord().serialNumber()), 100);
-        Label equipment = createCell(String.valueOf(r.normalizedRecord().equipmentId()), 120);
-        Label status = createCell(nullToDash(r.normalizedRecord().status()), 80);
-        Label issues = createCell(
-            r.issues().isEmpty() ? "OK" : String.join("; ", r.issues()),
-            250
-        );
-
-        if (!r.issues().isEmpty()) {
-            issues.setStyle("-fx-text-fill: #b23a3a; -fx-font-size: 11px;");
-        }
-
-        row.getChildren().addAll(number, serial, equipment, status, issues);
-        return row;
-    }
-
-    private Label createCell(String text, double width) {
-        Label l = new Label(text);
-        l.setMinWidth(width);
-        l.setPrefWidth(width);
-        l.setWrapText(true);
-        HBox.setHgrow(l, Priority.NEVER);
-        return l;
-    }
-
-    private String nullToDash(String v) {
-        return (v == null || v.isBlank()) ? "-" : v;
     }
 
     private void showError(String title, String msg) {
@@ -341,5 +191,15 @@ public class ImportExportScreen implements Initializable {
         a.setHeaderText(null);
         a.setContentText(msg);
         a.showAndWait();
+    }
+
+    @FXML
+    private void handleChooseImportFile(ActionEvent event) {
+        // placeholder (import removed)
+    }
+
+    @FXML
+    private void handleConfirmImport(ActionEvent event) {
+        // placeholder (import removed)
     }
 }

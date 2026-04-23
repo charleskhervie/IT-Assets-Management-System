@@ -4,37 +4,120 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.List;
-import ui.util.*;
+
+import dao.model.Category;
+import dao.model.Department;
+import dao.model.Employee;
+import dao.model.Equipment;
+import dao.model.Transaction;
+import dao.model.Unit;
+import ui.util.InventoryExportUtil;
 
 public class InventoryCsvService {
 
-    public ExportSummary exportToCsv(Path targetFile) throws IOException, SQLException {
-        List<InventoryExportUtil.InventoryRecord> records =
-                InventoryExportUtil.fetchExportRecords();
+    private final InventoryExportUtil exportUtil = new InventoryExportUtil();
+
+    public ExportSummary exportToCsv(Path targetFile) throws IOException {
+        List<Unit> units = exportUtil.getUnitsRaw();
+        List<Transaction> transactions = exportUtil.getTransactionsRaw();
+        List<Equipment> equipments = exportUtil.getEquipments();
+        List<Employee> employees = exportUtil.getEmployees();
+        List<Category> categories = exportUtil.getCategories();
+        List<Department> departments = exportUtil.getDepartments();
 
         StringBuilder csv = new StringBuilder();
 
-        csv.append("unit_id,serial_number,status,equipment_id,equipment_name,brand,model,category_id,category_name,added_by,assigned_to,created_at\n");
+        csv.append("table_name,id_1,id_2,text_1,text_2,text_3,text_4,text_5,date_1,date_2\n");
+        for (Department department : departments) {
+            csv.append("departments,");
+            csv.append(escape(department.getDepartmentId())).append(",");
+            csv.append(",");
+            csv.append(escape(department.getDepartmentName())).append(",");
+            csv.append(escape(department.getLocation())).append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append("\n");
+        }
 
-        for (var r : records) {
-            csv.append(escape(r.unitId())).append(",");
-            csv.append(escape(r.serialNumber())).append(",");
-            csv.append(escape(r.status())).append(",");
-            csv.append(escape(r.equipmentId())).append(",");
-            csv.append(escape(r.equipmentName())).append(",");
-            csv.append(escape(r.brand())).append(",");
-            csv.append(escape(r.model())).append(",");
-            csv.append(escape(r.categoryId())).append(",");
-            csv.append(escape(r.categoryName())).append(",");
-            csv.append(escape(r.addedBy())).append(",");
-            csv.append(r.assignedTo() == null ? "" : escape(r.assignedTo())).append(",");
-            csv.append(escape(r.createdAt())).append("\n");
+        for (Employee employee : employees) {
+            csv.append("employees,");
+            csv.append(escape(employee.getEmpId())).append(",");
+            csv.append(escape(employee.getDepartmentId())).append(",");
+            csv.append(escape(employee.getUsername())).append(",");
+            csv.append(escape(employee.getPassword())).append(",");
+            csv.append(escape(employee.getRole())).append(",");
+            csv.append(escape(employee.getFullName())).append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append("\n");
+        }
+        
+        for (Category category : categories) {
+            csv.append("categories,");
+            csv.append(escape(category.getCategoryId())).append(",");
+            csv.append(",");
+            csv.append(escape(category.getCategoryName())).append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append("\n");
+        }
+        for (Equipment equipment : equipments) {
+            csv.append("equipment,");
+            csv.append(escape(equipment.getEquipmentId())).append(",");
+            csv.append(escape(equipment.getCategoryId())).append(",");
+            csv.append(escape(equipment.getEquipmentName())).append(",");
+            csv.append(escape(equipment.getBrand())).append(",");
+            csv.append(escape(equipment.getModel())).append(",");
+            csv.append(escape(equipment.getSpecifications())).append(",");
+            csv.append(",");
+            csv.append(",");
+            csv.append("\n");
+        }
+
+        for (Unit unit : units) {
+            csv.append("units,");
+            csv.append(escape(unit.getUnitId())).append(",");
+            csv.append(escape(unit.getEquipmentId())).append(",");
+            csv.append(escape(unit.getSerialNumber())).append(",");
+            csv.append(escape(unit.getStatus())).append(",");
+            csv.append(escape(unit.getAddedBy())).append(",");
+            csv.append(escape(unit.getAssignedTo())).append(",");
+            csv.append(",");
+            csv.append(escape(unit.getCreatedAt())).append(",");
+            csv.append("\n");
+        }
+
+
+        for (Transaction transaction : transactions) {
+            csv.append("transactions,");
+            csv.append(escape(transaction.getTransactionId())).append(",");
+            csv.append(escape(transaction.getUnitId())).append(",");
+            csv.append(escape(transaction.getBorrower())).append(",");
+            csv.append(escape(transaction.getProcessedBy())).append(",");
+            csv.append(escape(transaction.getStatus())).append(",");
+            csv.append(escape(transaction.getRemarks())).append(",");
+            csv.append(",");
+            csv.append(escape(transaction.getBorrowedDate())).append(",");
+            csv.append(escape(transaction.getReturnDate())).append("\n");
         }
 
         Files.writeString(targetFile, csv.toString(), StandardCharsets.UTF_8);
-        return new ExportSummary(targetFile, records.size());
+
+        int total =
+                categories.size()
+                + departments.size()
+                + employees.size()
+                + equipments.size()
+                + units.size()
+                + transactions.size();
+
+        return new ExportSummary(targetFile, total);
     }
 
     private String escape(Object value) {
