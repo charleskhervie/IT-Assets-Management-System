@@ -57,6 +57,7 @@
                         <TableColumn fx:id="returnDateColumn" prefWidth="120.0" text="Return Date" />
                         <TableColumn fx:id="statusColumn" prefWidth="110.0" text="Status" />
                         <TableColumn fx:id="remarksColumn" prefWidth="130.0" text="Remarks" />
+                        <TableColumn fx:id="actionsColumn" prefWidth="180.0" text="Actions" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />

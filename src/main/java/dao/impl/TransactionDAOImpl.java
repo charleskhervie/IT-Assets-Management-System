@@ -15,15 +15,24 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     @Override
     public void add(Transaction transaction) throws SQLException {
-        String query = "insert into transaction (unit_id, borrowed_by, processed_by, borrowed_date, return_date, remarks) values (?, ?, ?, ?, ?, ?)";
+        String query = "insert into transaction (unit_id, borrowed_by, processed_by, borrowed_date, return_date, status, remarks) values (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, transaction.getUnitId());
-            ps.setInt(2, transaction.getBorrower());
-            ps.setInt(3, transaction.getProcessedBy());
+            if (transaction.getBorrower() > 0) {
+                ps.setInt(2, transaction.getBorrower());
+            } else {
+                ps.setNull(2, java.sql.Types.INTEGER);
+            }
+            if (transaction.getProcessedBy() > 0) {
+                ps.setInt(3, transaction.getProcessedBy());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
             ps.setTimestamp(4, transaction.getBorrowedDate() != null ? Timestamp.valueOf(transaction.getBorrowedDate()) : null);
             ps.setTimestamp(5, transaction.getReturnDate() != null ? Timestamp.valueOf(transaction.getReturnDate()) : null);
-            ps.setString(6, transaction.getRemarks());
+            ps.setString(6, transaction.getStatus());
+            ps.setString(7, transaction.getRemarks());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -99,8 +108,35 @@ public class TransactionDAOImpl implements TransactionDAO {
             rs.getInt("processed_by"),
             borrowedTs != null ? borrowedTs.toLocalDateTime() : null,
             returnTs != null ? returnTs.toLocalDateTime() : null,
-            returnTs == null ? "Checked Out" : "Returned",
+            rs.getString("status"),
             rs.getString("remarks")
         );
+    }
+
+    @Override
+    public void approveCheckout(int transactionId, int processedBy) throws SQLException {
+        String updateTransaction = "update transaction set status = 'checked-out', processed_by = ? where transaction_id = ?";
+        String updateUnit = "update units set status = 'checked-out' where unit_id = (select unit_id from transaction where transaction_id = ?)";
+        try (Connection conn = DBUtil.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
+                ps.setInt(1, processedBy);
+                ps.setInt(2, transactionId);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = conn.prepareStatement(updateUnit)) {
+                ps.setInt(1, transactionId);
+                ps.executeUpdate();
+            }
+        }
+    }
+
+    @Override
+    public void declineCheckout(int transactionId) throws SQLException {
+        String updateTransaction = "update transaction set status = 'declined' where transaction_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
+            ps.setInt(1, transactionId);
+            ps.executeUpdate();
+        }
     }
 }

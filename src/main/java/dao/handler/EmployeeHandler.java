@@ -27,5 +27,15 @@ public class EmployeeHandler {
             return "Database Error: " + e.getMessage();
         }
     }
+    public Employee getEmployeeByUsername(EmployeeDAO dao, String username) {
+        try {
+            return dao.findByUsername(username);
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+            return null;
+        }
+    }
+     
+
    
 }

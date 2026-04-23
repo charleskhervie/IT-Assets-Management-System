@@ -66,4 +66,45 @@ public class TransactionTableUtil {
             return row;
         });
     }
+    public static void setupActionsColumn(
+        TableColumn<Transaction, Void> actionsColumn,
+        java.util.function.Consumer<Transaction> onApprove,
+        java.util.function.Consumer<Transaction> onDecline,
+        boolean isAdmin) {
+
+        if (!isAdmin) {
+            actionsColumn.setVisible(false);
+            return;
+        }
+        actionsColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button approveBtn = new Button("Approve");
+            private final Button declineBtn = new Button("Decline");
+            private final javafx.scene.layout.HBox box = new javafx.scene.layout.HBox(6, approveBtn, declineBtn);
+
+            {
+                approveBtn.setStyle("-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-size: 11px;");
+                declineBtn.setStyle("-fx-background-color: #e05555; -fx-text-fill: white; -fx-font-size: 11px;");
+                approveBtn.setOnAction(e -> {
+                    Transaction t = getTableView().getItems().get(getIndex());
+                    onApprove.accept(t);
+                });
+                declineBtn.setOnAction(e -> {
+                    Transaction t = getTableView().getItems().get(getIndex());
+                    onDecline.accept(t);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+                Transaction t = getTableView().getItems().get(getIndex());
+                // only show buttons for pending transactions
+                setGraphic("pending".equalsIgnoreCase(t.getStatus()) ? box : null);
+            }
+        });
+    }
 }

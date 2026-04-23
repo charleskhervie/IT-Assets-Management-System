@@ -19,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ui.util.AdminUtil;
+import ui.util.AlertUtil;
 import ui.util.TransactionFilter;
 import ui.util.TransactionTableUtil;
 
@@ -35,6 +37,7 @@ public class TransactionScreen implements Initializable {
     @FXML private TableColumn<Transaction, LocalDateTime> returnDateColumn;
     @FXML private TableColumn<Transaction, String> statusColumn;
     @FXML private TableColumn<Transaction, String> remarksColumn;
+    @FXML private TableColumn<Transaction, Void> actionsColumn;
 
     private static final String STATUS_ALL = "All";
     private static final String STATUS_BORROWED = "Borrowed";
@@ -58,9 +61,15 @@ public class TransactionScreen implements Initializable {
         TransactionTableUtil.setupColumns(idColumn, unitIdColumn, borrowedByColumn,
                 processedByColumn, borrowDateColumn, returnDateColumn, statusColumn, remarksColumn);
 
+        TransactionTableUtil.setupActionsColumn(
+                actionsColumn,
+                this::handleApprove,
+                this::handleDecline,
+                AdminUtil.isAdminMode()
+        );
+
         MenuItem viewItem = new MenuItem("View Transaction");
         viewItem.setOnAction(e -> handleViewSelected());
-
         TransactionTableUtil.setupContextMenu(transactionTable, this::handleViewSelected, viewItem);
 
         filteredList = new FilteredList<>(masterList, t -> true);
@@ -111,7 +120,28 @@ public class TransactionScreen implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load viewTransaction.fxml", e);
         }
-}
+    }
+    private void handleApprove(Transaction transaction) {
+        boolean confirmed = AlertUtil.showConfirmation("Approve",
+                "Approve checkout for unit " + transaction.getUnitId() + "?");
+        if (!confirmed) return;
+        String error = handler.approveCheckout(transactionDAO, transaction.getTransactionId());
+        if (error != null) {
+            AlertUtil.showError("Error", error);
+        }
+        loadData();
+    }
+
+    private void handleDecline(Transaction transaction) {
+        boolean confirmed = AlertUtil.showConfirmation("Decline",
+                "Decline checkout for unit " + transaction.getUnitId() + "?");
+        if (!confirmed) return;
+        String error = handler.declineCheckout(transactionDAO, transaction.getTransactionId());
+        if (error != null) {
+            AlertUtil.showError("Error", error);
+        }
+        loadData();
+    }
 
     public void loadData() {
         masterList.setAll(handler.getTransactions(transactionDAO));

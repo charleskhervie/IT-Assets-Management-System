@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import java.net.URL;
+import ui.util.SessionManager;
+
 
 import dao.dao_util.CredentialManager;
+import dao.handler.EmployeeHandler;
 import dao.impl.EmployeeDAOImpl;
 import dao.intfc.EmployeeDAO;
 import dao.model.Employee;
@@ -63,7 +66,6 @@ public class LoginScreen implements Initializable{
             errorLabel.setVisible(true);
             return;
         }
-
         if (role == null || role.isBlank()) {
             errorLabel.setText("Please select a role.");
             errorLabel.setVisible(true);
@@ -78,6 +80,20 @@ public class LoginScreen implements Initializable{
         }
 
         try {
+            // Validate employee exists
+             
+            EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+            EmployeeHandler employeeHandler = new EmployeeHandler();
+            Employee employee = employeeHandler.getEmployeeByUsername(employeeDAO, username);
+            if (employee == null) {
+                errorLabel.setText("Username not found.");
+                errorLabel.setVisible(true);
+                return;
+            }
+
+            // Store in session
+            SessionManager.setLoggedInEmployee(employee);
+
             CredentialManager credentialManager = new CredentialManager();
             credentialManager.writeAppSession(matchedEmployee.getUsername(), normalizeAppMode(matchedEmployee.getRole()));
 
@@ -87,12 +103,16 @@ public class LoginScreen implements Initializable{
             stage.show();
         } catch (IOException exception) {
             exception.printStackTrace();
-            errorLabel.setText("Failed to continue login");
+            errorLabel.setText("Failed to continue login.");
             errorLabel.setVisible(true);
-            System.out.println(exception);
-
+        } 
+        /* 
+        catch (SQLException exception) {
+            exception.printStackTrace();
+            errorLabel.setText("Database error during login.");
+            errorLabel.setVisible(true);
         }
-
+            */
     }
 
     private Employee authenticateEmployee(String username, String password, String selectedRole) {

@@ -30,7 +30,7 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <TextField layoutX="77.0" layoutY="5.0" prefHeight="26.0" prefWidth="219.0" />
+                  <TextField fx:id="serialNoField" layoutX="77.0" layoutY="5.0" prefHeight="26.0" prefWidth="219.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="40.0" prefWidth="334.0">
@@ -40,7 +40,7 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <TextField disable="true" layoutX="77.0" layoutY="4.0" prefHeight="26.0" prefWidth="219.0" promptText="e.g Charles Realino" />
+                  <TextField fx:id="borrowerField" layoutX="77.0" layoutY="4.0" prefHeight="26.0" prefWidth="219.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="26.0" prefWidth="334.0">

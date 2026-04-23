@@ -12,4 +12,5 @@ public interface EmployeeDAO {
     Employee findById(int empId) throws SQLException;
     List<Employee> findAll() throws SQLException;
     List<Employee> findWithAttribute(String attribute, String value) throws SQLException;
+    Employee findByUsername(String username) throws SQLException;
 } 

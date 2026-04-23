@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import dao.intfc.TransactionDAO;
+import dao.model.Employee;
 import dao.model.Transaction;
+import ui.util.SessionManager;
 
 public class TransactionHandler {
 
@@ -25,6 +27,7 @@ public class TransactionHandler {
             dao.add(transaction);
             return null;
         } catch (SQLException e) {
+            e.printStackTrace();
             return "Failed to add transaction: " + e.getMessage();
         }
     }
@@ -53,5 +56,25 @@ public class TransactionHandler {
 
     private boolean isInputValid(Transaction transaction) {
         return transaction.getUnitId() > 0 && transaction.getBorrower() > 0;
+    }
+
+    public String approveCheckout(TransactionDAO dao, int transactionId) {
+        Employee admin = SessionManager.getLoggedInEmployee();
+        int processedBy = admin != null ? admin.getEmpId() : 0;
+        try {
+            dao.approveCheckout(transactionId, processedBy);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to approve: " + e.getMessage();
+        }
+    }
+
+    public String declineCheckout(TransactionDAO dao, int transactionId) {
+        try {
+            dao.declineCheckout(transactionId);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to decline: " + e.getMessage();
+        }
     }
 }
