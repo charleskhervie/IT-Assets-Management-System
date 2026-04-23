@@ -26,7 +26,7 @@ CREATE TABLE `categories` (
   `category_id` int NOT NULL AUTO_INCREMENT,
   `category_name` varchar(50) NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Laptop'),(2,'Monitor'),(3,'Keyboard'),(4,'Mouse'),(5,'Docking Station'),(6,'Headset');
+INSERT INTO `categories` VALUES (1,'Laptop'),(2,'Monitor'),(3,'Keyboard'),(4,'Mouse'),(5,'Docking Station'),(6,'Headset'),(8,'Couch');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +112,7 @@ CREATE TABLE `equipment` (
   PRIMARY KEY (`equipment_id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,6 +140,7 @@ CREATE TABLE `transaction` (
   `borrowed_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `return_date` timestamp NULL DEFAULT NULL,
   `remarks` text,
+  `status` varchar(20) DEFAULT 'checked out',
   PRIMARY KEY (`transaction_id`),
   KEY `unit_id` (`unit_id`),
   KEY `borrowed_by` (`borrowed_by`),
@@ -147,7 +148,7 @@ CREATE TABLE `transaction` (
   CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `units` (`unit_id`),
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`borrowed_by`) REFERENCES `employees` (`emp_id`),
   CONSTRAINT `transaction_ibfk_3` FOREIGN KEY (`processed_by`) REFERENCES `employees` (`emp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +157,7 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
-INSERT INTO `transaction` VALUES (1,1,4,1,'2026-04-20 04:27:49',NULL,'Initial Deployment for HR Lead'),(2,3,5,2,'2026-04-20 04:27:49',NULL,'Assigned for Academic Presentation'),(3,5,6,3,'2026-04-20 04:27:49',NULL,'Standard Peripheral Issuance'),(4,1,4,1,'2026-04-20 04:27:49',NULL,'Returned for Software Update'),(5,1,4,1,'2026-04-20 04:27:49',NULL,'Re-issued After Update'),(6,6,1,2,'2026-04-20 04:27:49',NULL,'Unit Sent for Scheduled Maintenance Due to Port Issues');
+INSERT INTO `transaction` VALUES (1,1,4,1,'2026-04-20 04:27:49',NULL,'Initial Deployment for HR Lead','checked out'),(2,3,5,2,'2026-04-20 04:27:49',NULL,'Assigned for Academic Presentation','checked out'),(3,5,6,3,'2026-04-20 04:27:49',NULL,'Standard Peripheral Issuance','checked out'),(4,1,4,1,'2026-04-20 04:27:49',NULL,'Returned for Software Update','checked out'),(5,1,4,1,'2026-04-20 04:27:49',NULL,'Re-issued After Update','checked out'),(6,6,1,2,'2026-04-20 04:27:49',NULL,'Unit Sent for Scheduled Maintenance Due to Port Issues','checked out'),(12,2,2,2,'2026-04-23 01:09:50',NULL,NULL,'checked-out'),(13,4,2,1,'2026-04-23 02:07:51',NULL,NULL,'checked-out'),(15,13,2,1,'2026-04-23 02:45:52',NULL,'good guy','checked-out'),(16,12,2,1,'2026-04-23 02:48:21',NULL,'awesome dude','checked-out');
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,7 +184,7 @@ CREATE TABLE `units` (
   CONSTRAINT `units_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`equipment_id`),
   CONSTRAINT `units_ibfk_2` FOREIGN KEY (`added_by`) REFERENCES `employees` (`emp_id`),
   CONSTRAINT `units_ibfk_3` FOREIGN KEY (`assigned_to`) REFERENCES `employees` (`emp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +193,7 @@ CREATE TABLE `units` (
 
 LOCK TABLES `units` WRITE;
 /*!40000 ALTER TABLE `units` DISABLE KEYS */;
-INSERT INTO `units` VALUES (1,1,'SN-APPLE-001','Deployed',1,'2026-04-20 04:27:48',4),(2,1,'SN-APPLE-002','Available',1,'2026-04-20 04:27:48',NULL),(3,2,'SN-LENO-001','Deployed',2,'2026-04-20 04:27:48',5),(4,3,'SN-DELL-001','Available',1,'2026-04-20 04:27:48',NULL),(5,4,'SN-LOGI-001','Deployed',3,'2026-04-20 04:27:48',6),(6,6,'SN-MSFT-001','Maintenance',2,'2026-04-20 04:27:48',NULL);
+INSERT INTO `units` VALUES (1,1,'SN-APPLE-001','Checked-Out',1,'2026-04-20 04:27:48',4),(2,1,'SN-APPLE-002','checked-out',1,'2026-04-20 04:27:48',NULL),(3,2,'SN-LENO-001','Checked-Out',2,'2026-04-20 04:27:48',5),(4,3,'SN-DELL-001','checked-out',1,'2026-04-20 04:27:48',NULL),(5,4,'SN-LOGI-001','Checked-Out',3,'2026-04-20 04:27:48',6),(6,6,'SN-MSFT-001','Maintenance',2,'2026-04-20 04:27:48',NULL),(12,2,'SN-1','checked-out',1,'2026-04-23 02:43:51',NULL),(13,1,'SN-2','available',1,'2026-04-23 02:43:59',NULL);
 /*!40000 ALTER TABLE `units` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -205,4 +206,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-20 12:31:45
+-- Dump completed on 2026-04-23 11:24:03
