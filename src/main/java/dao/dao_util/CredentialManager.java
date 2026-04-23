@@ -18,6 +18,23 @@ public class CredentialManager {
         }
     }
 
+    public void writeAppSession(String appUser, String appMode) throws IOException {
+        Properties props = new Properties();
+
+        if (exists()) {
+            try (InputStream input = new FileInputStream(ENV_FILE)) {
+                props.load(input);
+            }
+        }
+
+        props.setProperty("app_user", appUser);
+        props.setProperty("app_mode", appMode);
+
+        try (OutputStream output = new FileOutputStream(ENV_FILE)) {
+            props.store(output, null);
+        }
+    }
+
     public Properties load() throws IOException {
         Properties props = new Properties();
         try (InputStream input = new FileInputStream(ENV_FILE)) {
