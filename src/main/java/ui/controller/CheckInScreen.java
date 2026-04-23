@@ -1,14 +1,73 @@
 package ui.controller;
 
-import javafx.event.ActionEvent;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import dao.handler.TransactionHandler;
+import dao.impl.TransactionDAOImpl;
+import dao.intfc.TransactionDAO;
+import dao.model.Employee;
+import dao.model.Transaction;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import ui.util.AlertUtil;
+import ui.util.SessionManager;
 
-public class CheckInScreen {
+public class CheckInScreen implements Initializable {
+
+    @FXML private ComboBox<String> checkInComboBox;
+    @FXML private TextField borrowerField;
+
+    private final TransactionHandler handler = new TransactionHandler();
+    private final TransactionDAO transactionDAO = new TransactionDAOImpl();
+    private List<Transaction> checkedOutTransactions;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Employee emp = SessionManager.getLoggedInEmployee();
+        if (emp == null) return;
+
+        borrowerField.setText(emp.getFullName());
+
+        checkedOutTransactions = handler.getCheckedOutByEmployee(transactionDAO, emp.getEmpId());
+
+        if (checkedOutTransactions.isEmpty()) {
+            checkInComboBox.getItems().add("No checked-out items");
+            checkInComboBox.setValue("No checked-out items");
+            checkInComboBox.setDisable(true);
+        } else {
+            for (Transaction t : checkedOutTransactions) {
+                checkInComboBox.getItems().add("Unit " + t.getUnitId() + " (Transaction #" + t.getTransactionId() + ")");
+            }
+            checkInComboBox.getSelectionModel().selectFirst();
+        }
+    }
 
     @FXML
     private void handleConfirm(ActionEvent event) {
+        if (checkedOutTransactions == null || checkedOutTransactions.isEmpty()) {
+            AlertUtil.showError("No Items", "You have no checked-out items to return.");
+            return;
+        }
+
+        int selectedIndex = checkInComboBox.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < 0) {
+            AlertUtil.showError("Selection Error", "Please select an item to check in.");
+            return;
+        }
+
+        Transaction selected = checkedOutTransactions.get(selectedIndex);
+        String error = handler.checkIn(transactionDAO, selected.getTransactionId());
+        if (error != null) {
+            AlertUtil.showError("Error", error);
+            return;
+        }
+
         closeStage(event);
     }
 

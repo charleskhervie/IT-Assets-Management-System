@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import dao.intfc.TransactionDAO;
@@ -158,5 +159,36 @@ public class TransactionDAOImpl implements TransactionDAO {
             }
         }
         return transactions;
+    }
+    @Override
+    public List<Transaction> findCheckedOutByEmployee(int empId) throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
+        String query = "select * from transaction where borrowed_by = ? and status = 'checked-out'";
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, empId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    transactions.add(mapRow(rs));
+                }
+            }
+        }
+        return transactions;
+    }
+    @Override 
+    public void checkIn(int transactionId) throws SQLException {
+        String updateTransaction = "update transaction set status = 'returned', return_date = ? where transaction_id = ?";
+        String updateUnit = "update units set status = 'available' where unit_id = (select unit_id from transaction where transaction_id = ?)";
+        try (Connection conn = DBUtil.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
+                ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setInt(2, transactionId);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = conn.prepareStatement(updateUnit)) {
+                ps.setInt(1, transactionId);
+                ps.executeUpdate();
+            }
+        }
     }
 }

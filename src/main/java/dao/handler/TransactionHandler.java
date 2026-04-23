@@ -85,4 +85,20 @@ public class TransactionHandler {
             return Collections.emptyList();
         }
     }
+    public List<Transaction> getCheckedOutByEmployee(TransactionDAO dao, int empId) {
+        try {
+            return dao.findCheckedOutByEmployee(empId);
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+    public String checkIn(TransactionDAO dao, int transactionId) {
+        try {
+            dao.checkIn(transactionId);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to check in: " + e.getMessage();
+        }
+    }
 }
