@@ -136,4 +136,27 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         }
         return employees;
     }
+
+    @Override
+    public Employee findByUsernameAndPassword(String username, String password) throws SQLException {
+        String query = "select emp_id, department_id, username, password, role, full_name from employee where username = ? and password = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Employee(
+                        rs.getInt("emp_id"),
+                        rs.getInt("department_id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("full_name")
+                    );
+                }
+            }
+        }
+        return null;
+    }
 }
