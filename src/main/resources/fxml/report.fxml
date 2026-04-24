@@ -12,15 +12,16 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: #f3e5cb;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.ReportScreen">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="615.0" prefWidth="1100.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.ReportScreen">
 
    <top>
       <HBox alignment="CENTER" prefHeight="55.0" style="-fx-background-color: #cfcfcf; -fx-border-color: #4a4a4a; -fx-border-width: 0 0 1 0;">
          <children>
-            <Label text="Dashboard">
+            <Label text="REPORTS">
                <font>
                   <Font name="System Bold" size="22.0" />
                </font>
@@ -44,76 +45,145 @@
    </left>
 
    <center>
-      <ScrollPane>
+      <ScrollPane fitToWidth="true">
          <content>
-            <VBox spacing="20.0">
+            <VBox spacing="18.0" style="-fx-background-color: white;">
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
-               <VBox prefHeight="200.0" prefWidth="100.0">
+
+               <HBox spacing="12.0">
+                  <children>
+                     <VBox style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 12; -fx-background-radius: 4; -fx-border-radius: 4;" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label text="Total Units" />
+                           <Label fx:id="totalUnitsLabel" style="-fx-font-size: 24px; -fx-font-weight: 700;" text="0" />
+                        </children>
+                     </VBox>
+                     <VBox style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 12; -fx-background-radius: 4; -fx-border-radius: 4;" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label text="Available" />
+                           <Label fx:id="availableUnitsLabel" style="-fx-font-size: 24px; -fx-font-weight: 700;" text="0" />
+                        </children>
+                     </VBox>
+                     <VBox style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 12; -fx-background-radius: 4; -fx-border-radius: 4;" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label text="Checked Out" />
+                           <Label fx:id="checkedOutUnitsLabel" style="-fx-font-size: 24px; -fx-font-weight: 700;" text="0" />
+                        </children>
+                     </VBox>
+                     <VBox style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 12; -fx-background-radius: 4; -fx-border-radius: 4;" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label text="Maintenance" />
+                           <Label fx:id="maintenanceUnitsLabel" style="-fx-font-size: 24px; -fx-font-weight: 700;" text="0" />
+                        </children>
+                     </VBox>
+                     <VBox style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 12; -fx-background-radius: 4; -fx-border-radius: 4;" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label text="Transactions" />
+                           <Label fx:id="transactionsLabel" style="-fx-font-size: 24px; -fx-font-weight: 700;" text="0" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+
+               <HBox spacing="10.0">
+                  <children>
+                     <Region HBox.hgrow="ALWAYS" />
+                     <Button fx:id="exportCsvButton" mnemonicParsing="false" onAction="#handleExportCsv" style="-fx-background-color: #2f7d32; -fx-text-fill: white;" text="Export CSV" />
+                     <Button fx:id="exportJsonButton" mnemonicParsing="false" onAction="#handleExportJson" style="-fx-background-color: #2d6fb0; -fx-text-fill: white;" text="Export JSON" />
+                     <Button fx:id="exportPdfButton" mnemonicParsing="false" onAction="#handleExportPdf" style="-fx-background-color: #b14646; -fx-text-fill: white;" text="Export PDF" />
+                  </children>
+               </HBox>
+
+               <VBox spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
                   <children>
                      <Label text="Category Summary">
                         <font>
                            <Font name="System Bold" size="16.0" />
                         </font>
                      </Label>
-                     <TableView>
-                       <columns>
-                         <TableColumn prefWidth="88.79998397827148" text="Category" />
-                         <TableColumn prefWidth="98.39996337890625" text="Total" />
-                           <TableColumn prefWidth="87.20002746582031" text="Avaiable" />
-                           <TableColumn prefWidth="121.5999755859375" text="Checked out" />
-                           <TableColumn prefWidth="102.39996337890625" text="Maintenance" />
-                       </columns>
+                     <TableView fx:id="categorySummaryTable">
+                        <columns>
+                           <TableColumn fx:id="categoryNameColumn" prefWidth="220.0" text="Category" />
+                           <TableColumn fx:id="categoryTotalColumn" prefWidth="90.0" text="Total" />
+                           <TableColumn fx:id="categoryAvailableColumn" prefWidth="90.0" text="Available" />
+                           <TableColumn fx:id="categoryCheckedOutColumn" prefWidth="100.0" text="Checked Out" />
+                           <TableColumn fx:id="categoryMaintenanceColumn" prefWidth="100.0" text="Maintenance" />
+                        </columns>
                      </TableView>
                   </children>
                </VBox>
-               <VBox prefHeight="200.0" prefWidth="100.0">
+
+               <VBox spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
                   <children>
                      <Label text="Equipment Summary">
                         <font>
                            <Font name="System Bold" size="16.0" />
                         </font>
                      </Label>
-                     <TableView prefHeight="200.0" prefWidth="200.0">
-                       <columns>
-                         <TableColumn prefWidth="91.19994735717773" text="Equipment" />
-                         <TableColumn prefWidth="100.800048828125" text="Units" />
-                           <TableColumn prefWidth="88.80000305175781" text="Avaiable" />
-                           <TableColumn prefWidth="96.0" text="Checked out" />
-                           <TableColumn minWidth="0.0" prefWidth="120.0" text="Maintenance" />
-                       </columns>
+                     <TableView fx:id="equipmentSummaryTable">
+                        <columns>
+                           <TableColumn fx:id="equipmentNameColumn" prefWidth="220.0" text="Equipment" />
+                           <TableColumn fx:id="equipmentTotalColumn" prefWidth="90.0" text="Total" />
+                           <TableColumn fx:id="equipmentAvailableColumn" prefWidth="90.0" text="Available" />
+                           <TableColumn fx:id="equipmentCheckedOutColumn" prefWidth="100.0" text="Checked Out" />
+                           <TableColumn fx:id="equipmentMaintenanceColumn" prefWidth="100.0" text="Maintenance" />
+                        </columns>
                      </TableView>
                   </children>
                </VBox>
-   
-               <VBox prefWidth="500.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
-                  <Label text="Usage Overview">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Label>
-   
-                     <PieChart prefHeight="300.0" />
+
+               <VBox spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
+                  <children>
+                     <Label text="Recent Transactions">
+                        <font>
+                           <Font name="System Bold" size="16.0" />
+                        </font>
+                     </Label>
+                     <TableView fx:id="transactionSummaryTable">
+                        <columns>
+                           <TableColumn fx:id="transactionIdColumn" prefWidth="90.0" text="Transaction ID" />
+                           <TableColumn fx:id="transactionUnitColumn" prefWidth="180.0" text="Unit" />
+                           <TableColumn fx:id="transactionBorrowedByColumn" prefWidth="150.0" text="Borrowed By" />
+                           <TableColumn fx:id="transactionProcessedByColumn" prefWidth="150.0" text="Processed By" />
+                           <TableColumn fx:id="transactionBorrowDateColumn" prefWidth="120.0" text="Borrow Date" />
+                           <TableColumn fx:id="transactionReturnDateColumn" prefWidth="120.0" text="Return Date" />
+                           <TableColumn fx:id="transactionStatusColumn" prefWidth="110.0" text="Status" />
+                           <TableColumn fx:id="transactionRemarksColumn" prefWidth="220.0" text="Remarks" />
+                        </columns>
+                     </TableView>
+                  </children>
                </VBox>
-   
-               <VBox prefWidth="500.0" spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
-                  <Label text="Equipment Distribution">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Label>
-   
-                     <BarChart prefHeight="300.0">
-                     <xAxis>
-                        <CategoryAxis label="Equipment" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis label="Count" />
-                     </yAxis>
-                  </BarChart>
+
+               <VBox spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
+                  <children>
+                     <Label text="Usage Overview">
+                        <font>
+                           <Font name="System Bold" size="16.0" />
+                        </font>
+                     </Label>
+                     <PieChart fx:id="statusPieChart" prefHeight="280.0" />
+                  </children>
                </VBox>
-      
+
+               <VBox spacing="10.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-padding: 10;">
+                  <children>
+                     <Label text="Equipment Distribution">
+                        <font>
+                           <Font name="System Bold" size="16.0" />
+                        </font>
+                     </Label>
+                     <BarChart fx:id="equipmentBarChart" prefHeight="300.0">
+                        <xAxis>
+                           <CategoryAxis label="Equipment" />
+                        </xAxis>
+                        <yAxis>
+                           <NumberAxis label="Count" />
+                        </yAxis>
+                     </BarChart>
+                  </children>
+               </VBox>
             </VBox>
          </content>
       </ScrollPane>
