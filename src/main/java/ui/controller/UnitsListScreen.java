@@ -57,34 +57,7 @@ public class UnitsListScreen implements Initializable {
     private FilteredList<Unit> filteredList;
     private UnitDAO unitDAO;
     
-    @FXML private void handleUnits(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/fxml/unitsList.fxml"); 
-    }
-    @FXML private void handleImportExport(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/importExport.fxml"); 
-    }
-    @FXML private void handleTransactions(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/fxml/Transaction.fxml"); 
-    }
-    @FXML private void handleEmployees(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/Employee.fxml"); 
-    }
-    @FXML private void handleReports(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/report.fxml"); 
-    }
-    @FXML private void handleDashboard(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/Dashboard.fxml"); 
-    }
-    @FXML private void handleBackToDashboard(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/Dashboard.fxml"); 
-    }
-    @FXML private void handleNavEquipment(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/equipmentList.fxml");
-    }
-
-    @FXML private void handleNavCategory(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/categoryList.fxml");
-    }
+   
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initDAO();
@@ -121,14 +94,6 @@ public class UnitsListScreen implements Initializable {
         if (addUnitButton != null) {
             addUnitButton.setVisible(visible);
             addUnitButton.setManaged(visible);
-        }
-        if (navEquipmentButton != null) {
-            navEquipmentButton.setVisible(true);
-            navEquipmentButton.setManaged(true);
-        }
-        if (navCategoryButton != null) {
-            navCategoryButton.setVisible(true);
-            navCategoryButton.setManaged(true);
         }
     }    
 
@@ -212,7 +177,7 @@ public class UnitsListScreen implements Initializable {
             modal.setScene(new Scene(root));
             modal.showAndWait();
 
-            loadData(); // Refresh the table after adding
+            loadData(); // refresh the table after adding
         } catch (IOException e) {
             AlertUtil.showError("Navigation Error", "Could not load the Add Unit screen.");
             e.printStackTrace();
