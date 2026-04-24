@@ -91,6 +91,7 @@
                   <children>
                      <Region HBox.hgrow="ALWAYS" />
                      <Button fx:id="exportCsvButton" mnemonicParsing="false" onAction="#handleExportCsv" style="-fx-background-color: #2f7d32; -fx-text-fill: white;" text="Export CSV" />
+                     <Button fx:id="exportJsonButton" mnemonicParsing="false" onAction="#handleExportJson" style="-fx-background-color: #2d6fb0; -fx-text-fill: white;" text="Export JSON" />
                      <Button fx:id="exportPdfButton" mnemonicParsing="false" onAction="#handleExportPdf" style="-fx-background-color: #b14646; -fx-text-fill: white;" text="Export PDF" />
                   </children>
                </HBox>

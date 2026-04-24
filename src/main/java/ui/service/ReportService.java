@@ -222,6 +222,90 @@ public class ReportService {
         return new ExportSummary(targetFile, snapshot.totalUnits() + snapshot.totalTransactions());
     }
 
+    public ExportSummary exportToJson(Path targetFile) throws IOException, SQLException {
+        ReportSnapshot snapshot = loadReportData();
+        StringBuilder json = new StringBuilder();
+
+        json.append("{\n");
+        json.append("  \"summary\": {\n");
+        json.append("    \"totalUnits\": ").append(snapshot.totalUnits()).append(",\n");
+        json.append("    \"availableUnits\": ").append(snapshot.availableUnits()).append(",\n");
+        json.append("    \"checkedOutUnits\": ").append(snapshot.checkedOutUnits()).append(",\n");
+        json.append("    \"maintenanceUnits\": ").append(snapshot.maintenanceUnits()).append(",\n");
+        json.append("    \"totalTransactions\": ").append(snapshot.totalTransactions()).append("\n");
+        json.append("  },\n");
+
+        json.append("  \"statusBreakdown\": [\n");
+        for (int i = 0; i < snapshot.statusRows().size(); i++) {
+            StatusSummaryRow row = snapshot.statusRows().get(i);
+            json.append("    {\"status\": ").append(jsonString(row.status()))
+                .append(", \"count\": ").append(row.count()).append("}");
+            if (i < snapshot.statusRows().size() - 1) {
+                json.append(",");
+            }
+            json.append("\n");
+        }
+        json.append("  ],\n");
+
+        json.append("  \"categorySummary\": [\n");
+        for (int i = 0; i < snapshot.categoryRows().size(); i++) {
+            CategorySummaryRow row = snapshot.categoryRows().get(i);
+            json.append("    {\"categoryName\": ").append(jsonString(row.categoryName()))
+                .append(", \"totalUnits\": ").append(row.totalUnits())
+                .append(", \"available\": ").append(row.available())
+                .append(", \"checkedOut\": ").append(row.checkedOut())
+                .append(", \"maintenance\": ").append(row.maintenance())
+                .append(", \"other\": ").append(row.other())
+                .append("}");
+            if (i < snapshot.categoryRows().size() - 1) {
+                json.append(",");
+            }
+            json.append("\n");
+        }
+        json.append("  ],\n");
+
+        json.append("  \"equipmentSummary\": [\n");
+        for (int i = 0; i < snapshot.equipmentRows().size(); i++) {
+            EquipmentSummaryRow row = snapshot.equipmentRows().get(i);
+            json.append("    {\"equipmentName\": ").append(jsonString(row.equipmentName()))
+                .append(", \"totalUnits\": ").append(row.totalUnits())
+                .append(", \"available\": ").append(row.available())
+                .append(", \"checkedOut\": ").append(row.checkedOut())
+                .append(", \"maintenance\": ").append(row.maintenance())
+                .append(", \"other\": ").append(row.other())
+                .append("}");
+            if (i < snapshot.equipmentRows().size() - 1) {
+                json.append(",");
+            }
+            json.append("\n");
+        }
+        json.append("  ],\n");
+
+        json.append("  \"recentTransactions\": [\n");
+        for (int i = 0; i < snapshot.transactionRows().size(); i++) {
+            TransactionSummaryRow row = snapshot.transactionRows().get(i);
+            json.append("    {")
+                .append("\"transactionId\": ").append(row.transactionId()).append(", ")
+                .append("\"unitLabel\": ").append(jsonString(row.unitLabel())).append(", ")
+                .append("\"borrowedByName\": ").append(jsonString(row.borrowedByName())).append(", ")
+                .append("\"processedByName\": ").append(jsonString(row.processedByName())).append(", ")
+                .append("\"borrowedDate\": ").append(jsonString(row.borrowedDate())).append(", ")
+                .append("\"returnDate\": ").append(jsonString(row.returnDate())).append(", ")
+                .append("\"status\": ").append(jsonString(row.status())).append(", ")
+                .append("\"remarks\": ").append(jsonString(row.remarks()))
+                .append("}");
+            if (i < snapshot.transactionRows().size() - 1) {
+                json.append(",");
+            }
+            json.append("\n");
+        }
+        json.append("  ]\n");
+        json.append("}\n");
+
+        Files.writeString(targetFile, json.toString(), StandardCharsets.UTF_8);
+        return new ExportSummary(targetFile, snapshot.totalUnits() + snapshot.totalTransactions());
+    }
+
     public ExportSummary exportToPdf(Path targetFile) throws IOException, SQLException {
         ReportSnapshot snapshot = loadReportData();
         try (OutputStream output = Files.newOutputStream(targetFile)) {
@@ -350,6 +434,18 @@ public class ReportService {
             return '"' + text.replace("\"", "\"\"") + '"';
         }
         return text;
+    }
+
+    private String jsonString(String value) {
+        if (value == null) {
+            return "null";
+        }
+        return "\"" + value
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
+            .replace("\t", "\\t") + "\"";
     }
 
     private String formatDateTime(LocalDateTime dateTime) {

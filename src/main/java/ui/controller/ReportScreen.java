@@ -65,6 +65,7 @@ public class ReportScreen implements Initializable {
     @FXML private BarChart<String, Number> equipmentBarChart;
 
     @FXML private Button exportCsvButton;
+    @FXML private Button exportJsonButton;
     @FXML private Button exportPdfButton;
 
     private final ReportService reportService = new ReportService();
@@ -134,6 +135,11 @@ public class ReportScreen implements Initializable {
     @FXML
     private void handleExportCsv(ActionEvent event) {
         exportReport("CSV", "report-summary.csv", "*.csv", path -> reportService.exportToCsv(path));
+    }
+
+    @FXML
+    private void handleExportJson(ActionEvent event) {
+        exportReport("JSON", "report-summary.json", "*.json", path -> reportService.exportToJson(path));
     }
 
     @FXML
