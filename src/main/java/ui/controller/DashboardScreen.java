@@ -85,6 +85,10 @@ public class DashboardScreen implements Initializable {
         }
         if (adminMode) {
             setActiveButton(dashboardButton);
+        } else {
+            setActiveButton(unitsButton);
+        }
+        if (usernameLabel != null) {
             try {
                 CredentialManager cm = new CredentialManager();
                 if (cm.exists()) {
@@ -95,8 +99,6 @@ public class DashboardScreen implements Initializable {
             } catch (IOException e) {
                 usernameLabel.setText("Unknown");
             }
-        } else {
-            setActiveButton(unitsButton);
         }
 
         if (!adminMode) {
