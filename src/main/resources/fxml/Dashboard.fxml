@@ -53,7 +53,7 @@
                      <children>
                         <Label fx:id="usernameLabel" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #283044;" />
                         <Label style="-fx-text-fill: #78A1BB; -fx-font-size: 13px;" text="&#x25CF;" />
-                        <Label style="-fx-text-fill: #78A1BB; -fx-font-size: 13px;" text="Admin" />
+                        <Label fx:id="roleLabel" style="-fx-text-fill: #78A1BB; -fx-font-size: 13px;" />
                      </children>
                   </HBox>
                </children>

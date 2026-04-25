@@ -58,6 +58,8 @@ public class DashboardScreen implements Initializable {
     private Label transactionCountLabel;
     @FXML
     private Label usernameLabel;
+    @FXML
+    private Label roleLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -88,13 +90,15 @@ public class DashboardScreen implements Initializable {
         } else {
             setActiveButton(unitsButton);
         }
-        if (usernameLabel != null) {
+        if (usernameLabel != null && roleLabel != null) {
             try {
                 CredentialManager cm = new CredentialManager();
                 if (cm.exists()) {
                     Properties props = cm.load();
                     String appUser = props.getProperty("app_user", "Unknown");
+                    String appRole = props.getProperty("app_mode", "Unknown");
                     usernameLabel.setText(appUser);
+                    roleLabel.setText(appRole);
                 }
             } catch (IOException e) {
                 usernameLabel.setText("Unknown");
