@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -30,8 +31,9 @@
                <Button fx:id="employeesButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleEmployees" prefHeight="35.0" styleClass="nav-button" text="Employees" />
                <Button fx:id="reportsButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleReports" prefHeight="35.0" styleClass="nav-button" text="Reports" />
                <Button fx:id="importExportButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleImportExport" prefHeight="35.0" styleClass="nav-button" text="Import / Export" />
-               
-               <VBox VBox.vgrow="ALWAYS" /> <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleExit" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #e05555; -fx-font-size: 13px; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 24; -fx-background-radius: 6;" text="⏻  Exit" />
+
+               <VBox VBox.vgrow="ALWAYS" />
+               <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#handleExit" prefHeight="40.0" style="-fx-background-color: transparent; -fx-text-fill: #e05555; -fx-font-size: 13px; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 24; -fx-background-radius: 6;" text="⏻  Exit" />
             </children>
             <padding>
                <Insets bottom="15.0" left="6.0" right="6.0" top="5.0" />
@@ -46,7 +48,14 @@
             <HBox alignment="CENTER_LEFT" prefHeight="71.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 0 0 1 0;">
                <padding><Insets left="24.0" right="24.0" /></padding>
                <children>
-                  <Label fx:id="pageLabel" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #212121;" text="Welcome" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <Label fx:id="usernameLabel" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #283044;" />
+                        <Label style="-fx-text-fill: #78A1BB; -fx-font-size: 13px;" text="&#x25CF;" />
+                        <Label style="-fx-text-fill: #78A1BB; -fx-font-size: 13px;" text="Admin" />
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </top>
@@ -55,6 +64,7 @@
             <VBox spacing="24.0">
                <padding><Insets bottom="30.0" left="30.0" right="30.0" top="30.0" /></padding>
                <children>
+                  <Label style="-fx-font-size: 22px; -fx-font-weight: 700; -fx-text-fill: #212121;" text="Dashboard" />
                   <GridPane hgap="20.0" vgap="20.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
@@ -128,7 +138,7 @@
                               </VBox>
                               <HBox style="-fx-border-color: #a8d5b5; -fx-border-width: 1 0 0 0; -fx-padding: 8 0 0 0;">
                                  <children>
-                                    <Label onMouseClicked="#handleTransactionsClick" style="-fx-text-fill: #283044; -fx-font-size: 12px; -fx-cursor: hand;" text="More info →" />
+                                    <Label onMouseClicked="#handleTransactionsClick" style="-fx-text-fill: #283044; -fx-font-size: 12px; -fx-cursor: hand;" text="More info" />
                                  </children>
                               </HBox>
                            </children>

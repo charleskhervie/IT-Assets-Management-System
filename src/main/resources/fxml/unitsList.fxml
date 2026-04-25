@@ -22,6 +22,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" spacing="12.0">
                <children>
+                   <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #212121;" text="Units List" />
                   <Region HBox.hgrow="ALWAYS" />
                   <Button fx:id="addUnitButton" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #283044; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;" text="+ Add Unit" />
                </children>
@@ -57,7 +58,7 @@
             <!-- Table -->
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <TableView fx:id="unitsTable" prefWidth="1060.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;">
+                  <TableView fx:id="unitsTable" style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;">
                      <columns>
                         <TableColumn fx:id="idColumn" prefWidth="60.0" text="ID" />
                         <TableColumn fx:id="serialColumn" prefWidth="160.0" text="Serial No." />
@@ -65,7 +66,6 @@
                         <TableColumn fx:id="addedByColumn" prefWidth="130.0" text="Added By" />
                         <TableColumn fx:id="statusColumn" prefWidth="120.0" text="Status" />
                         <TableColumn fx:id="assignedToColumn" prefWidth="150.0" text="Assigned To" />
-                        <TableColumn fx:id="actionsColumn" prefWidth="160.0" text="Actions" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />

@@ -21,6 +21,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" spacing="12.0">
                <children>
+                   <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #212121;" text="Equipment List" />
                   <Region HBox.hgrow="ALWAYS" />
                   <Button fx:id="addEquipmentButton" mnemonicParsing="false" onAction="#handleAddEquipment"
                           prefHeight="36.0" prefWidth="140.0"
@@ -57,11 +58,11 @@
             <Region prefHeight="14.0" />
 
             <!-- Table -->
-            <ScrollPane fitToHeight="true" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
                         style="-fx-background-color: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
                <content>
-                  <TableView fx:id="unitsTable1" prefWidth="1060.0"
-                             style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;">
+                  <TableView fx:id="unitsTable1"
+                        style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;">
                      <columns>
                         <TableColumn fx:id="idColumn1" prefWidth="150.0" text="Equipment ID" />
                         <TableColumn fx:id="serialColumn1" prefWidth="180.0" text="Equipment Name" />
@@ -69,7 +70,6 @@
                         <TableColumn fx:id="addedByColumn1" prefWidth="150.0" text="Model" />
                         <TableColumn fx:id="addedByColumn11" prefWidth="220.0" text="Specifications" />
                         <TableColumn fx:id="statusColumn1" prefWidth="130.0" text="Category" />
-                        <TableColumn prefWidth="180.0" text="Actions" />
                      </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
