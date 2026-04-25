@@ -29,27 +29,99 @@ import java.util.ResourceBundle;
 
 public class EmployeeScreen implements Initializable {
 
+    @FXML private TextField searchField;
     @FXML private TableView<Employee> employeeTable;
     @FXML private TableColumn<Employee, Integer> idColumn;
     @FXML private TableColumn<Employee, String> usernameColumn;
     @FXML private TableColumn<Employee, String> fullNameColumn;
     @FXML private TableColumn<Employee, String> roleColumn;
     @FXML private TableColumn<Employee, Integer> departmentColumn;
+    @FXML private Button prevButton;
+    @FXML private Button nextButton;
+    @FXML private Label pageLabel;
 
     private final EmployeeHandler handler = new EmployeeHandler();
     private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
     private final ObservableList<Employee> masterList = FXCollections.observableArrayList();
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 0;
+    private java.util.List<Employee> currentFilteredData = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         EmployeeTableUtil.setupColumns(idColumn, usernameColumn, fullNameColumn, roleColumn, departmentColumn);
         setupContextMenu();
+        initFilterListeners();
         loadData();
     }
+
+    private void initFilterListeners() {
+        if (searchField != null) {
+            searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
+        }
+    }
+
+    private void applyFilters() {
+        String keyword = searchField != null ? searchField.getText().toLowerCase().trim() : "";
+        currentFilteredData = masterList.stream()
+            .filter(employee -> matchesKeyword(employee, keyword))
+            .collect(java.util.stream.Collectors.toList());
+        currentPage = 0;
+        updatePage();
+    }
+
+    private boolean matchesKeyword(Employee employee, String keyword) {
+        if (keyword.isEmpty()) {
+            return true;
+        }
+        return String.valueOf(employee.getEmpId()).contains(keyword)
+            || containsKeyword(employee.getUsername(), keyword)
+            || containsKeyword(employee.getFullName(), keyword)
+            || containsKeyword(employee.getRole(), keyword)
+            || String.valueOf(employee.getDepartmentId()).contains(keyword);
+    }
+
+    private boolean containsKeyword(String value, String keyword) {
+        return value != null && value.toLowerCase().contains(keyword);
+    }
+
+    private void updatePage() {
+        int fromIndex = currentPage * PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + PAGE_SIZE, currentFilteredData.size());
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+
+        employeeTable.setItems(FXCollections.observableArrayList(
+            currentFilteredData.subList(fromIndex, toIndex)
+        ));
+
+        if (pageLabel != null)
+            pageLabel.setText("Page " + (currentPage + 1) + " of " + totalPages);
+        if (prevButton != null)
+            prevButton.setDisable(currentPage == 0);
+        if (nextButton != null)
+            nextButton.setDisable(currentPage >= totalPages - 1);
+    }
+
+    @FXML private void handlePrev(ActionEvent event) {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePage();
+        }
+    }
+
+    @FXML private void handleNext(ActionEvent event) {
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePage();
+        }
+    }
+
     public void loadData() {
         
         masterList.setAll(handler.getEmployees(employeeDAO));
-        employeeTable.setItems(masterList);
+        applyFilters();
         
     }
     @FXML

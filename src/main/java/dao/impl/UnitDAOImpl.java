@@ -102,7 +102,6 @@ public class UnitDAOImpl implements UnitDAO {
             left join equipment e on u.equipment_id = e.equipment_id
             left join employees emp on u.added_by = emp.emp_id
             left join employees assigned_emp on u.assigned_to = assigned_emp.emp_id
-            where u.is_deleted = FALSE
         """;
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query);
