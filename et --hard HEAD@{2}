@@ -1,0 +1,15 @@
+[33ma9bbd34[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{0}: pull --rebase origin dev (finish): returning to refs/heads/dev
+[33ma9bbd34[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m)[m HEAD@{1}: pull --rebase origin dev (start): checkout a9bbd34d3f5532b4f9cfb4098d66a1d908cd19f1
+[33m6466dbe[m HEAD@{2}: commit: Fix the functionality of import and organize then add a InventoryImportWriter
+[33mc263c69[m HEAD@{3}: pull origin dev: Merge made by the 'ort' strategy.
+[33mbc908dc[m HEAD@{4}: commit: Add functionality on import
+[33mf078ad1[m HEAD@{5}: pull origin dev: Fast-forward
+[33mabda1e8[m HEAD@{6}: pull origin dev: Fast-forward
+[33md83228d[m HEAD@{7}: pull origin dev: Fast-forward
+[33m62c91b1[m HEAD@{8}: commit: Add functionality on import/export,Create folder services with two files, add Import/ExportScreen in controller
+[33mdbd861e[m HEAD@{9}: pull origin dev: Fast-forward
+[33m3fa262b[m HEAD@{10}: commit: just add comments
+[33m1056a89[m[33m ([m[1;32mmain[m[33m)[m HEAD@{11}: checkout: moving from main to dev
+[33m1056a89[m[33m ([m[1;32mmain[m[33m)[m HEAD@{12}: commit: Add EmployeeHandler,Modify EmployeeDAOImpl,Add EmployeeModalScreen,EmployeeTableUtil
+[33m690c097[m HEAD@{13}: reset: moving to origin/dev
+[33m3dfd35f[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{14}: clone: from https://github.com/charleskhervie/IT-Assets-Management-System.git
