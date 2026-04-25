@@ -1,8 +1,10 @@
 package ui.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import dao.dao_util.CredentialManager;
 import dao.handler.EmployeeHandler;
 import dao.handler.EquipmentHandler;
 import dao.handler.TransactionHandler;
@@ -24,6 +26,7 @@ import javafx.scene.layout.BorderPane;
 import ui.util.NavigationUtil;
 
 import java.util.Optional;
+import java.util.Properties;
 
 public class DashboardScreen implements Initializable {
 
@@ -54,7 +57,7 @@ public class DashboardScreen implements Initializable {
     @FXML 
     private Label transactionCountLabel;
     @FXML
-    private Label pageLabel;
+    private Label usernameLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -82,10 +85,18 @@ public class DashboardScreen implements Initializable {
         }
         if (adminMode) {
             setActiveButton(dashboardButton);
-            if (pageLabel != null) pageLabel.setText("Dashboard");
+            try {
+                CredentialManager cm = new CredentialManager();
+                if (cm.exists()) {
+                    Properties props = cm.load();
+                    String appUser = props.getProperty("app_user", "Unknown");
+                    usernameLabel.setText(appUser);
+                }
+            } catch (IOException e) {
+                usernameLabel.setText("Unknown");
+            }
         } else {
             setActiveButton(unitsButton);
-            if (pageLabel != null) pageLabel.setText("Dashboard");
         }
 
         if (!adminMode) {
@@ -97,62 +108,50 @@ public class DashboardScreen implements Initializable {
 
     @FXML private void handleUnits(ActionEvent event){ 
         setActiveButton(unitsButton);
-        if (pageLabel != null) pageLabel.setText("Units List");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/unitsList.fxml"); 
     }
     @FXML private void handleTransactions(ActionEvent event){ 
         setActiveButton(transactionsButton);
-        if (pageLabel != null) pageLabel.setText("Transactions");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/Transaction.fxml"); 
     }
     @FXML private void handleEmployees(ActionEvent event){ 
         setActiveButton(employeesButton);
-        if (pageLabel != null) pageLabel.setText("Employees");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/Employee.fxml"); 
     }
     @FXML private void handleReports(ActionEvent event){ 
         setActiveButton(reportsButton);
-        if (pageLabel != null) pageLabel.setText("Reports");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/report.fxml"); 
     }
     @FXML private void handleNavEquipment(ActionEvent event) {
         setActiveButton(equipmentButton);
-        if (pageLabel != null) pageLabel.setText("Equipment");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/equipmentList.fxml");
     }
     @FXML private void handleNavCategory(ActionEvent event) {
         setActiveButton(categoryButton);
-        if (pageLabel != null) pageLabel.setText("Categories");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/categoryList.fxml");
     }
     @FXML private void handleDashboard(ActionEvent event){ 
         setActiveButton(dashboardButton);
-        if (pageLabel != null) pageLabel.setText("Dashboard");
         NavigationUtil.loadScene(event, "/fxml/Dashboard.fxml"); 
     }
     @FXML private void handleImportExport(ActionEvent event){ 
         setActiveButton(importExportButton);
-        if (pageLabel != null) pageLabel.setText("Import / Export");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/importExport.fxml"); 
     }
     @FXML private void handleUnitsClick(MouseEvent event){    
         setActiveButton(unitsButton);
-        if (pageLabel != null) pageLabel.setText("Units List");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/unitsList.fxml"); 
     }
     @FXML private void handleEquipmentClick(MouseEvent event){    
         setActiveButton(equipmentButton);
-        if (pageLabel != null) pageLabel.setText("Equipment");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/equipmentList.fxml"); 
     }
     @FXML private void handleEmployeesClick(MouseEvent event){    
         setActiveButton(employeesButton);
-        if (pageLabel != null) pageLabel.setText("Employees");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/Employee.fxml"); 
     }
     @FXML private void handleTransactionsClick(MouseEvent event){    
         setActiveButton(transactionsButton);
-        if (pageLabel != null) pageLabel.setText("Transactions");
         NavigationUtil.loadIntoDashboardFromPane(rootPane, "/fxml/Transaction.fxml"); 
     }
 

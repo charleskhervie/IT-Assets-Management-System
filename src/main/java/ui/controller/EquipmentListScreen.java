@@ -59,14 +59,18 @@ public class EquipmentListScreen implements Initializable {
     }
 
     private void initTable() {
-        EquipmentTableUtil.setupColumns(idColumn1, serialColumn1, equipmentColumn1,
-                addedByColumn1, addedByColumn11, statusColumn1);
+        EquipmentTableUtil.setupColumns(
+            unitsTable1,
+            idColumn1, serialColumn1, equipmentColumn1,
+            addedByColumn1, addedByColumn11, statusColumn1,
+            e -> handleEditSelected(),
+            e -> handleDeleteSelected()
+        );
 
         MenuItem editItem = new MenuItem("Edit Equipment");
         MenuItem deleteItem = new MenuItem("Delete Selected");
         editItem.setOnAction(e -> handleEditSelected());
         deleteItem.setOnAction(e -> handleDeleteSelected());
-
         EquipmentTableUtil.setupContextMenu(unitsTable1, editItem, deleteItem);
 
         filteredList = new FilteredList<>(masterList, e -> true);

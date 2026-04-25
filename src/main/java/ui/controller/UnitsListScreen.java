@@ -40,7 +40,6 @@ public class UnitsListScreen implements Initializable {
     @FXML private TableColumn<Unit, Integer> addedByColumn;
     @FXML private TableColumn<Unit, String> statusColumn;
     @FXML private TableColumn<Unit, Integer> assignedToColumn;
-    @FXML private TableColumn<Unit, Void> actionsColumn;
     @FXML private Button checkOutButton;
     @FXML private Button checkInButton;
     @FXML private Button addUnitButton;
@@ -110,14 +109,19 @@ public class UnitsListScreen implements Initializable {
 
    @SuppressWarnings("unchecked")
     private void initTable() {
-        UnitTableUtil.setupColumns((TableView<Object>) (TableView<?>) unitsTable);
-
         if (AdminUtil.isAdminMode()) {
+            UnitTableUtil.setupColumns(
+                (TableView<Object>) (TableView<?>) unitsTable,
+                e -> handleEditSelected(),
+                e -> handleDeleteSelected()
+            );
             MenuItem editItem = new MenuItem("Edit Unit");
             MenuItem deleteItem = new MenuItem("Delete Selected");
             editItem.setOnAction(e -> handleEditSelected());
             deleteItem.setOnAction(e -> handleDeleteSelected());
             UnitTableUtil.setupContextMenu((TableView<Object>) (TableView<?>) unitsTable, editItem, deleteItem);
+        } else {
+            UnitTableUtil.setupColumns((TableView<Object>) (TableView<?>) unitsTable);
         }
 
         filteredList = new FilteredList<>(masterList, u -> true);
@@ -186,15 +190,14 @@ public class UnitsListScreen implements Initializable {
 
     private void handleDeleteSelected() {
         List<Unit> selected = new ArrayList<>(unitsTable.getSelectionModel().getSelectedItems());
-        if (selected.isEmpty()){
-            return;
-        }
-        boolean alert = AlertUtil.showConfirmation("Delete Units", "Are you sure you want to delete " + selected.size() + " unit(s)?");
-        if (!alert){
-            return;
-        }
+        if (selected.isEmpty()) return; // ← was this returning early?
+
+        boolean alert = AlertUtil.showConfirmation("Delete Units", 
+            "Are you sure you want to delete " + selected.size() + " unit(s)?");
+        if (!alert) return;
+
         List<String> errors = deleteUnits(selected);
-        if (!errors.isEmpty()){
+        if (!errors.isEmpty()) {
             AlertUtil.showError("Some Deletions Failed", String.join("\n", errors));
         }
         loadData();

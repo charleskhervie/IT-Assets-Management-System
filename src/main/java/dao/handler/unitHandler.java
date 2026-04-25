@@ -58,7 +58,7 @@ public class unitHandler {
             if (!units.isEmpty() && "checked-out".equalsIgnoreCase(units.get(0).getStatus())) {
                 return "Cannot delete a checked-out unit. Check it in first.";
             }
-            dao.delete(unitId);
+            dao.softDelete(unitId);
             return null;
         } catch (SQLException e) {
             return "Failed to delete: " + e.getMessage();

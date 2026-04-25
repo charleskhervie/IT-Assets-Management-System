@@ -56,13 +56,17 @@ public class CategoryListScreen implements Initializable {
     }
 
     private void initTable() {
-        CategoryTableUtil.setupColumns(idColumn11, serialColumn11);
+        CategoryTableUtil.setupColumns(
+            unitsTable11,
+            idColumn11, serialColumn11,
+            e -> handleEditSelected(),
+            e -> handleDeleteSelected()
+        );
 
         MenuItem editItem = new MenuItem("Edit Category");
         MenuItem deleteItem = new MenuItem("Delete Selected");
         editItem.setOnAction(e -> handleEditSelected());
         deleteItem.setOnAction(e -> handleDeleteSelected());
-
         CategoryTableUtil.setupContextMenu(unitsTable11, editItem, deleteItem);
 
         filteredList = new FilteredList<>(masterList, e -> true);

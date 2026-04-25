@@ -48,6 +48,9 @@ public class EquipmentHandler {
             dao.delete(equipmentId);
             return null;
         } catch (SQLException e) {
+             if (e.getMessage() != null && e.getMessage().toLowerCase().contains("foreign key")) {
+                return "Cannot delete equipment. Delete units that reference this equipment first.";
+            }
             return "Failed to delete equipment: " + e.getMessage();
         }
     }
