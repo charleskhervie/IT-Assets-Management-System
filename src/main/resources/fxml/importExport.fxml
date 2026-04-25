@@ -26,7 +26,6 @@
                   <VBox spacing="2.0">
                      <children>
                         <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #212121;" text="Import / Export" />
-                        <Label style="-fx-text-fill: #78A1BB; -fx-font-size: 12px;" text="Move inventory data in and out using validated file formats" />
                      </children>
                   </VBox>
                </children>

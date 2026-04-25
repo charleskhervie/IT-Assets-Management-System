@@ -28,6 +28,7 @@ public class EquipmentTableUtil {
         specificationsColumn.setCellValueFactory(new PropertyValueFactory<>("specifications"));
         categoryIdColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
 
+        if (onEdit != null || onDelete != null) {
         TableColumn<Equipment, Void> actionsCol = new TableColumn<>("Actions");
         actionsCol.setPrefWidth(160);
         actionsCol.setStyle("-fx-alignment: CENTER;");
@@ -63,7 +64,9 @@ public class EquipmentTableUtil {
         });
 
         table.getColumns().add(actionsCol);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+    }
+
+    table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
     public static void setupContextMenu(TableView<Equipment> table, MenuItem... items) {
