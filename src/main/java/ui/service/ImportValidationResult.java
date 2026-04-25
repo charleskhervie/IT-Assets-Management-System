@@ -10,7 +10,7 @@ public record ImportValidationResult(
         List<ImportIssue> issues) {
 
     public int validRecords() {
-        return snapshot.totalRecords();
+        return Math.max(0, totalRecords - issueCount());
     }
 
     public int issueCount() {

@@ -18,6 +18,7 @@ import dao.model.Equipment;
 import dao.model.Transaction;
 import dao.model.Unit;
 import ui.util.InventoryExportUtil;
+import ui.util.InventoryImportUtil;
 
 public class InventoryCsvService {
 
@@ -134,7 +135,7 @@ public class InventoryCsvService {
     public ImportSummary importFromCsv(Path sourceFile, boolean skipDuplicates) throws IOException {
         ImportValidationResult validation = validateImport(sourceFile, skipDuplicates);
         try {
-            return importUtil.appendAll(sourceFile, validation.snapshot());
+            return importUtil.importAll(sourceFile, validation.snapshot());
         } catch (Exception e) {
             throw new IOException("CSV import failed: " + e.getMessage(), e);
         }
@@ -241,7 +242,7 @@ public class InventoryCsvService {
 
         InventorySnapshot snapshot = new InventorySnapshot(departments, employees, categories, equipment, units, transactions);
         try {
-            issues.addAll(importUtil.previewAppendIssues(snapshot));
+            issues.addAll(importUtil.validate(snapshot));
         } catch (Exception e) {
             throw new IOException("CSV import validation failed: " + e.getMessage(), e);
         }

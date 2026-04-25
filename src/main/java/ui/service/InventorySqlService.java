@@ -17,6 +17,7 @@ import dao.model.Equipment;
 import dao.model.Transaction;
 import dao.model.Unit;
 import ui.util.InventoryExportUtil;
+import ui.util.InventoryImportUtil;
 
 public class InventorySqlService {
 
@@ -68,7 +69,7 @@ public class InventorySqlService {
     public ImportSummary importFromSql(Path sourceFile, boolean skipDuplicates) throws IOException {
         ImportValidationResult validation = validateImport(sourceFile, skipDuplicates);
         try {
-            return importUtil.appendAll(sourceFile, validation.snapshot());
+            return importUtil.importAll(sourceFile, validation.snapshot());
         } catch (Exception e) {
             throw new IOException("SQL import failed: " + e.getMessage(), e);
         }
@@ -79,7 +80,7 @@ public class InventorySqlService {
         ImportValidationResult parsed = parseSnapshotFromPlan(plan);
         List<ImportIssue> issues = new ArrayList<>(parsed.issues());
         try {
-            issues.addAll(importUtil.previewAppendIssues(parsed.snapshot()));
+            issues.addAll(importUtil.validate(parsed.snapshot()));
         } catch (Exception e) {
             throw new IOException("SQL import validation failed: " + e.getMessage(), e);
         }

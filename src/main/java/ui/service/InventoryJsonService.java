@@ -20,6 +20,7 @@ import dao.model.Equipment;
 import dao.model.Transaction;
 import dao.model.Unit;
 import ui.util.InventoryExportUtil;
+import ui.util.InventoryImportUtil;
 
 public class InventoryJsonService {
 
@@ -66,7 +67,7 @@ public class InventoryJsonService {
     public ImportSummary importFromJson(Path sourceFile, boolean skipDuplicates) throws IOException {
         ImportValidationResult validation = validateImport(sourceFile, skipDuplicates);
         try {
-            return importUtil.appendAll(sourceFile, validation.snapshot());
+            return importUtil.importAll(sourceFile, validation.snapshot());
         } catch (Exception e) {
             throw new IOException("JSON import failed: " + e.getMessage(), e);
         }
@@ -101,7 +102,7 @@ public class InventoryJsonService {
 
         InventorySnapshot snapshot = new InventorySnapshot(departments, employees, categories, equipment, units, transactions);
         try {
-            issues.addAll(importUtil.previewAppendIssues(snapshot));
+            issues.addAll(importUtil.validate(snapshot));
         } catch (Exception e) {
             throw new IOException("JSON import validation failed: " + e.getMessage(), e);
         }
