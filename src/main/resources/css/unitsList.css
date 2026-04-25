@@ -1,0 +1,17 @@
+.action-column-button {
+    -fx-background-color: #78A1BB;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.check-in-style {
+    -fx-background-color: #283044;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+.column-action-button:disabled {
+    -fx-background-color: #1a1a1a !important; 
+    -fx-text-fill: #555555 !important;
+    -fx-opacity: 1.0 !important;              
+    -fx-cursor: default;
+}

@@ -28,7 +28,12 @@ public class CheckOutScreen {
     private final TransactionHandler handler = new TransactionHandler();
     private final TransactionDAO transactionDAO = new TransactionDAOImpl();
     private final UnitDAO unitDAO = new UnitDAOImpl();
-
+    public void setTargetUnit(Unit unit) {
+        if (unit != null) {
+            serialNoField.setText(unit.getSerialNumber());
+            serialNoField.setEditable(false); 
+        }
+    }
     public void initialize() {
         Employee loggedIn = SessionManager.getLoggedInEmployee();
         if (loggedIn != null) {

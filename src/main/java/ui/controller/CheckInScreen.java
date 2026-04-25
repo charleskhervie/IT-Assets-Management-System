@@ -8,6 +8,7 @@ import dao.impl.TransactionDAOImpl;
 import dao.intfc.TransactionDAO;
 import dao.model.Employee;
 import dao.model.Transaction;
+import dao.model.Unit;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
@@ -26,7 +27,16 @@ public class CheckInScreen implements Initializable {
     private final TransactionHandler handler = new TransactionHandler();
     private final TransactionDAO transactionDAO = new TransactionDAOImpl();
     private List<Transaction> checkedOutTransactions;
+    public void setTargetUnit(Unit unit) {
+        if (unit == null || checkedOutTransactions == null) return;
 
+        for (int i = 0; i < checkedOutTransactions.size(); i++) {
+            if (checkedOutTransactions.get(i).getUnitId() == unit.getUnitId()) {
+                checkInComboBox.getSelectionModel().select(i);
+                break;
+            }
+        }
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Employee emp = SessionManager.getLoggedInEmployee();
@@ -41,10 +51,10 @@ public class CheckInScreen implements Initializable {
             checkInComboBox.setValue("No checked-out items");
             checkInComboBox.setDisable(true);
         } else {
+            checkInComboBox.getItems().clear();
             for (Transaction t : checkedOutTransactions) {
                 checkInComboBox.getItems().add("Unit " + t.getUnitId() + " (Transaction #" + t.getTransactionId() + ")");
             }
-            checkInComboBox.getSelectionModel().selectFirst();
         }
     }
 

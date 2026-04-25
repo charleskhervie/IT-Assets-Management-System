@@ -95,6 +95,87 @@ public class UnitTableUtil {
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
+    public static void setupColumnsWithActions(TableView<Object> table,
+        String btn1Label, String btn1Style, EventHandler<ActionEvent> onBtn1,
+        String btn2Label, String btn2Style, EventHandler<ActionEvent> onBtn2) {
+    
+        table.getColumns().clear();
+
+        // Standard Columns
+        TableColumn<Object, Integer> idCol = new TableColumn<>("ID");
+        TableColumn<Object, String> serialCol = new TableColumn<>("Serial No.");
+        TableColumn<Object, String> equipmentCol = new TableColumn<>("Equipment");
+        TableColumn<Object, String> addedByCol = new TableColumn<>("Added By");
+        TableColumn<Object, String> statusCol = new TableColumn<>("Status");
+        TableColumn<Object, String> assignedToCol = new TableColumn<>("Assigned To");
+
+        idCol.setCellValueFactory(new PropertyValueFactory<>("unitId"));
+        serialCol.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
+        equipmentCol.setCellValueFactory(new PropertyValueFactory<>("equipmentName"));
+        addedByCol.setCellValueFactory(new PropertyValueFactory<>("addedByName"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        assignedToCol.setCellValueFactory(new PropertyValueFactory<>("assignedToName"));
+
+        idCol.setPrefWidth(60); serialCol.setPrefWidth(160);
+        equipmentCol.setPrefWidth(180); addedByCol.setPrefWidth(130);
+        statusCol.setPrefWidth(120); assignedToCol.setPrefWidth(150);
+
+        table.getColumns().addAll(idCol, serialCol, equipmentCol, addedByCol, statusCol, assignedToCol);
+
+        if (onBtn1 != null || onBtn2 != null) {
+            TableColumn<Object, Void> actionsCol = new TableColumn<>("Actions");
+            actionsCol.setStyle("-fx-alignment: CENTER;");
+            
+            actionsCol.setCellFactory(col -> new TableCell<>() {
+                private final Button btn1 = new Button(btn1Label);
+                private final Button btn2 = new Button(btn2Label);
+                private final HBox box = new HBox(8, btn1, btn2);
+
+                {
+                    box.setAlignment(javafx.geometry.Pos.CENTER);
+                    btn1.setStyle(btn1Style);
+                    btn2.setStyle(btn2Style);
+
+                    btn1.getStyleClass().add("column-button");
+                    btn2.getStyleClass().add("column-button");
+
+                    btn1.setOnAction(e -> {
+                        table.getSelectionModel().select(getIndex());
+                        onBtn1.handle(e);
+                    });
+                    btn2.setOnAction(e -> {
+                        table.getSelectionModel().select(getIndex());
+                        onBtn2.handle(e);
+                    });
+                }
+
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        Object rowData = getTableView().getItems().get(getIndex());
+                        if (rowData instanceof dao.model.Unit) {
+                            dao.model.Unit unit = (dao.model.Unit) rowData;
+                            String status = unit.getStatus().toLowerCase();
+
+                            if (btn1.getText().equalsIgnoreCase("Check Out")) {
+                                btn1.setDisable(status.equals("checked-out") || status.equals("maintenance"));
+                            }
+                            if (btn2.getText().equalsIgnoreCase("Check In")) {
+                                btn2.setDisable(status.equals("available"));
+                            }
+                        }
+                        setGraphic(box);
+                    }
+                }
+            });
+            table.getColumns().add(actionsCol);
+        }
+
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+    }
 
     public static void setupContextMenu(TableView<Object> table, MenuItem... items) {
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

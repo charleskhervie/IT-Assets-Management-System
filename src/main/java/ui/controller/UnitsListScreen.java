@@ -54,9 +54,9 @@ public class UnitsListScreen implements Initializable {
     private List<Unit> currentFilteredData = new ArrayList<>();
 
     private static final String STATUS_ALL = "All";
-    private static final String STATUS_AVAILABLE = "available";
-    private static final String STATUS_CHECKED_OUT = "checked-out";
-    private static final String STATUS_MAINTENANCE = "maintenance";
+    private static final String STATUS_AVAILABLE = "Available";
+    private static final String STATUS_CHECKED_OUT = "Checked-out";
+    private static final String STATUS_MAINTENANCE = "Maintenance";
 
     private final unitHandler handler = new unitHandler();
     private final ObservableList<Unit> masterList = FXCollections.observableArrayList();
@@ -71,7 +71,9 @@ public class UnitsListScreen implements Initializable {
         initFilterListeners();
         initButtonVisibility();
         loadData();
+        
     }
+    
 
      private void initFilterListeners() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
@@ -115,25 +117,90 @@ public class UnitsListScreen implements Initializable {
 
    @SuppressWarnings("unchecked")
     private void initTable() {
+        String editStyle = "-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+        String deleteStyle = "-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+        String checkOutStyle = "-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+        String checkInStyle = "-fx-background-color: #283044; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+
         if (AdminUtil.isAdminMode()) {
-            UnitTableUtil.setupColumns(
+            UnitTableUtil.setupColumnsWithActions(
                 (TableView<Object>) (TableView<?>) unitsTable,
-                e -> handleEditSelected(),
-                e -> handleDeleteSelected()
+                "Edit", editStyle, e -> handleEditSelected(),
+                "Delete", deleteStyle, e -> handleDeleteSelected()
             );
-            MenuItem editItem = new MenuItem("Edit Unit");
-            MenuItem deleteItem = new MenuItem("Delete Selected");
-            editItem.setOnAction(e -> handleEditSelected());
-            deleteItem.setOnAction(e -> handleDeleteSelected());
-            UnitTableUtil.setupContextMenu((TableView<Object>) (TableView<?>) unitsTable, editItem, deleteItem);
         } else {
-            UnitTableUtil.setupColumns((TableView<Object>) (TableView<?>) unitsTable);
+            UnitTableUtil.setupColumnsWithActions(
+                (TableView<Object>) (TableView<?>) unitsTable,
+                "Check Out", checkOutStyle, e -> handleCheckOutInline(),
+                "Check In", checkInStyle, e -> handleCheckInInline()
+            );
         }
 
         currentFilteredData = new ArrayList<>(masterList);
         updatePage();
     }
+    private void handleCheckOutInline() {
+        
+        Unit selectedUnit = unitsTable.getSelectionModel().getSelectedItem();
+        
+        if (selectedUnit == null) {
+            AlertUtil.showError("Selection Error", "Please select a unit to check out.");
+            return;
+        }
+        if (selectedUnit == null || "checked-out".equalsIgnoreCase(selectedUnit.getStatus()) 
+                                || "maintenance".equalsIgnoreCase(selectedUnit.getStatus())) {
+            return; 
+        }
 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
+            Parent root = loader.load();
+
+            CheckOutScreen controller = loader.getController();
+            controller.setTargetUnit(selectedUnit);
+
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Check Out");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+            loadData();
+        } catch (IOException e) {
+            AlertUtil.showError("Error", "Could not load Check-out screen.");
+        }
+    }
+
+    private void handleCheckInInline() {
+        Unit selectedUnit = unitsTable.getSelectionModel().getSelectedItem();
+        if (selectedUnit == null) {
+            AlertUtil.showError("Selection Error", "Please select a unit to check in.");
+            return;
+        }
+        if (selectedUnit == null || "available".equalsIgnoreCase(selectedUnit.getStatus())) {
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-in.fxml"));
+            Parent root = loader.load();
+
+            CheckInScreen controller = loader.getController();
+            controller.setTargetUnit(selectedUnit);
+
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Check In");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+            loadData();
+        } catch (IOException e) {
+            AlertUtil.showError("Error", "Could not load Check-in screen.");
+        }
+    }
     public void loadData() {
         masterList.setAll(handler.getUnitsDisplay(unitDAO));
         applyFilters();

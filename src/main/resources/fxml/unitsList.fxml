@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane style="-fx-background-color: #EBF5EE;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.UnitsListScreen">
+<BorderPane stylesheets="@../css/unitsList.css" style="-fx-background-color: #EBF5EE;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.UnitsListScreen">
    <top>
       <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 0 0 1 0;">
          <padding>
