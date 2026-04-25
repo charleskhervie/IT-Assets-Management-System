@@ -29,7 +29,7 @@ public class AddUnitScreen implements Initializable {
     @FXML private Button cancelButton;
 
 
-    private static final String DEFAULT_STATUS = "available";
+    private static final String DEFAULT_STATUS = "Available";
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String FALLBACK_USER_ID = "1";
 

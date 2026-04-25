@@ -40,51 +40,29 @@ public class UnitsListScreen implements Initializable {
     @FXML private TableColumn<Unit, Integer> addedByColumn;
     @FXML private TableColumn<Unit, String> statusColumn;
     @FXML private TableColumn<Unit, Integer> assignedToColumn;
-    @FXML private TableColumn<Unit, Void> actionsColumn;
     @FXML private Button checkOutButton;
     @FXML private Button checkInButton;
     @FXML private Button addUnitButton;
     @FXML private Button navEquipmentButton;
     @FXML private Button navCategoryButton;
+    @FXML private Button prevButton;
+    @FXML private Button nextButton;
+    @FXML private Label pageLabel;
+
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 0;
+    private List<Unit> currentFilteredData = new ArrayList<>();
 
     private static final String STATUS_ALL = "All";
-    private static final String STATUS_AVAILABLE = "available";
-    private static final String STATUS_CHECKED_OUT = "checked-out";
-    private static final String STATUS_MAINTENANCE = "maintenance";
+    private static final String STATUS_AVAILABLE = "Available";
+    private static final String STATUS_CHECKED_OUT = "Checked-out";
+    private static final String STATUS_MAINTENANCE = "Maintenance";
 
     private final unitHandler handler = new unitHandler();
     private final ObservableList<Unit> masterList = FXCollections.observableArrayList();
-    private FilteredList<Unit> filteredList;
     private UnitDAO unitDAO;
     
-    @FXML private void handleUnits(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/fxml/unitsList.fxml"); 
-    }
-    @FXML private void handleImportExport(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/importExport.fxml"); 
-    }
-    @FXML private void handleTransactions(ActionEvent event){ 
-        NavigationUtil.loadIntoDashboard(event, "/fxml/Transaction.fxml"); 
-    }
-    @FXML private void handleEmployees(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/Employee.fxml"); 
-    }
-    @FXML private void handleReports(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/report.fxml"); 
-    }
-    @FXML private void handleDashboard(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/Dashboard.fxml"); 
-    }
-    @FXML private void handleBackToDashboard(ActionEvent event){ 
-        NavigationUtil.loadScene(event, "/fxml/Dashboard.fxml"); 
-    }
-    @FXML private void handleNavEquipment(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/equipmentList.fxml");
-    }
-
-    @FXML private void handleNavCategory(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/categoryList.fxml");
-    }
+   
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initDAO();
@@ -93,7 +71,9 @@ public class UnitsListScreen implements Initializable {
         initFilterListeners();
         initButtonVisibility();
         loadData();
+        
     }
+    
 
      private void initFilterListeners() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
@@ -122,14 +102,6 @@ public class UnitsListScreen implements Initializable {
             addUnitButton.setVisible(visible);
             addUnitButton.setManaged(visible);
         }
-        if (navEquipmentButton != null) {
-            navEquipmentButton.setVisible(true);
-            navEquipmentButton.setManaged(true);
-        }
-        if (navCategoryButton != null) {
-            navCategoryButton.setVisible(true);
-            navCategoryButton.setManaged(true);
-        }
     }    
 
     private void initDAO() {
@@ -145,28 +117,136 @@ public class UnitsListScreen implements Initializable {
 
    @SuppressWarnings("unchecked")
     private void initTable() {
-        UnitTableUtil.setupColumns((TableView<Object>) (TableView<?>) unitsTable);
+        String editStyle = "-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+        String deleteStyle = "-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+        String checkOutStyle = "-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+        String checkInStyle = "-fx-background-color: #283044; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
 
         if (AdminUtil.isAdminMode()) {
-            MenuItem editItem = new MenuItem("Edit Unit");
-            MenuItem deleteItem = new MenuItem("Delete Selected");
-            editItem.setOnAction(e -> handleEditSelected());
-            deleteItem.setOnAction(e -> handleDeleteSelected());
-            UnitTableUtil.setupContextMenu((TableView<Object>) (TableView<?>) unitsTable, editItem, deleteItem);
+            UnitTableUtil.setupColumnsWithActions(
+                (TableView<Object>) (TableView<?>) unitsTable,
+                "Edit", editStyle, e -> handleEditSelected(),
+                "Delete", deleteStyle, e -> handleDeleteSelected()
+            );
+        } else {
+            UnitTableUtil.setupColumnsWithActions(
+                (TableView<Object>) (TableView<?>) unitsTable,
+                "Check Out", checkOutStyle, e -> handleCheckOutInline(),
+                "Check In", checkInStyle, e -> handleCheckInInline()
+            );
         }
 
-        filteredList = new FilteredList<>(masterList, u -> true);
-        unitsTable.setItems((ObservableList) filteredList);
+        currentFilteredData = new ArrayList<>(masterList);
+        updatePage();
+    }
+    private void handleCheckOutInline() {
+        
+        Unit selectedUnit = unitsTable.getSelectionModel().getSelectedItem();
+        
+        if (selectedUnit == null) {
+            AlertUtil.showError("Selection Error", "Please select a unit to check out.");
+            return;
+        }
+        if (selectedUnit == null || "checked-out".equalsIgnoreCase(selectedUnit.getStatus()) 
+                                || "maintenance".equalsIgnoreCase(selectedUnit.getStatus())) {
+            return; 
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
+            Parent root = loader.load();
+
+            CheckOutScreen controller = loader.getController();
+            controller.setTargetUnit(selectedUnit);
+
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Check Out");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+            loadData();
+        } catch (IOException e) {
+            AlertUtil.showError("Error", "Could not load Check-out screen.");
+        }
     }
 
+    private void handleCheckInInline() {
+        Unit selectedUnit = unitsTable.getSelectionModel().getSelectedItem();
+        if (selectedUnit == null) {
+            AlertUtil.showError("Selection Error", "Please select a unit to check in.");
+            return;
+        }
+        if (selectedUnit == null || "available".equalsIgnoreCase(selectedUnit.getStatus())) {
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-in.fxml"));
+            Parent root = loader.load();
+
+            CheckInScreen controller = loader.getController();
+            controller.setTargetUnit(selectedUnit);
+
+            Stage modal = new Stage();
+            modal.initOwner(unitsTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Check In");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+            loadData();
+        } catch (IOException e) {
+            AlertUtil.showError("Error", "Could not load Check-in screen.");
+        }
+    }
     public void loadData() {
         masterList.setAll(handler.getUnitsDisplay(unitDAO));
+        applyFilters();
     }
 
     private void applyFilters() {
         String keyword = searchField.getText().toLowerCase().trim();
         String status = statusFilter.getValue();
-        filteredList.setPredicate(unit -> UnitFilter.matches(unit, status, keyword));
+        currentFilteredData = masterList.stream()
+            .filter(unit -> UnitFilter.matches(unit, status, keyword))
+            .collect(java.util.stream.Collectors.toList());
+        currentPage = 0;
+        updatePage();
+    }
+
+    private void updatePage() {
+        int fromIndex = currentPage * PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + PAGE_SIZE, currentFilteredData.size());
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+
+        unitsTable.setItems(FXCollections.observableArrayList(
+            currentFilteredData.subList(fromIndex, toIndex)
+        ));
+
+        if (pageLabel != null)
+            pageLabel.setText("Page " + (currentPage + 1) + " of " + totalPages);
+        if (prevButton != null)
+            prevButton.setDisable(currentPage == 0);
+        if (nextButton != null)
+            nextButton.setDisable(currentPage >= totalPages - 1);
+    }
+
+    @FXML private void handlePrev(ActionEvent event) {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePage();
+        }
+    }
+
+    @FXML private void handleNext(ActionEvent event) {
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePage();
+        }
     }
 
     private void handleEditSelected() {
@@ -212,7 +292,7 @@ public class UnitsListScreen implements Initializable {
             modal.setScene(new Scene(root));
             modal.showAndWait();
 
-            loadData(); // Refresh the table after adding
+            loadData(); // refresh the table after adding
         } catch (IOException e) {
             AlertUtil.showError("Navigation Error", "Could not load the Add Unit screen.");
             e.printStackTrace();
@@ -221,15 +301,14 @@ public class UnitsListScreen implements Initializable {
 
     private void handleDeleteSelected() {
         List<Unit> selected = new ArrayList<>(unitsTable.getSelectionModel().getSelectedItems());
-        if (selected.isEmpty()){
-            return;
-        }
-        boolean alert = AlertUtil.showConfirmation("Delete Units", "Are you sure you want to delete " + selected.size() + " unit(s)?");
-        if (!alert){
-            return;
-        }
+        if (selected.isEmpty()) return; // ← was this returning early?
+
+        boolean alert = AlertUtil.showConfirmation("Delete Units", 
+            "Are you sure you want to delete " + selected.size() + " unit(s)?");
+        if (!alert) return;
+
         List<String> errors = deleteUnits(selected);
-        if (!errors.isEmpty()){
+        if (!errors.isEmpty()) {
             AlertUtil.showError("Some Deletions Failed", String.join("\n", errors));
         }
         loadData();
@@ -238,7 +317,7 @@ public class UnitsListScreen implements Initializable {
     private List<String> deleteUnits(List<Unit> units) {
         List<String> errors = new ArrayList<>();
         for (Unit unit : units) {
-            String error = handler.deleteUnit(unitDAO, unit.getUnitId());
+            String error = handler.softDeleteUnit(unitDAO, unit.getUnitId());
             if (error != null){
                 errors.add("Unit " + unit.getUnitId() + ": " + error);
             }

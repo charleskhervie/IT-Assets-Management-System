@@ -22,11 +22,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ui.util.AdminUtil;
 import ui.util.AlertUtil;
 import ui.util.EquipmentFilter;
 import ui.util.EquipmentTableUtil;
 import ui.util.ModalUtil;
-import ui.util.NavigationUtil;
 
 public class EquipmentListScreen implements Initializable {
 
@@ -38,12 +38,16 @@ public class EquipmentListScreen implements Initializable {
     @FXML private TableColumn<Equipment, String> addedByColumn1;
     @FXML private TableColumn<Equipment, String> addedByColumn11;
     @FXML private TableColumn<Equipment, Integer> statusColumn1;
+    @FXML private Button prevButton1;
+    @FXML private Button nextButton1;
+    @FXML private Label pageLabel1;
     @FXML private Button addEquipmentButton;
-    @FXML private Button backButton;
-
+    
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 0;
+    private List<Equipment> currentFilteredData = new ArrayList<>();
     private final EquipmentHandler handler = new EquipmentHandler();
     private final ObservableList<Equipment> masterList = FXCollections.observableArrayList();
-    private FilteredList<Equipment> filteredList;
     private EquipmentDAO equipmentDAO;
 
     @Override
@@ -52,6 +56,10 @@ public class EquipmentListScreen implements Initializable {
         initTable();
         initFilterListeners();
         loadData();
+        if (addEquipmentButton != null) {
+            addEquipmentButton.setVisible(AdminUtil.isAdminMode());
+            addEquipmentButton.setManaged(AdminUtil.isAdminMode());
+        }
     }
 
     private void initDAO() {
@@ -61,18 +69,31 @@ public class EquipmentListScreen implements Initializable {
     }
 
     private void initTable() {
-        EquipmentTableUtil.setupColumns(idColumn1, serialColumn1, equipmentColumn1,
-                addedByColumn1, addedByColumn11, statusColumn1);
+        if (AdminUtil.isAdminMode()) {
+            EquipmentTableUtil.setupColumns(
+                unitsTable1,
+                idColumn1, serialColumn1, equipmentColumn1,
+                addedByColumn1, addedByColumn11, statusColumn1,
+                e -> handleEditSelected(),
+                e -> handleDeleteSelected()
+            );
 
-        MenuItem editItem = new MenuItem("Edit Equipment");
-        MenuItem deleteItem = new MenuItem("Delete Selected");
-        editItem.setOnAction(e -> handleEditSelected());
-        deleteItem.setOnAction(e -> handleDeleteSelected());
+            MenuItem editItem = new MenuItem("Edit Equipment");
+            MenuItem deleteItem = new MenuItem("Delete Selected");
+            editItem.setOnAction(e -> handleEditSelected());
+            deleteItem.setOnAction(e -> handleDeleteSelected());
+            EquipmentTableUtil.setupContextMenu(unitsTable1, editItem, deleteItem);
+        } else {
+            EquipmentTableUtil.setupColumns(
+                unitsTable1,
+                idColumn1, serialColumn1, equipmentColumn1,
+                addedByColumn1, addedByColumn11, statusColumn1,
+                null, null
+            );
+        }
 
-        EquipmentTableUtil.setupContextMenu(unitsTable1, editItem, deleteItem);
-
-        filteredList = new FilteredList<>(masterList, e -> true);
-        unitsTable1.setItems(filteredList);
+        currentFilteredData = new ArrayList<>(masterList);
+        updatePage();
     }
 
     private void initFilterListeners() {
@@ -81,22 +102,55 @@ public class EquipmentListScreen implements Initializable {
 
     private void applyFilters() {
         String keyword = searchField1.getText().toLowerCase().trim();
-        filteredList.setPredicate(equipment -> EquipmentFilter.matches(equipment, keyword));
+        currentFilteredData = masterList.stream()
+            .filter(equipment -> EquipmentFilter.matches(equipment, keyword))
+            .collect(java.util.stream.Collectors.toList());
+        currentPage = 0;
+        updatePage();
+    }
+
+    private void updatePage() {
+        int fromIndex = currentPage * PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + PAGE_SIZE, currentFilteredData.size());
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+
+        unitsTable1.setItems(FXCollections.observableArrayList(
+            currentFilteredData.subList(fromIndex, toIndex)
+        ));
+
+        if (pageLabel1 != null)
+            pageLabel1.setText("Page " + (currentPage + 1) + " of " + totalPages);
+        if (prevButton1 != null)
+            prevButton1.setDisable(currentPage == 0);
+        if (nextButton1 != null)
+            nextButton1.setDisable(currentPage >= totalPages - 1);
+    }
+
+    @FXML private void handlePrev(ActionEvent event) {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePage();
+        }
+    }
+
+    @FXML private void handleNext(ActionEvent event) {
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePage();
+        }
     }
 
     public void loadData() {
         masterList.setAll(handler.getEquipments(equipmentDAO));
+        applyFilters();
     }
 
     @FXML
     private void handleAddEquipment(ActionEvent event) {
         ModalUtil.openModal(event, "/fxml/AddEquipment.fxml", "Add Equipment");
         loadData();
-    }
-
-    @FXML
-    private void handleBackButton(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/unitsList.fxml");
     }
 
     private void handleEditSelected() {

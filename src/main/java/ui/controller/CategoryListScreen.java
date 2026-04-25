@@ -22,11 +22,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ui.util.AdminUtil;
 import ui.util.AlertUtil;
 import ui.util.CategoryFilter;
 import ui.util.CategoryTableUtil;
 import ui.util.ModalUtil;
-import ui.util.NavigationUtil;
 
 public class CategoryListScreen implements Initializable {
 
@@ -35,11 +35,15 @@ public class CategoryListScreen implements Initializable {
     @FXML private TableColumn<Category, Integer> idColumn11;
     @FXML private TableColumn<Category, String> serialColumn11;
     @FXML private Button addCategoryButton;
-    @FXML private Button backButton;
+    @FXML private Button prevButton11;
+    @FXML private Button nextButton11;
+    @FXML private Label pageLabel11;
 
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 0;
+    private List<Category> currentFilteredData = new ArrayList<>();
     private final CategoryHandler handler = new CategoryHandler();
     private final ObservableList<Category> masterList = FXCollections.observableArrayList();
-    private FilteredList<Category> filteredList;
     private CategoryDAO categoryDAO;
 
     @Override
@@ -48,6 +52,10 @@ public class CategoryListScreen implements Initializable {
         initTable();
         initFilterListeners();
         loadData();
+        if (addCategoryButton != null) {
+            addCategoryButton.setVisible(AdminUtil.isAdminMode());
+            addCategoryButton.setManaged(AdminUtil.isAdminMode());
+        }
     }
 
     private void initDAO() {
@@ -57,17 +65,29 @@ public class CategoryListScreen implements Initializable {
     }
 
     private void initTable() {
-        CategoryTableUtil.setupColumns(idColumn11, serialColumn11);
+        if (AdminUtil.isAdminMode()) {
+            CategoryTableUtil.setupColumns(
+                unitsTable11,
+                idColumn11, serialColumn11,
+                e -> handleEditSelected(),
+                e -> handleDeleteSelected()
+            );
 
-        MenuItem editItem = new MenuItem("Edit Category");
-        MenuItem deleteItem = new MenuItem("Delete Selected");
-        editItem.setOnAction(e -> handleEditSelected());
-        deleteItem.setOnAction(e -> handleDeleteSelected());
+            MenuItem editItem = new MenuItem("Edit Category");
+            MenuItem deleteItem = new MenuItem("Delete Selected");
+            editItem.setOnAction(e -> handleEditSelected());
+            deleteItem.setOnAction(e -> handleDeleteSelected());
+            CategoryTableUtil.setupContextMenu(unitsTable11, editItem, deleteItem);
+        } else {
+            CategoryTableUtil.setupColumns(
+                unitsTable11,
+                idColumn11, serialColumn11,
+                null, null
+            );
+        }
 
-        CategoryTableUtil.setupContextMenu(unitsTable11, editItem, deleteItem);
-
-        filteredList = new FilteredList<>(masterList, e -> true);
-        unitsTable11.setItems(filteredList);
+        currentFilteredData = new ArrayList<>(masterList);
+        updatePage();
     }
 
     private void initFilterListeners() {
@@ -76,22 +96,55 @@ public class CategoryListScreen implements Initializable {
 
     private void applyFilters() {
         String keyword = searchField11.getText().toLowerCase().trim();
-        filteredList.setPredicate(category -> CategoryFilter.matches(category, keyword));
+        currentFilteredData = masterList.stream()
+            .filter(category -> CategoryFilter.matches(category, keyword))
+            .collect(java.util.stream.Collectors.toList());
+        currentPage = 0;
+        updatePage();
     }
+    private void updatePage() {
+        int fromIndex = currentPage * PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + PAGE_SIZE, currentFilteredData.size());
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+
+        unitsTable11.setItems(FXCollections.observableArrayList(
+            currentFilteredData.subList(fromIndex, toIndex)
+        ));
+
+        if (pageLabel11 != null)
+            pageLabel11.setText("Page " + (currentPage + 1) + " of " + totalPages);
+        if (prevButton11 != null)
+            prevButton11.setDisable(currentPage == 0);
+        if (nextButton11 != null)
+            nextButton11.setDisable(currentPage >= totalPages - 1);
+    }
+
+    @FXML private void handlePrev(ActionEvent event) {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePage();
+        }
+    }
+
+    @FXML private void handleNext(ActionEvent event) {
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePage();
+        }
+    }
+
 
     public void loadData() {
         masterList.setAll(handler.getCategories(categoryDAO));
+        applyFilters();
     }
 
     @FXML
     private void handleAddCategory(ActionEvent event) {
         ModalUtil.openModal(event, "/fxml/AddCategory.fxml", "Add Category");
         loadData();
-    }
-
-    @FXML
-    private void handleBackButton(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/unitsList.fxml");
     }
 
     private void handleEditSelected() {

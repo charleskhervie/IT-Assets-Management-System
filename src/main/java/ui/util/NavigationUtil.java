@@ -51,19 +51,5 @@ public class NavigationUtil {
             throw new RuntimeException("Failed to load: " + fxmlPath, e);
         }
     }
-    public static void loadDashboardWithContent(ActionEvent event, String contentFxmlPath) {
-        try {
-            FXMLLoader dashboardLoader = new FXMLLoader(NavigationUtil.class.getResource("/ui/Dashboard.fxml"));
-            Parent dashboardRoot = dashboardLoader.load();
-
-            DashboardScreen dashboardController = dashboardLoader.getController();
-            dashboardController.loadContent(contentFxmlPath);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(dashboardRoot));
-            stage.show();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load dashboard with content: " + contentFxmlPath, e);
-        }
-    }
+    
 }

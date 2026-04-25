@@ -2,6 +2,8 @@ package ui.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import dao.handler.TransactionHandler;
@@ -11,7 +13,7 @@ import dao.model.Employee;
 import dao.model.Transaction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -40,15 +42,22 @@ public class TransactionScreen implements Initializable {
     @FXML private TableColumn<Transaction, String> statusColumn;
     @FXML private TableColumn<Transaction, String> remarksColumn;
     @FXML private TableColumn<Transaction, Void> actionsColumn;
+    @FXML private Button prevButton;
+    @FXML private Button nextButton;
+    @FXML private Label pageLabel;
+
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 0;
+    private List<Transaction> currentFilteredData = new ArrayList<>();
 
     private static final String STATUS_ALL = "All";
-    private static final String STATUS_BORROWED = "Borrowed";
+    private static final String STATUS_CHECKED_OUT = "checked-out";
     private static final String STATUS_RETURNED = "Returned";
     private static final String STATUS_PENDING = "Pending";
+    private static final String STATUS_DECLINED = "declined";
 
     private final TransactionHandler handler = new TransactionHandler();
     private final ObservableList<Transaction> masterList = FXCollections.observableArrayList();
-    private FilteredList<Transaction> filteredList;
     private TransactionDAO transactionDAO;
 
     @Override
@@ -80,8 +89,8 @@ public class TransactionScreen implements Initializable {
         viewItem.setOnAction(e -> handleViewSelected());
         TransactionTableUtil.setupContextMenu(table, this::handleViewSelected, viewItem);
 
-        filteredList = new FilteredList<>(masterList, t -> true);
-        table.setItems((ObservableList) filteredList);
+        currentFilteredData = new ArrayList<>(masterList);
+        updatePage();
     }
 
     private void initDAO() {
@@ -91,7 +100,7 @@ public class TransactionScreen implements Initializable {
     }
 
     private void initStatusFilter() {
-        statusFilter.getItems().addAll(STATUS_ALL, STATUS_BORROWED, STATUS_RETURNED, STATUS_PENDING);
+        statusFilter.getItems().addAll(STATUS_ALL, STATUS_CHECKED_OUT, STATUS_RETURNED.toLowerCase(), STATUS_PENDING.toLowerCase(), STATUS_DECLINED);
         statusFilter.setValue(STATUS_ALL);
     }
 
@@ -103,7 +112,44 @@ public class TransactionScreen implements Initializable {
     private void applyFilters() {
         String keyword = searchField.getText().toLowerCase().trim();
         String status = statusFilter.getValue();
-        filteredList.setPredicate(t -> TransactionFilter.matches(t, status, keyword));
+        currentFilteredData = masterList.stream()
+            .filter(t -> TransactionFilter.matches(t, status, keyword))
+            .collect(java.util.stream.Collectors.toList());
+        currentPage = 0;
+        updatePage();
+    }
+
+    private void updatePage() {
+        int fromIndex = currentPage * PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + PAGE_SIZE, currentFilteredData.size());
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+
+        transactionTable.setItems(FXCollections.observableArrayList(
+            currentFilteredData.subList(fromIndex, toIndex)
+        ));
+
+        if (pageLabel != null)
+            pageLabel.setText("Page " + (currentPage + 1) + " of " + totalPages);
+        if (prevButton != null)
+            prevButton.setDisable(currentPage == 0);
+        if (nextButton != null)
+            nextButton.setDisable(currentPage >= totalPages - 1);
+    }
+
+    @FXML private void handlePrev(ActionEvent event) {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePage();
+        }
+    }
+
+    @FXML private void handleNext(ActionEvent event) {
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePage();
+        }
     }
     
 
@@ -180,7 +226,10 @@ public class TransactionScreen implements Initializable {
             Employee emp = SessionManager.getLoggedInEmployee();
             if (emp != null) {
                 masterList.setAll(handler.getTransactionsByEmployee(transactionDAO, emp.getEmpId()));
+            } else {
+                masterList.clear();
             }
         }
+        applyFilters();
     }
 }

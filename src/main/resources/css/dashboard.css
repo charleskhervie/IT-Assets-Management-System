@@ -1,0 +1,14 @@
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cccccc;
+    -fx-background-radius: 6;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 24;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.nav-button.active {
+    -fx-background-color: #78A1BB;
+    -fx-text-fill: white;
+}
