@@ -65,7 +65,7 @@ public class CheckOutScreen {
                 return;
             }
 
-            String status = AdminUtil.isAdminMode() ? "checked-out" : "pending";
+            String status = AdminUtil.isAdminMode() ? "Checked-out" : "Pending";
             int processedBy = AdminUtil.isAdminMode() ? loggedIn.getEmpId() : 0;
 
             Transaction transaction = new Transaction(
