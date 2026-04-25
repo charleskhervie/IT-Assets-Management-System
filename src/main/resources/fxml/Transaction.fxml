@@ -2,6 +2,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -10,55 +11,63 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.TransactionScreen">
+<BorderPane style="-fx-background-color: #EBF5EE;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.TransactionScreen">
    <top>
-      <VBox prefWidth="1110.0" spacing="12.0" BorderPane.alignment="CENTER">
+      <VBox style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 0 0 1 0;">
          <padding>
-            <Insets bottom="14.0" left="24.0" right="24.0" top="14.0" />
+            <Insets bottom="16.0" left="28.0" right="28.0" top="16.0" />
          </padding>
          <children>
-            <HBox alignment="CENTER" prefHeight="48.0" style="-fx-background-color: #cfcfcf; -fx-border-color: #4a4a4a; -fx-border-width: 1;">
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
                <children>
-                  <Label style="-fx-font-size: 22px; -fx-font-weight: 700;" text="TRANSACTIONS" />
+                  <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #212121;" text="Transactions" />
+                  <Region HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>
       </VBox>
    </top>
    <center>
-      <VBox VBox.vgrow="ALWAYS">
+      <VBox spacing="0.0" VBox.vgrow="ALWAYS">
          <padding>
-            <Insets left="24.0" right="24.0" />
+            <Insets bottom="24.0" left="28.0" right="28.0" top="20.0" />
          </padding>
          <children>
-            <HBox alignment="CENTER_LEFT" spacing="16.0">
+            <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 8; -fx-border-color: #c8e6c9; -fx-border-width: 1; -fx-border-radius: 8;">
                <padding>
-                  <Insets bottom="10.0" top="10.0" />
+                  <Insets bottom="12.0" left="16.0" right="16.0" top="12.0" />
                </padding>
                <children>
-                  <Label style="-fx-font-size: 14px; -fx-font-weight: 700;" text="Status:" />
-                  <ComboBox fx:id="statusFilter" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: #4a4a4a;" />
+                  <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #283044;" text="Status:" />
+                  <ComboBox fx:id="statusFilter" prefWidth="170.0" style="-fx-background-color: #EBF5EE; -fx-border-color: #c8e6c9; -fx-border-radius: 4; -fx-background-radius: 4;" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <Label style="-fx-font-size: 14px; -fx-font-weight: 700;" text="Search" />
-                  <TextField fx:id="searchField" prefWidth="240.0" promptText="Search transactions..." style="-fx-background-color: white; -fx-border-color: #4a4a4a;" />
+                  <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #283044;" text="🔍" />
+                  <TextField fx:id="searchField" prefWidth="260.0" promptText="Search transactions..." style="-fx-background-color: #EBF5EE; -fx-border-color: #c8e6c9; -fx-border-radius: 4; -fx-background-radius: 4; -fx-font-size: 13px;" />
                </children>
             </HBox>
-            <TableView fx:id="transactionTable" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #4a4a4a; -fx-border-width: 1;">
-               <columns>
-                  <TableColumn fx:id="idColumn" prefWidth="110.0" text="Transaction ID" />
-                  <TableColumn fx:id="unitIdColumn" prefWidth="90.0" text="Unit ID" />
-                  <TableColumn fx:id="borrowedByColumn" prefWidth="150.0" text="Borrowed By" />
-                  <TableColumn fx:id="processedByColumn" prefWidth="150.0" text="Processed By" />
-                  <TableColumn fx:id="borrowDateColumn" prefWidth="120.0" text="Borrow Date" />
-                  <TableColumn fx:id="returnDateColumn" prefWidth="120.0" text="Return Date" />
-                  <TableColumn fx:id="statusColumn" prefWidth="110.0" text="Status" />
-                  <TableColumn fx:id="remarksColumn" prefWidth="130.0" text="Remarks" />
-                  <TableColumn fx:id="actionsColumn" prefWidth="180.0" text="Actions" />
-               </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
+
+            <Region prefHeight="14.0" />
+
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-border-color: transparent;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+               <content>
+                  <TableView fx:id="transactionTable" style="-fx-background-color: #FFFFFF; -fx-border-color: #c8e6c9; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;">
+                     <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="110.0" text="Transaction ID" />
+                        <TableColumn fx:id="unitIdColumn" prefWidth="90.0" text="Unit ID" />
+                        <TableColumn fx:id="borrowedByColumn" prefWidth="150.0" text="Borrowed By" />
+                        <TableColumn fx:id="processedByColumn" prefWidth="150.0" text="Processed By" />
+                        <TableColumn fx:id="borrowDateColumn" prefWidth="120.0" text="Borrow Date" />
+                        <TableColumn fx:id="returnDateColumn" prefWidth="120.0" text="Return Date" />
+                        <TableColumn fx:id="statusColumn" prefWidth="110.0" text="Status" />
+                        <TableColumn fx:id="remarksColumn" prefWidth="130.0" text="Remarks" />
+                        <TableColumn fx:id="actionsColumn" prefWidth="180.0" text="Actions" />
+                     </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </center>
