@@ -61,6 +61,16 @@ public class UnitDAOImpl implements UnitDAO {
             ps.executeUpdate();
         }
     }
+    @Override
+    public void softDelete(int unitId) throws SQLException {
+        String query = "update units set is_deleted = TRUE where unit_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, unitId);
+            ps.executeUpdate();
+        }
+    }
+    
     //original findall for data taken from database
     
     @Override

@@ -203,7 +203,7 @@ public class UnitsListScreen implements Initializable {
     private List<String> deleteUnits(List<Unit> units) {
         List<String> errors = new ArrayList<>();
         for (Unit unit : units) {
-            String error = handler.deleteUnit(unitDAO, unit.getUnitId());
+            String error = handler.softDeleteUnit(unitDAO, unit.getUnitId());
             if (error != null){
                 errors.add("Unit " + unit.getUnitId() + ": " + error);
             }

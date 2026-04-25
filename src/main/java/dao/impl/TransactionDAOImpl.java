@@ -69,8 +69,9 @@ public class TransactionDAOImpl implements TransactionDAO {
         }
     }
 
-    //old find all to display data directly taken from data
     
+
+    //find all to display data directly taken from data
     @Override
     public List<Transaction> findAllRaw() throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
@@ -89,16 +90,16 @@ public class TransactionDAOImpl implements TransactionDAO {
     public List<Transaction> findAllDisplay() throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
         String query = """
-            select t.transaction_id, t.unit_id, t.borrowed_by, t.processed_by,
-                t.borrowed_date, t.return_date, t.status, t.remarks,
+            select u.unit_id, u.equipment_id, u.serial_number, u.status,
+                u.added_by, u.created_at, u.assigned_to,
                 coalesce(e.equipment_name, 'Unknown') as equipment_name,
-                coalesce(borrower.full_name, 'Unknown') as borrowed_by_name,
-                coalesce(processor.full_name, '-') as processed_by_name
-            from transaction t
-            left join units u on t.unit_id = u.unit_id
+                coalesce(emp.full_name, 'Unknown') as added_by_name,
+                coalesce(assigned_emp.full_name, '-') as assigned_to_name
+            from units u
             left join equipment e on u.equipment_id = e.equipment_id
-            left join employees borrower on t.borrowed_by = borrower.emp_id
-            left join employees processor on t.processed_by = processor.emp_id
+            left join employees emp on u.added_by = emp.emp_id
+            left join employees assigned_emp on u.assigned_to = assigned_emp.emp_id
+            where u.is_deleted = FALSE
         """;
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query);

@@ -51,6 +51,19 @@ public class unitHandler {
             return "Failed to delete: " + e.getMessage();
         }
     }
+    public String softDeleteUnit(UnitDAO dao, int unitId) {
+        if (unitId <= 0) return "Invalid unit ID.";
+        try {
+            List<Unit> units = dao.findWithAttribute("unit_id", String.valueOf(unitId));
+            if (!units.isEmpty() && "checked-out".equalsIgnoreCase(units.get(0).getStatus())) {
+                return "Cannot delete a checked-out unit. Check it in first.";
+            }
+            dao.delete(unitId);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to delete: " + e.getMessage();
+        }
+    }
     public String updateUnit(UnitDAO dao, Unit unit) {
         if (!isUpdateInputValid(unit)) {
             return "Equipment ID must be greater than 0 and serial number cannot be empty.";

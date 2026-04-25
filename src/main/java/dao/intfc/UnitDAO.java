@@ -9,6 +9,7 @@ public interface UnitDAO {
     void add(Unit unit) throws SQLException;
     void update(Unit unit) throws SQLException;
     void delete(int unitId) throws SQLException;
+    void softDelete(int unitId) throws SQLException;
     Unit findById(int unitId) throws SQLException;
     List<Unit> findAllRaw() throws SQLException;
     List<Unit> findAllDisplay() throws SQLException;
