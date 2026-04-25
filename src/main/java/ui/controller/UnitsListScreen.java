@@ -45,6 +45,13 @@ public class UnitsListScreen implements Initializable {
     @FXML private Button addUnitButton;
     @FXML private Button navEquipmentButton;
     @FXML private Button navCategoryButton;
+    @FXML private Button prevButton;
+    @FXML private Button nextButton;
+    @FXML private Label pageLabel;
+
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 0;
+    private List<Unit> currentFilteredData = new ArrayList<>();
 
     private static final String STATUS_ALL = "All";
     private static final String STATUS_AVAILABLE = "available";
@@ -53,7 +60,6 @@ public class UnitsListScreen implements Initializable {
 
     private final unitHandler handler = new unitHandler();
     private final ObservableList<Unit> masterList = FXCollections.observableArrayList();
-    private FilteredList<Unit> filteredList;
     private UnitDAO unitDAO;
     
    
@@ -124,18 +130,56 @@ public class UnitsListScreen implements Initializable {
             UnitTableUtil.setupColumns((TableView<Object>) (TableView<?>) unitsTable);
         }
 
-        filteredList = new FilteredList<>(masterList, u -> true);
-        unitsTable.setItems((ObservableList) filteredList);
+        currentFilteredData = new ArrayList<>(masterList);
+        updatePage();
     }
 
     public void loadData() {
         masterList.setAll(handler.getUnitsDisplay(unitDAO));
+        applyFilters();
     }
 
     private void applyFilters() {
         String keyword = searchField.getText().toLowerCase().trim();
         String status = statusFilter.getValue();
-        filteredList.setPredicate(unit -> UnitFilter.matches(unit, status, keyword));
+        currentFilteredData = masterList.stream()
+            .filter(unit -> UnitFilter.matches(unit, status, keyword))
+            .collect(java.util.stream.Collectors.toList());
+        currentPage = 0;
+        updatePage();
+    }
+
+    private void updatePage() {
+        int fromIndex = currentPage * PAGE_SIZE;
+        int toIndex = Math.min(fromIndex + PAGE_SIZE, currentFilteredData.size());
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (totalPages == 0) totalPages = 1;
+
+        unitsTable.setItems(FXCollections.observableArrayList(
+            currentFilteredData.subList(fromIndex, toIndex)
+        ));
+
+        if (pageLabel != null)
+            pageLabel.setText("Page " + (currentPage + 1) + " of " + totalPages);
+        if (prevButton != null)
+            prevButton.setDisable(currentPage == 0);
+        if (nextButton != null)
+            nextButton.setDisable(currentPage >= totalPages - 1);
+    }
+
+    @FXML private void handlePrev(ActionEvent event) {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePage();
+        }
+    }
+
+    @FXML private void handleNext(ActionEvent event) {
+        int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePage();
+        }
     }
 
     private void handleEditSelected() {

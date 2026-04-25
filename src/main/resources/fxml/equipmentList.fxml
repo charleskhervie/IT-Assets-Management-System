@@ -54,10 +54,8 @@
                </children>
             </HBox>
 
-            <!-- Spacer -->
             <Region prefHeight="14.0" />
 
-            <!-- Table -->
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
                         style="-fx-background-color: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
                <content>
@@ -77,6 +75,17 @@
                   </TableView>
                </content>
             </ScrollPane>
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <padding>
+                  <Insets top="16.0" />
+               </padding>
+               <children>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="prevButton1" mnemonicParsing="false" onAction="#handlePrev" prefHeight="36.0" prefWidth="90.0" style="-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;" text="← Prev" />
+                  <Label fx:id="pageLabel1" style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #283044;" text="Page 1" />
+                  <Button fx:id="nextButton1" mnemonicParsing="false" onAction="#handleNext" prefHeight="36.0" prefWidth="90.0" style="-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;" text="Next →" />
+               </children>
+            </HBox>
 
          </children>
       </VBox>
