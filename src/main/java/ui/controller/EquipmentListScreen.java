@@ -26,7 +26,6 @@ import ui.util.AlertUtil;
 import ui.util.EquipmentFilter;
 import ui.util.EquipmentTableUtil;
 import ui.util.ModalUtil;
-import ui.util.NavigationUtil;
 
 public class EquipmentListScreen implements Initializable {
 
@@ -39,7 +38,6 @@ public class EquipmentListScreen implements Initializable {
     @FXML private TableColumn<Equipment, String> addedByColumn11;
     @FXML private TableColumn<Equipment, Integer> statusColumn1;
     @FXML private Button addEquipmentButton;
-    @FXML private Button backButton;
 
     private final EquipmentHandler handler = new EquipmentHandler();
     private final ObservableList<Equipment> masterList = FXCollections.observableArrayList();
@@ -92,11 +90,6 @@ public class EquipmentListScreen implements Initializable {
     private void handleAddEquipment(ActionEvent event) {
         ModalUtil.openModal(event, "/fxml/AddEquipment.fxml", "Add Equipment");
         loadData();
-    }
-
-    @FXML
-    private void handleBackButton(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/unitsList.fxml");
     }
 
     private void handleEditSelected() {

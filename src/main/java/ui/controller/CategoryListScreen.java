@@ -35,7 +35,6 @@ public class CategoryListScreen implements Initializable {
     @FXML private TableColumn<Category, Integer> idColumn11;
     @FXML private TableColumn<Category, String> serialColumn11;
     @FXML private Button addCategoryButton;
-    @FXML private Button backButton;
 
     private final CategoryHandler handler = new CategoryHandler();
     private final ObservableList<Category> masterList = FXCollections.observableArrayList();
@@ -87,11 +86,6 @@ public class CategoryListScreen implements Initializable {
     private void handleAddCategory(ActionEvent event) {
         ModalUtil.openModal(event, "/fxml/AddCategory.fxml", "Add Category");
         loadData();
-    }
-
-    @FXML
-    private void handleBackButton(ActionEvent event) {
-        NavigationUtil.loadIntoDashboard(event, "/fxml/unitsList.fxml");
     }
 
     private void handleEditSelected() {
