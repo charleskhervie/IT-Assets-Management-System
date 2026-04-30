@@ -12,6 +12,7 @@ public class Unit {
     private Integer assignedTo;
     // display fields
     private String equipmentName;
+    private String categoryName;
     private String addedByName;
     private String assignedToName;
 
@@ -42,6 +43,8 @@ public class Unit {
     public void setAssignedTo(Integer assignedTo) { this.assignedTo = assignedTo; }
     public String getEquipmentName() { return equipmentName; }
     public void setEquipmentName(String equipmentName) { this.equipmentName = equipmentName; }
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
     public String getAddedByName() { return addedByName; }
     public void setAddedByName(String addedByName) { this.addedByName = addedByName; }
     public String getAssignedToName() { return assignedToName; }

@@ -17,21 +17,30 @@ public class UnitFilter {
             || status.equalsIgnoreCase(unit.getStatus());
     }
 
-   private static boolean matchesKeyword(Unit unit, String keyword) {
+    private static boolean matchesKeyword(Unit unit, String keyword) {
         if (keyword.isEmpty()) return true;
 
         String unitId = String.valueOf(unit.getUnitId());
         String serial = unit.getSerialNumber();
         String equipmentId = String.valueOf(unit.getEquipmentId());
+        String equipmentName = unit.getEquipmentName();
+        String categoryName = unit.getCategoryName();
         String addedBy = String.valueOf(unit.getAddedBy());
+        String addedByName = unit.getAddedByName();
         String assignedTo = unit.getAssignedTo() != null ? String.valueOf(unit.getAssignedTo()): "";
+        String assignedToName = unit.getAssignedToName();
+        String status = unit.getStatus();
 
-        if(containsKeyword(unitId, keyword)|| containsKeyword(serial, keyword)|| containsKeyword(equipmentId, keyword)
-            || containsKeyword(addedBy, keyword) || containsKeyword(assignedTo, keyword)){
-            return true;
-        }else{
-            return false;
-        }
+        return containsKeyword(unitId, keyword)
+            || containsKeyword(serial, keyword)
+            || containsKeyword(equipmentId, keyword)
+            || containsKeyword(equipmentName, keyword)
+            || containsKeyword(categoryName, keyword)
+            || containsKeyword(addedBy, keyword)
+            || containsKeyword(addedByName, keyword)
+            || containsKeyword(assignedTo, keyword)
+            || containsKeyword(assignedToName, keyword)
+            || containsKeyword(status, keyword);
 
     }
 

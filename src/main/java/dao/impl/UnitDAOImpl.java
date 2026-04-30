@@ -96,10 +96,12 @@ public class UnitDAOImpl implements UnitDAO {
             select u.unit_id, u.equipment_id, u.serial_number, u.status,
                 u.added_by, u.created_at, u.assigned_to,
                 coalesce(e.equipment_name, 'Unknown') as equipment_name,
+                coalesce(c.category_name, 'Unknown') as category_name,
                 coalesce(emp.full_name, 'Unknown') as added_by_name,
                 coalesce(assigned_emp.full_name, '-') as assigned_to_name
             from units u
             left join equipment e on u.equipment_id = e.equipment_id
+            left join categories c on e.category_id = c.category_id
             left join employees emp on u.added_by = emp.emp_id
             left join employees assigned_emp on u.assigned_to = assigned_emp.emp_id
         """;
@@ -216,6 +218,7 @@ public class UnitDAOImpl implements UnitDAO {
             rs.getObject("assigned_to", Integer.class)
         );
         unit.setEquipmentName(rs.getString("equipment_name"));
+        unit.setCategoryName(rs.getString("category_name"));
         unit.setAddedByName(rs.getString("added_by_name"));
         unit.setAssignedToName(rs.getString("assigned_to_name"));
         return unit;

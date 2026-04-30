@@ -13,7 +13,6 @@ import dao.intfc.UnitDAO;
 import dao.model.Unit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +26,7 @@ import ui.util.AdminUtil;
 import ui.util.AlertUtil;
 import ui.util.NavigationUtil;
 import ui.util.UnitFilter;
-import ui.util.UnitTableUtil;;
+import ui.util.UnitTableUtil;
 
 public class UnitsListScreen implements Initializable {
 
@@ -37,6 +36,7 @@ public class UnitsListScreen implements Initializable {
     @FXML private TableColumn<Unit, Integer> idColumn;
     @FXML private TableColumn<Unit, String> serialColumn;
     @FXML private TableColumn<Unit, Integer> equipmentColumn;
+    @FXML private TableColumn<Unit, String> categoryColumn;
     @FXML private TableColumn<Unit, Integer> addedByColumn;
     @FXML private TableColumn<Unit, String> statusColumn;
     @FXML private TableColumn<Unit, Integer> assignedToColumn;
@@ -222,9 +222,12 @@ public class UnitsListScreen implements Initializable {
         int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
         if (totalPages == 0) totalPages = 1;
 
+        unitsTable.getSelectionModel().clearSelection();
+        unitsTable.getItems().clear();
         unitsTable.setItems(FXCollections.observableArrayList(
             currentFilteredData.subList(fromIndex, toIndex)
         ));
+        unitsTable.refresh();
 
         if (pageLabel != null)
             pageLabel.setText("Page " + (currentPage + 1) + " of " + totalPages);

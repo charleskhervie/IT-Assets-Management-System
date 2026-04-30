@@ -1,5 +1,6 @@
 package ui.util;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -17,6 +18,7 @@ public class UnitTableUtil {
         TableColumn<Object, Integer> idCol = new TableColumn<>("ID");
         TableColumn<Object, String> serialCol = new TableColumn<>("Serial No.");
         TableColumn<Object, String> equipmentCol = new TableColumn<>("Equipment");
+        TableColumn<Object, String> categoryCol = new TableColumn<>("Category");
         TableColumn<Object, String> addedByCol = new TableColumn<>("Added By");
         TableColumn<Object, String> statusCol = new TableColumn<>("Status");
         TableColumn<Object, String> assignedToCol = new TableColumn<>("Assigned To");
@@ -24,20 +26,22 @@ public class UnitTableUtil {
         idCol.setCellValueFactory(new PropertyValueFactory<>("unitId"));
         serialCol.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
         equipmentCol.setCellValueFactory(new PropertyValueFactory<>("equipmentName"));
+        categoryCol.setCellValueFactory(new PropertyValueFactory<>("categoryName"));
         addedByCol.setCellValueFactory(new PropertyValueFactory<>("addedByName"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         assignedToCol.setCellValueFactory(new PropertyValueFactory<>("assignedToName"));
 
         idCol.setPrefWidth(60); serialCol.setPrefWidth(160);
-        equipmentCol.setPrefWidth(180); addedByCol.setPrefWidth(130);
+        equipmentCol.setPrefWidth(180); categoryCol.setPrefWidth(150); addedByCol.setPrefWidth(130);
         statusCol.setPrefWidth(120); assignedToCol.setPrefWidth(150);
 
-        table.getColumns().addAll(idCol, serialCol, equipmentCol, addedByCol, statusCol, assignedToCol);
+        table.getColumns().addAll(idCol, serialCol, equipmentCol, categoryCol, addedByCol, statusCol, assignedToCol);
 
         if (onEdit != null || onDelete != null) {
-            TableColumn<Object, Void> actionsCol = new TableColumn<>("Actions");
+            TableColumn<Object, Object> actionsCol = new TableColumn<>("Actions");
             actionsCol.setPrefWidth(160);
             actionsCol.setStyle("-fx-alignment: CENTER;");
+            actionsCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue()));
             actionsCol.setCellFactory(col -> new TableCell<>() {
                 private final Button editBtn = new Button("Edit");
                 private final Button deleteBtn = new Button("Delete");
@@ -65,9 +69,9 @@ public class UnitTableUtil {
                 }
 
                 @Override
-                protected void updateItem(Void item, boolean empty) {
+                protected void updateItem(Object item, boolean empty) {
                     super.updateItem(item, empty);
-                    setGraphic(empty ? null : box);
+                    setGraphic(empty || item == null ? null : box);
                 }
             });
             table.getColumns().add(actionsCol);
@@ -105,6 +109,7 @@ public class UnitTableUtil {
         TableColumn<Object, Integer> idCol = new TableColumn<>("ID");
         TableColumn<Object, String> serialCol = new TableColumn<>("Serial No.");
         TableColumn<Object, String> equipmentCol = new TableColumn<>("Equipment");
+        TableColumn<Object, String> categoryCol = new TableColumn<>("Category");
         TableColumn<Object, String> addedByCol = new TableColumn<>("Added By");
         TableColumn<Object, String> statusCol = new TableColumn<>("Status");
         TableColumn<Object, String> assignedToCol = new TableColumn<>("Assigned To");
@@ -112,19 +117,21 @@ public class UnitTableUtil {
         idCol.setCellValueFactory(new PropertyValueFactory<>("unitId"));
         serialCol.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
         equipmentCol.setCellValueFactory(new PropertyValueFactory<>("equipmentName"));
+        categoryCol.setCellValueFactory(new PropertyValueFactory<>("categoryName"));
         addedByCol.setCellValueFactory(new PropertyValueFactory<>("addedByName"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         assignedToCol.setCellValueFactory(new PropertyValueFactory<>("assignedToName"));
 
         idCol.setPrefWidth(60); serialCol.setPrefWidth(160);
-        equipmentCol.setPrefWidth(180); addedByCol.setPrefWidth(130);
+        equipmentCol.setPrefWidth(180); categoryCol.setPrefWidth(150); addedByCol.setPrefWidth(130);
         statusCol.setPrefWidth(120); assignedToCol.setPrefWidth(150);
 
-        table.getColumns().addAll(idCol, serialCol, equipmentCol, addedByCol, statusCol, assignedToCol);
+        table.getColumns().addAll(idCol, serialCol, equipmentCol, categoryCol, addedByCol, statusCol, assignedToCol);
 
         if (onBtn1 != null || onBtn2 != null) {
-            TableColumn<Object, Void> actionsCol = new TableColumn<>("Actions");
+            TableColumn<Object, Object> actionsCol = new TableColumn<>("Actions");
             actionsCol.setStyle("-fx-alignment: CENTER;");
+            actionsCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue()));
             
             actionsCol.setCellFactory(col -> new TableCell<>() {
                 private final Button btn1 = new Button(btn1Label);
@@ -150,12 +157,15 @@ public class UnitTableUtil {
                 }
 
                 @Override
-                protected void updateItem(Void item, boolean empty) {
+                protected void updateItem(Object item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (empty) {
+                    if (empty || item == null) {
                         setGraphic(null);
                     } else {
-                        Object rowData = getTableView().getItems().get(getIndex());
+                        btn1.setDisable(false);
+                        btn2.setDisable(false);
+
+                        Object rowData = item;
                         if (rowData instanceof dao.model.Unit) {
                             dao.model.Unit unit = (dao.model.Unit) rowData;
                             String status = unit.getStatus().toLowerCase();
