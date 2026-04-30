@@ -27,6 +27,9 @@ import ui.util.AlertUtil;
 import ui.util.SessionManager;
 import ui.util.TransactionFilter;
 import ui.util.TransactionTableUtil;
+import ui.service.TableExportService;
+import javafx.stage.FileChooser;
+import java.io.File;
 
 public class TransactionScreen implements Initializable {
 
@@ -231,5 +234,45 @@ public class TransactionScreen implements Initializable {
             }
         }
         applyFilters();
+    }
+
+    @FXML private void handleExportPdf(ActionEvent event) {
+        if (currentFilteredData.isEmpty()) {
+            AlertUtil.showError("Export Error", "No transactions to export. Please check your filters.");
+            return;
+        }
+
+        try {
+            String filterDesc = buildFilterDescription();
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Export Transactions as PDF");
+            chooser.setInitialFileName("transactions-export.pdf");
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+
+            File file = chooser.showSaveDialog(transactionTable.getScene().getWindow());
+            if (file == null) {
+                return;
+            }
+
+            TableExportService.exportTransactionsToPdf(file.toPath(), currentFilteredData, filterDesc);
+            AlertUtil.showInfo("Export Complete", "Transactions exported to:\n" + file.getAbsolutePath());
+        } catch (Exception e) {
+            AlertUtil.showError("Export Failed", e.getMessage());
+        }
+    }
+
+    private String buildFilterDescription() {
+        StringBuilder desc = new StringBuilder();
+        String status = statusFilter.getValue();
+        String search = searchField.getText().trim();
+
+        if (status != null && !status.equals(STATUS_ALL)) {
+            desc.append("Status: ").append(status);
+        }
+        if (!search.isEmpty()) {
+            if (desc.length() > 0) desc.append(", ");
+            desc.append("Search: ").append(search);
+        }
+        return desc.toString();
     }
 }

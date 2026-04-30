@@ -44,6 +44,7 @@
                   <Region HBox.hgrow="ALWAYS" />
                   <Label style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #283044;" text="🔍" />
                   <TextField fx:id="searchField" prefWidth="260.0" promptText="Search transactions..." style="-fx-background-color: #EBF5EE; -fx-border-color: #c8e6c9; -fx-border-radius: 4; -fx-background-radius: 4; -fx-font-size: 13px;" />
+                  <Button mnemonicParsing="false" onAction="#handleExportPdf" prefHeight="34.0" prefWidth="110.0" style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;" text="Export PDF" />
                </children>
             </HBox>
 
