@@ -24,6 +24,7 @@
                <children>
                   <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #212121;" text="Units List" />
                   <Region HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#handleExportPdf" prefHeight="36.0" prefWidth="110.0" style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;" text="Export PDF" />
                   <Button fx:id="addUnitButton" mnemonicParsing="false" onAction="#handleAddUnit" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #283044; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 6; -fx-cursor: hand;" text="+ Add Unit" />
                </children>
             </HBox>
