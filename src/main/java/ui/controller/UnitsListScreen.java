@@ -122,8 +122,8 @@ public class UnitsListScreen implements Initializable {
     private void initTable() {
         String editStyle = "-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
         String deleteStyle = "-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
-        String checkOutStyle = "-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
-        String checkInStyle = "-fx-background-color: #283044; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
+       
+        TableView<Object> table = (TableView<Object>) (TableView<?>) unitsTable;
 
         if (AdminUtil.isAdminMode()) {
             UnitTableUtil.setupColumnsWithActions(
@@ -132,11 +132,7 @@ public class UnitsListScreen implements Initializable {
                 "Delete", deleteStyle, e -> handleDeleteSelected()
             );
         } else {
-            UnitTableUtil.setupColumnsWithActions(
-                (TableView<Object>) (TableView<?>) unitsTable,
-                "Check Out", checkOutStyle, e -> handleCheckOutInline(),
-                "Check In", checkInStyle, e -> handleCheckInInline()
-            );
+            UnitTableUtil.setupColumns(table);
         }
 
         currentFilteredData = new ArrayList<>(masterList);

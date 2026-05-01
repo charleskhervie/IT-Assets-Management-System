@@ -200,6 +200,9 @@ public class TransactionScreen implements Initializable {
             if (!controller.isSaved()) return;
 
             String error = handler.approveCheckout(transactionDAO, transaction.getTransactionId(), controller.getRemarks());
+            if (STATUS_CHECKED_OUT.equalsIgnoreCase(transaction.getStatus()) && transaction.getBorrower() > 0) {
+                handler.assignUnit(transactionDAO, transaction);
+            }
             if (error != null) {
                 AlertUtil.showError("Error", error);
             }

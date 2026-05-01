@@ -14,6 +14,7 @@ public interface TransactionDAO {
     List<Transaction> findWithAttribute(String attribute, String value) throws SQLException;
     List<Transaction> findByEmployee(int empId) throws SQLException;
     List<Transaction> findCheckedOutByEmployee(int empId) throws SQLException;
+    void assignUnit(int unitId, int empId) throws SQLException;
     void checkIn(int transactionId) throws SQLException;
     void approveCheckout(int transactionId, int processedBy, String remarks) throws SQLException;
     void declineCheckout(int transactionId) throws SQLException;

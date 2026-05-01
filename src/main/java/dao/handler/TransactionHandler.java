@@ -30,7 +30,7 @@ public class TransactionHandler {
 
     public String addTransaction(TransactionDAO dao, Transaction transaction) {
         if (!isInputValid(transaction)) {
-            return "Unit ID and employee ID must be greater than 0.";
+            return "Invalid Unit ID.";
         }
         try {
             dao.add(transaction);
@@ -41,9 +41,23 @@ public class TransactionHandler {
         }
     }
 
+    public String assignUnit(TransactionDAO dao, Transaction transaction) {
+        if (!isInputValid(transaction)) {
+            return "Invalid Unit ID and Employee ID.";
+        }
+
+        try {
+            dao.assignUnit(transaction.getUnitId(), transaction.getBorrower());
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Failed to assign unit: " + e.getMessage();
+        }
+    }
+
     public String updateTransaction(TransactionDAO dao, Transaction transaction) {
         if (!isInputValid(transaction)) {
-            return "Unit ID and employee ID must be greater than 0.";
+            return "Invalid Unit ID and Employee ID .";
         }
         try {
             dao.update(transaction);

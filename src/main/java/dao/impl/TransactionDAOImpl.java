@@ -163,8 +163,8 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     @Override
     public void approveCheckout(int transactionId, int processedBy, String remarks) throws SQLException {
-        String updateTransaction = "update transaction set status = 'checked-out', processed_by = ?, remarks = ? where transaction_id = ?";
-        String updateUnit = "update units set status = 'checked-out' where unit_id = (select unit_id from transaction where transaction_id = ?)";
+        String updateTransaction = "update transaction set status = 'Checked-out', processed_by = ?, remarks = ? where transaction_id = ?";
+        String updateUnit = "update units set status = 'Checked-out', assigned_to = (select borrowed_by from transaction where transaction_id = ?) where unit_id = (select unit_id from transaction where transaction_id = ?)";
         try (Connection conn = DBUtil.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
                 if (processedBy > 0) {
@@ -178,6 +178,7 @@ public class TransactionDAOImpl implements TransactionDAO {
             }
             try (PreparedStatement ps = conn.prepareStatement(updateUnit)) {
                 ps.setInt(1, transactionId);
+                ps.setInt(2, transactionId);
                 ps.executeUpdate();
             }
         }
@@ -185,7 +186,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     @Override
     public void declineCheckout(int transactionId) throws SQLException {
-        String updateTransaction = "update transaction set status = 'declined' where transaction_id = ?";
+        String updateTransaction = "update transaction set status = 'Declined' where transaction_id = ?";
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
             ps.setInt(1, transactionId);
@@ -222,7 +223,7 @@ public class TransactionDAOImpl implements TransactionDAO {
     @Override
     public List<Transaction> findCheckedOutByEmployee(int empId) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
-        String query = "select * from transaction where borrowed_by = ? and status = 'checked-out'";
+        String query = "select * from transaction where borrowed_by = ? and status = 'Checked-out'";
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, empId);
@@ -234,13 +235,13 @@ public class TransactionDAOImpl implements TransactionDAO {
         }
         return transactions;
     }
-    @Override 
+    @Override
     public void checkIn(int transactionId) throws SQLException {
-        String updateTransaction = "update transaction set status = 'returned', return_date = ? where transaction_id = ?";
-        String updateUnit = "update units set status = 'available' where unit_id = (select unit_id from transaction where transaction_id = ?)";
+        String updateTransaction = "update transaction set status = 'Returned', return_date = ? where transaction_id = ?";
+        String updateUnit = "update units set status = 'Available', assigned_to = NULL where unit_id = (select unit_id from transaction where transaction_id = ?)";
         try (Connection conn = DBUtil.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
-                ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setObject(1, LocalDateTime.now());
                 ps.setInt(2, transactionId);
                 ps.executeUpdate();
             }
@@ -248,6 +249,16 @@ public class TransactionDAOImpl implements TransactionDAO {
                 ps.setInt(1, transactionId);
                 ps.executeUpdate();
             }
+        }
+    }
+    @Override
+    public void assignUnit(int unitId, int empId) throws SQLException {
+        String query = "update units set assigned_to = ? where unit_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, empId);
+            ps.setInt(2, unitId);
+            ps.executeUpdate();
         }
     }
    
