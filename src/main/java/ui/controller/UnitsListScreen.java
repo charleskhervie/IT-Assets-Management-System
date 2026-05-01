@@ -138,68 +138,8 @@ public class UnitsListScreen implements Initializable {
         currentFilteredData = new ArrayList<>(masterList);
         updatePage();
     }
-    private void handleCheckOutInline() {
-        
-        Unit selectedUnit = unitsTable.getSelectionModel().getSelectedItem();
-        
-        if (selectedUnit == null) {
-            AlertUtil.showError("Selection Error", "Please select a unit to check out.");
-            return;
-        }
-        if (selectedUnit == null || "checked-out".equalsIgnoreCase(selectedUnit.getStatus()) 
-                                || "maintenance".equalsIgnoreCase(selectedUnit.getStatus())) {
-            return; 
-        }
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
-            Parent root = loader.load();
-
-            CheckOutScreen controller = loader.getController();
-            controller.setTargetUnit(selectedUnit);
-
-            Stage modal = new Stage();
-            modal.initOwner(unitsTable.getScene().getWindow());
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setResizable(false);
-            modal.setTitle("Check Out");
-            modal.setScene(new Scene(root));
-            modal.showAndWait();
-            loadData();
-        } catch (IOException e) {
-            AlertUtil.showError("Error", "Could not load Check-out screen.");
-        }
-    }
-
-    private void handleCheckInInline() {
-        Unit selectedUnit = unitsTable.getSelectionModel().getSelectedItem();
-        if (selectedUnit == null) {
-            AlertUtil.showError("Selection Error", "Please select a unit to check in.");
-            return;
-        }
-        if (selectedUnit == null || "available".equalsIgnoreCase(selectedUnit.getStatus())) {
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-in.fxml"));
-            Parent root = loader.load();
-
-            CheckInScreen controller = loader.getController();
-            controller.setTargetUnit(selectedUnit);
-
-            Stage modal = new Stage();
-            modal.initOwner(unitsTable.getScene().getWindow());
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setResizable(false);
-            modal.setTitle("Check In");
-            modal.setScene(new Scene(root));
-            modal.showAndWait();
-            loadData();
-        } catch (IOException e) {
-            AlertUtil.showError("Error", "Could not load Check-in screen.");
-        }
-    }
+    
     public void loadData() {
         masterList.setAll(handler.getUnitsDisplay(unitDAO));
         applyFilters();

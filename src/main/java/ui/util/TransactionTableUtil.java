@@ -95,7 +95,8 @@ public class TransactionTableUtil {
                 super.updateItem(item, empty);
                 if (empty) { setGraphic(null); return; }
                 Transaction t = (Transaction) getTableView().getItems().get(getIndex());
-                setGraphic("pending".equalsIgnoreCase(t.getStatus()) ? box : null);
+                String status = t.getStatus();
+                setGraphic("pending".equalsIgnoreCase(status) || "Pending Return".equalsIgnoreCase(status) ? box : null);
             }
         });
     }

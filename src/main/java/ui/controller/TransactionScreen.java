@@ -58,6 +58,7 @@ public class TransactionScreen implements Initializable {
     private static final String STATUS_RETURNED = "Returned";
     private static final String STATUS_PENDING = "Pending";
     private static final String STATUS_DECLINED = "Declined";
+    private static final String STATUS_PENDING_RETURN = "Pending Return";
 
     private final TransactionHandler handler = new TransactionHandler();
     private final ObservableList<Transaction> masterList = FXCollections.observableArrayList();
@@ -74,15 +75,29 @@ public class TransactionScreen implements Initializable {
     @SuppressWarnings("unchecked")
     private void initTable() {
         TableView<Object> table = (TableView<Object>) (TableView<?>) transactionTable;
-        
+
         TransactionTableUtil.setupColumns(table);
-        
+
         if (AdminUtil.isAdminMode()) {
             TableColumn<Object, Void> actionsColumn = new TableColumn<>("Actions");
             TransactionTableUtil.setupActionsColumn(
                     actionsColumn,
-                    t -> handleApprove((Transaction) t),
-                    t -> handleDecline((Transaction) t),
+                    t -> {
+                        Transaction tx = (Transaction) t;
+                        if ("Pending Return".equalsIgnoreCase(tx.getStatus())) {
+                            handleApproveReturn(tx);
+                        } else {
+                            handleApprove(tx);
+                        }
+                    },
+                    t -> {
+                        Transaction tx = (Transaction) t;
+                        if ("Pending Return".equalsIgnoreCase(tx.getStatus())) {
+                            handleDeclineReturn(tx);
+                        } else {
+                            handleDecline(tx);
+                        }
+                    },
                     true
             );
             table.getColumns().add(actionsColumn);
@@ -103,7 +118,7 @@ public class TransactionScreen implements Initializable {
     }
 
     private void initStatusFilter() {
-        statusFilter.getItems().addAll(STATUS_ALL, STATUS_CHECKED_OUT, STATUS_RETURNED.toLowerCase(), STATUS_PENDING.toLowerCase(), STATUS_DECLINED);
+        statusFilter.getItems().addAll(STATUS_ALL, STATUS_CHECKED_OUT, STATUS_RETURNED, STATUS_PENDING, STATUS_PENDING_RETURN, STATUS_DECLINED);
         statusFilter.setValue(STATUS_ALL);
     }
 
@@ -200,6 +215,7 @@ public class TransactionScreen implements Initializable {
             if (!controller.isSaved()) return;
 
             String error = handler.approveCheckout(transactionDAO, transaction.getTransactionId(), controller.getRemarks());
+            
             if (STATUS_CHECKED_OUT.equalsIgnoreCase(transaction.getStatus()) && transaction.getBorrower() > 0) {
                 handler.assignUnit(transactionDAO, transaction);
             }
@@ -211,6 +227,44 @@ public class TransactionScreen implements Initializable {
             throw new RuntimeException("Failed to load addRemarks.fxml", e);
         }
     }
+    private void handleApproveReturn(Transaction transaction) {
+        boolean confirmed = AlertUtil.showConfirmation("Approve Return",
+                "Approve return for unit " + transaction.getUnitId() + "?");
+        if (!confirmed) return;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addRemarks.fxml"));
+            Parent root = loader.load();
+            AddRemarksModal controller = loader.getController();
+
+            Stage modal = new Stage();
+            modal.initOwner(transactionTable.getScene().getWindow());
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.setResizable(false);
+            modal.setTitle("Add Remarks");
+            modal.setScene(new Scene(root));
+            modal.showAndWait();
+
+            if (!controller.isSaved()) return;
+
+            String error = handler.approveReturn(transactionDAO, transaction.getTransactionId(), controller.getRemarks());
+            if (error != null) AlertUtil.showError("Error", error);
+            loadData();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load addRemarks.fxml", e);
+        }
+    }
+
+    private void handleDeclineReturn(Transaction transaction) {
+        boolean confirmed = AlertUtil.showConfirmation("Decline Return",
+                "Decline return for unit " + transaction.getUnitId() + "? It will remain checked out.");
+        if (!confirmed) return;
+
+        String error = handler.revertToCheckedOut(transactionDAO, transaction.getTransactionId());
+        if (error != null) AlertUtil.showError("Error", error);
+        loadData();
+    }
+    
 
     private void handleDecline(Transaction transaction) {
         boolean confirmed = AlertUtil.showConfirmation("Decline",

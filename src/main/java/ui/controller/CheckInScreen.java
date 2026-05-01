@@ -72,14 +72,17 @@ public class CheckInScreen implements Initializable {
         }
 
         Transaction selected = checkedOutTransactions.get(selectedIndex);
-        String error = handler.checkIn(transactionDAO, selected.getTransactionId());
+
+        String error = handler.pendingReturn(transactionDAO, selected.getTransactionId());
         if (error != null) {
             AlertUtil.showError("Error", error);
             return;
         }
 
+        AlertUtil.showInfo("Return Requested", "Your return request has been submitted and is pending admin approval.");
         closeStage(event);
     }
+    
 
     @FXML
     private void handleCancel(ActionEvent event) {

@@ -58,7 +58,6 @@ public class CheckOutScreen {
         }
 
         try {
-            // Find unit by serial number
             List<Unit> units = unitDAO.findWithAttribute("serial_number", serialNo);
             if (units.isEmpty()) {
                 AlertUtil.showError("Not Found", "No unit found with serial number: " + serialNo);
@@ -89,8 +88,8 @@ public class CheckOutScreen {
                 AlertUtil.showError("Error", error);
                 return;
             }
-
             closeStage(event);
+            AlertUtil.showInfo("Check out Requested", "Your check out request has been submitted and is pending admin approval.");
         } catch (Exception e) {
             AlertUtil.showError("Error", "Failed to process checkout: " + e.getMessage());
         }

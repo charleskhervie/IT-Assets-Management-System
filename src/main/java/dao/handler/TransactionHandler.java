@@ -124,5 +124,32 @@ public class TransactionHandler {
             return "Failed to check in: " + e.getMessage();
         }
     }
+    public String pendingReturn(TransactionDAO dao, int transactionId) {
+        try {
+            dao.pendingReturn(transactionId);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to submit return request: " + e.getMessage();
+        }
+    }
+
+    public String approveReturn(TransactionDAO dao, int transactionId, String remarks) {
+        Employee admin = SessionManager.getLoggedInEmployee();
+        int processedBy = admin != null ? admin.getEmpId() : 0;
+        try {
+            dao.approveReturn(transactionId, processedBy, remarks);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to approve return: " + e.getMessage();
+        }
+    }
+    public String revertToCheckedOut(TransactionDAO dao, int transactionId) {
+        try {
+            dao.revertToCheckedOut(transactionId);
+            return null;
+        } catch (SQLException e) {
+            return "Failed to revert status: " + e.getMessage();
+        }
+    }
     
 }

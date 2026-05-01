@@ -261,5 +261,41 @@ public class TransactionDAOImpl implements TransactionDAO {
             ps.executeUpdate();
         }
     }
-   
+    @Override
+    public void pendingReturn(int transactionId) throws SQLException {
+        String query = "update transaction set status = 'Pending Return' where transaction_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, transactionId);
+            ps.executeUpdate();
+        }
+    }
+    @Override
+    public void approveReturn(int transactionId, int processedBy, String remarks) throws SQLException {
+        String updateTransaction = "update transaction set status = 'Returned', return_date = ?, processed_by = ?, remarks = ? where transaction_id = ?";
+        String updateUnit = "update units set status = 'Available', assigned_to = NULL where unit_id = (select unit_id from transaction where transaction_id = ?)";
+        try (Connection conn = DBUtil.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(updateTransaction)) {
+                ps.setObject(1, LocalDateTime.now());
+                if (processedBy > 0) ps.setInt(2, processedBy);
+                else ps.setNull(2, java.sql.Types.INTEGER);
+                ps.setString(3, remarks);
+                ps.setInt(4, transactionId);
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = conn.prepareStatement(updateUnit)) {
+                ps.setInt(1, transactionId);
+                ps.executeUpdate();
+            }
+        }
+    }
+    @Override
+    public void revertToCheckedOut(int transactionId) throws SQLException {
+        String query = "update transaction set status = 'Checked-out' where transaction_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, transactionId);
+            ps.executeUpdate();
+        }
+    }
 }
