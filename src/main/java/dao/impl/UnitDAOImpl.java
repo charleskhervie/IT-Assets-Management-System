@@ -76,7 +76,7 @@ public class UnitDAOImpl implements UnitDAO {
     @Override
     public List<Unit> findAllRaw() throws SQLException {
         List<Unit> units = new ArrayList<>();
-        String query = "select * from units";
+        String query = "select * from units where is_deleted = FALSE";
 
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query);
@@ -104,6 +104,7 @@ public class UnitDAOImpl implements UnitDAO {
             left join categories c on e.category_id = c.category_id
             left join employees emp on u.added_by = emp.emp_id
             left join employees assigned_emp on u.assigned_to = assigned_emp.emp_id
+            where u.is_deleted = FALSE
         """;
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query);

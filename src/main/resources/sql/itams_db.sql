@@ -1,76 +1,44 @@
--- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
---
--- Host: localhost    Database: itams_db
--- ------------------------------------------------------
--- Server version	8.0.44
+CREATE DATABASE IF NOT EXISTS itams_db;
+USE itams_db;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET FOREIGN_KEY_CHECKS = 0;
 
---
--- Table structure for table `categories`
---
-
+DROP TABLE IF EXISTS `transaction`;
+DROP TABLE IF EXISTS `units`;
+DROP TABLE IF EXISTS `equipment`;
+DROP TABLE IF EXISTS `employees`;
+DROP TABLE IF EXISTS `departments`;
 DROP TABLE IF EXISTS `categories`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `categories` (
   `category_id` int NOT NULL AUTO_INCREMENT,
   `category_name` varchar(50) NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `categories`
---
+INSERT INTO `categories` VALUES 
+(1,'Laptop'),
+(2,'Monitor'),
+(3,'Keyboard'),
+(4,'Mouse'),
+(5,'Docking Station'),
+(6,'Headset');
 
-LOCK TABLES `categories` WRITE;
-/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Laptop'),(2,'Monitor'),(3,'Keyboard'),(4,'Mouse'),(5,'Docking Station'),(6,'Headset'),(8,'Couch');
-/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `departments`
---
-
-DROP TABLE IF EXISTS `departments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `departments` (
   `department_id` int NOT NULL AUTO_INCREMENT,
   `department_name` varchar(100) NOT NULL,
   `location` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`department_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `departments`
---
+INSERT INTO `departments` VALUES 
+(1,'IT Services','Building A - Room 101'),
+(2,'Human Resources','Building A - Room 202'),
+(3,'Accounting','Building B - Room 105'),
+(4,'Marketing','Building C - Room 301'),
+(5,'Academic Affairs','Building A - Room 102'),
+(6,'Research and Development','Building D - Room 404');
 
-LOCK TABLES `departments` WRITE;
-/*!40000 ALTER TABLE `departments` DISABLE KEYS */;
-INSERT INTO `departments` VALUES (1,'IT Services','Building A - Room 101'),(2,'Human Resources','Building A - Room 202'),(3,'Accounting','Building B - Room 105'),(4,'Marketing','Building C - Room 301'),(5,'Academic Affairs','Building A - Room 102'),(6,'Research and Development','Building D - Room 404');
-/*!40000 ALTER TABLE `departments` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `employees`
---
-
-DROP TABLE IF EXISTS `employees`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employees` (
   `emp_id` int NOT NULL AUTO_INCREMENT,
   `department_id` int DEFAULT NULL,
@@ -83,25 +51,15 @@ CREATE TABLE `employees` (
   KEY `department_id` (`department_id`),
   CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `employees`
---
+INSERT INTO `employees` VALUES 
+(1,1,'admin_xeon','pass123','Admin','Xeon Dadulla'),
+(2,1,'staff_andrei','pass456','Staff','Andrei Dadivalos'),
+(3,1,'staff_charles','pass789','Staff','Charles Realino'),
+(4,2,'jdoe_hr','pass000','Staff','Jane Doe'),
+(5,3,'msmith_acc','pass111','Staff','Mark Smith'),
+(6,5,'rreyes_acad','pass222','Staff','Reyna Reyes');
 
-LOCK TABLES `employees` WRITE;
-/*!40000 ALTER TABLE `employees` DISABLE KEYS */;
-INSERT INTO `employees` VALUES (1,1,'admin_xeon','pass123','Admin','Xeon Dadulla'),(2,1,'staff_andrei','pass456','Staff','Andrei Dadivalos'),(3,1,'staff_charles','pass789','Staff','Charles Realino'),(4,2,'jdoe_hr','pass000','Staff','Jane Doe'),(5,3,'msmith_acc','pass111','Staff','Mark Smith'),(6,5,'rreyes_acad','pass222','Staff','Reyna Reyes');
-/*!40000 ALTER TABLE `employees` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `equipment`
---
-
-DROP TABLE IF EXISTS `equipment`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `equipment` (
   `equipment_id` int NOT NULL AUTO_INCREMENT,
   `equipment_name` varchar(100) NOT NULL,
@@ -112,26 +70,59 @@ CREATE TABLE `equipment` (
   PRIMARY KEY (`equipment_id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `equipment`
---
+INSERT INTO `equipment` VALUES 
+(1,'MacBook Air M2','Apple','A2681','8GB RAM, 256GB SSD',1),
+(2,'ThinkPad X1 Carbon','Lenovo','Gen 11','16GB RAM, 512GB SSD',1),
+(3,'UltraSharp 27','Dell','U2723QE','4K Resolution, USB-C Hub',2),
+(4,'MX Keys S','Logitech','920-011406','Wireless, Backlit',3),
+(5,'MX Master 3S','Logitech','910-006557','8000 DPI, Silent Clicks',4),
+(6,'Surface Dock 2','Microsoft','1917','199W Power Supply',5),
+(7,'WH-1000XM5','Sony','WH1000XM5','30hr Battery, Noise Cancelling',6),
+(8,'UltraSharp 32','Dell','U3223QE','4K Resolution, USB-C Hub',2),
+(9,'MX Master 3S Pro','Logitech','910-006780','8000 DPI, Ergonomic',4);
 
-LOCK TABLES `equipment` WRITE;
-/*!40000 ALTER TABLE `equipment` DISABLE KEYS */;
-INSERT INTO `equipment` VALUES (1,'MacBook Air M2','Apple','A2681','8GB RAM, 256GB SSD',1),(2,'ThinkPad X1 Carbon','Lenovo','Gen 11','16GB RAM, 512GB SSD',1),(3,'UltraSharp 27','Dell','U2723QE','4K Resolution, USB-C Hub',2),(4,'MX Keys S','Logitech','920-011406','Wireless, Backlit',3),(5,'MX Master 3S','Logitech','910-006557','8000 DPI, Silent Clicks',4),(6,'Surface Dock 2','Microsoft','1917','199W Power Supply',5);
-/*!40000 ALTER TABLE `equipment` ENABLE KEYS */;
-UNLOCK TABLES;
+CREATE TABLE `units` (
+  `unit_id` int NOT NULL AUTO_INCREMENT,
+  `equipment_id` int DEFAULT NULL,
+  `serial_number` varchar(100) NOT NULL,
+  `status` varchar(20) DEFAULT 'Available',
+  `added_by` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `assigned_to` int DEFAULT NULL,
+  `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (`unit_id`),
+  UNIQUE KEY `serial_number` (`serial_number`),
+  KEY `equipment_id` (`equipment_id`),
+  KEY `added_by` (`added_by`),
+  KEY `assigned_to` (`assigned_to`),
+  CONSTRAINT `units_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`equipment_id`),
+  CONSTRAINT `units_ibfk_2` FOREIGN KEY (`added_by`) REFERENCES `employees` (`emp_id`),
+  CONSTRAINT `units_ibfk_3` FOREIGN KEY (`assigned_to`) REFERENCES `employees` (`emp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Table structure for table `transaction`
---
+INSERT INTO `units` VALUES 
+(1,1,'SN-APPLE-001','Available',1,'2026-01-10 08:00:00',NULL,FALSE),
+(2,1,'SN-APPLE-002','Available',1,'2026-01-10 08:00:00',NULL,FALSE),
+(3,1,'SN-APPLE-003','Available',2,'2026-01-10 08:00:00',NULL,FALSE),
+(4,2,'SN-LENO-001','Available',1,'2026-01-12 08:00:00',NULL,FALSE),
+(5,2,'SN-LENO-002','Available',2,'2026-01-12 08:00:00',NULL,FALSE),
+(6,2,'SN-LENO-003','Available',1,'2026-01-12 08:00:00',NULL,FALSE),
+(7,3,'SN-DELL-MON-001','Available',1,'2026-01-15 08:00:00',NULL,FALSE),
+(8,3,'SN-DELL-MON-002','Available',2,'2026-01-15 08:00:00',NULL,FALSE),
+(9,8,'SN-DELL-MON-003','Available',1,'2026-01-15 08:00:00',NULL,FALSE),
+(10,4,'SN-LOGI-KB-001','Available',3,'2026-01-18 08:00:00',NULL,FALSE),
+(11,4,'SN-LOGI-KB-002','Available',1,'2026-01-18 08:00:00',NULL,FALSE),
+(12,5,'SN-LOGI-MS-001','Available',1,'2026-01-20 08:00:00',NULL,FALSE),
+(13,5,'SN-LOGI-MS-002','Available',2,'2026-01-20 08:00:00',NULL,FALSE),
+(14,6,'SN-MSFT-DOCK-001','Available',1,'2026-01-22 08:00:00',NULL,FALSE),
+(15,6,'SN-MSFT-DOCK-002','Maintenance',2,'2026-01-22 08:00:00',NULL,FALSE),
+(16,7,'SN-SONY-HEAD-001','Available',1,'2026-01-25 08:00:00',NULL,FALSE),
+(17,7,'SN-SONY-HEAD-002','Available',3,'2026-01-25 08:00:00',NULL,FALSE),
+(18,9,'SN-LOGI-MS-PRO-001','Available',1,'2026-02-01 08:00:00',NULL,FALSE),
+(19,9,'SN-LOGI-MS-PRO-002','Available',2,'2026-02-01 08:00:00',NULL,FALSE);
 
-DROP TABLE IF EXISTS `transaction`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `transaction` (
   `transaction_id` int NOT NULL AUTO_INCREMENT,
   `unit_id` int DEFAULT NULL,
@@ -148,62 +139,6 @@ CREATE TABLE `transaction` (
   CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `units` (`unit_id`),
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`borrowed_by`) REFERENCES `employees` (`emp_id`),
   CONSTRAINT `transaction_ibfk_3` FOREIGN KEY (`processed_by`) REFERENCES `employees` (`emp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `transaction`
---
-
-LOCK TABLES `transaction` WRITE;
-/*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
-INSERT INTO `transaction` VALUES (1,1,4,1,'2026-04-20 04:27:49',NULL,'Initial Deployment for HR Lead','checked out'),(2,3,5,2,'2026-04-20 04:27:49',NULL,'Assigned for Academic Presentation','checked out'),(3,5,6,3,'2026-04-20 04:27:49',NULL,'Standard Peripheral Issuance','checked out'),(4,1,4,1,'2026-04-20 04:27:49',NULL,'Returned for Software Update','checked out'),(5,1,4,1,'2026-04-20 04:27:49',NULL,'Re-issued After Update','checked out'),(6,6,1,2,'2026-04-20 04:27:49',NULL,'Unit Sent for Scheduled Maintenance Due to Port Issues','checked out'),(12,2,2,2,'2026-04-23 01:09:50',NULL,NULL,'checked-out'),(13,4,2,1,'2026-04-23 02:07:51',NULL,NULL,'checked-out'),(15,13,2,1,'2026-04-23 02:45:52',NULL,'good guy','checked-out'),(16,12,2,1,'2026-04-23 02:48:21',NULL,'awesome dude','checked-out');
-/*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `units`
---
-
-DROP TABLE IF EXISTS `units`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `units` (
-  `unit_id` int NOT NULL AUTO_INCREMENT,
-  `equipment_id` int DEFAULT NULL,
-  `serial_number` varchar(100) NOT NULL,
-  `status` varchar(20) DEFAULT 'available',
-  `added_by` int DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `assigned_to` int DEFAULT NULL,
-  PRIMARY KEY (`unit_id`),
-  UNIQUE KEY `serial_number` (`serial_number`),
-  KEY `equipment_id` (`equipment_id`),
-  KEY `added_by` (`added_by`),
-  KEY `assigned_to` (`assigned_to`),
-  CONSTRAINT `units_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`equipment_id`),
-  CONSTRAINT `units_ibfk_2` FOREIGN KEY (`added_by`) REFERENCES `employees` (`emp_id`),
-  CONSTRAINT `units_ibfk_3` FOREIGN KEY (`assigned_to`) REFERENCES `employees` (`emp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `units`
---
-
-LOCK TABLES `units` WRITE;
-/*!40000 ALTER TABLE `units` DISABLE KEYS */;
-INSERT INTO `units` VALUES (1,1,'SN-APPLE-001','Checked-Out',1,'2026-04-20 04:27:48',4),(2,1,'SN-APPLE-002','checked-out',1,'2026-04-20 04:27:48',NULL),(3,2,'SN-LENO-001','Checked-Out',2,'2026-04-20 04:27:48',5),(4,3,'SN-DELL-001','checked-out',1,'2026-04-20 04:27:48',NULL),(5,4,'SN-LOGI-001','Checked-Out',3,'2026-04-20 04:27:48',6),(6,6,'SN-MSFT-001','Maintenance',2,'2026-04-20 04:27:48',NULL),(12,2,'SN-1','checked-out',1,'2026-04-23 02:43:51',NULL),(13,1,'SN-2','available',1,'2026-04-23 02:43:59',NULL);
-/*!40000 ALTER TABLE `units` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-04-23 11:24:03
+SET FOREIGN_KEY_CHECKS = 1;

@@ -54,10 +54,10 @@ public class TransactionScreen implements Initializable {
     private List<Transaction> currentFilteredData = new ArrayList<>();
 
     private static final String STATUS_ALL = "All";
-    private static final String STATUS_CHECKED_OUT = "checked-out";
+    private static final String STATUS_CHECKED_OUT = "Checked-out";
     private static final String STATUS_RETURNED = "Returned";
     private static final String STATUS_PENDING = "Pending";
-    private static final String STATUS_DECLINED = "declined";
+    private static final String STATUS_DECLINED = "Declined";
 
     private final TransactionHandler handler = new TransactionHandler();
     private final ObservableList<Transaction> masterList = FXCollections.observableArrayList();
