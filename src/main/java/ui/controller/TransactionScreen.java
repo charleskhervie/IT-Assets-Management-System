@@ -271,10 +271,8 @@ public class TransactionScreen implements Initializable {
                 "Decline checkout for unit " + transaction.getUnitId() + "?");
         if (!confirmed) return;
 
-        String error = handler.deleteTransaction(transactionDAO, transaction.getTransactionId());
-        if (error != null) {
-            AlertUtil.showError("Error", error);
-        }
+        String error = handler.declineCheckout(transactionDAO, transaction.getTransactionId());
+        if (error != null) AlertUtil.showError("Error", error);
         loadData();
     }
 
