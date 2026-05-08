@@ -30,8 +30,6 @@ The **IT Assets Management System (ITAMS)** is a Java-based desktop application 
 ## ✨ Features
 
 - 🔐 **User Authentication** and role-based access (Admin/Staff)
-- 🏢 **Department Management** - Add, edit, and manage organizational departments
-- 👥 **Employee Management** - Handle employee records and assignments
 - 📦 **Equipment Tracking** - Monitor IT assets with detailed information
 - 🏷️ **Category Management** - Organize equipment by categories
 - 📥📤 **Check-in/Check-out** - Track asset borrowing and returns
