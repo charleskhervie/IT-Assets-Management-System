@@ -21,7 +21,23 @@ import dao.model.Transaction;
 import dao.model.Unit;
 import ui.util.InventoryExportUtil;
 import ui.util.InventoryImportUtil;
-
+/**
+ * Service class for JSON Import and Export Operations.
+ * 
+ * 
+ * - Implements a hierarchical JSON schema that organizes inventory entities 
+ *   (Departments, Employees, Equipment, etc.) into distinct arrays within 
+ *   a single root object.
+ * - Manages the full Export implementation: extracting data via {@link InventoryExportUtil}, 
+ *   manually serializing entities to JSON strings with proper character 
+ *   escaping, and persisting to the file system.
+ * - Provides a rigorous Import workflow that validates the JSON structure 
+ *   using {@link SimpleJsonParser} before performing deep logical validation 
+ *   on relational integrity and constraints.
+ * - Supports pre-import analysis via {@link ImportPreviewData}, giving users 
+ *   visibility into total records and potential validation issues prior 
+ *   to database commitment.
+ */
 public class InventoryJsonService {
 
     private final InventoryExportUtil exportUtil = new InventoryExportUtil();

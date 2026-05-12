@@ -1,7 +1,13 @@
 package ui.util;
 
 import dao.model.Equipment;
-
+/**
+ * Utility class for Filtering Equipment Data.
+ * 
+ * Provides centralized logic for evaluating search criteria against 
+ * {@link Equipment} attributes to support dynamic UI filtering.
+ * 
+ */
 public class EquipmentFilter {
 
     private EquipmentFilter() {}

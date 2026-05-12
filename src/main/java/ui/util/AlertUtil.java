@@ -2,7 +2,19 @@ package ui.util;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-
+/**
+ * Utility class for UI Dialog Management.
+ * 
+ * Provides a centralized interface for triggering standardized JavaFX 
+ * dialogs to facilitate user interaction and feedback.
+ * 
+ * - Simplifies the creation of confirmation dialogs, returning a boolean 
+ *   result based on {@link ButtonType#OK} selection.
+ * - Standardizes the display of error alerts to inform users of validation 
+ *   failures or system exceptions.
+ * - Facilitates information signaling to provide non-critical updates or 
+ *   operation success confirmations.
+ */
 public class AlertUtil {
 
     private AlertUtil() {}

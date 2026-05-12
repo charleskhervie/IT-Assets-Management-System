@@ -7,7 +7,11 @@ import dao.intfc.TransactionDAO;
 import dao.model.Employee;
 import dao.model.Transaction;
 import ui.util.SessionManager;
-
+/**
+ * handler class for managing the lifecycle of asset transactions.
+ * coordinates between the user interface and the {@link TransactionDAO} 
+ * to handle checkouts, returns, and admin approvals.
+ */
 public class TransactionHandler {
 
     public List<Transaction> getTransactionDisplay(TransactionDAO dao) {
@@ -18,6 +22,7 @@ public class TransactionHandler {
             return Collections.emptyList();
         }
     }
+
     public List<Transaction> getTransactionRaw(TransactionDAO dao) {
         try {
             return dao.findAllRaw();
@@ -26,7 +31,6 @@ public class TransactionHandler {
             return Collections.emptyList();
         }
     }
-    
 
     public String addTransaction(TransactionDAO dao, Transaction transaction) {
         if (!isInputValid(transaction)) {
@@ -41,6 +45,10 @@ public class TransactionHandler {
         }
     }
 
+    /**
+     * assigns a specific unit to an employee without the standard 
+     * approval workflow, typically used for direct administrative assignments.
+     */
     public String assignUnit(TransactionDAO dao, Transaction transaction) {
         if (!isInputValid(transaction)) {
             return "Invalid Unit ID and Employee ID.";
@@ -77,10 +85,15 @@ public class TransactionHandler {
         }
     }
 
+    // ensures both the unit and the borrower exist before proceeding
     private boolean isInputValid(Transaction transaction) {
         return transaction.getUnitId() > 0 && transaction.getBorrower() > 0;
     }
 
+    /**
+     * finalizes a checkout request. 
+     * retrieves the admin ID from the active session to record who processed the request.
+     */
     public String approveCheckout(TransactionDAO dao, int transactionId, String remarks) {
         Employee admin = SessionManager.getLoggedInEmployee();
         int processedBy = admin != null ? admin.getEmpId() : 0;
@@ -100,6 +113,7 @@ public class TransactionHandler {
             return "Failed to decline: " + e.getMessage();
         }
     }
+
     public List<Transaction> getTransactionsByEmployee(TransactionDAO dao, int empId) {
         try {
             return dao.findByEmployee(empId);
@@ -108,6 +122,10 @@ public class TransactionHandler {
             return Collections.emptyList();
         }
     }
+
+    /**
+     * retrieves only the units currently in the possession of a specific employee.
+     */
     public List<Transaction> getCheckedOutByEmployee(TransactionDAO dao, int empId) {
         try {
             return dao.findCheckedOutByEmployee(empId);
@@ -116,6 +134,7 @@ public class TransactionHandler {
             return Collections.emptyList();
         }
     }
+
     public String checkIn(TransactionDAO dao, int transactionId) {
         try {
             dao.checkIn(transactionId);
@@ -124,6 +143,11 @@ public class TransactionHandler {
             return "Failed to check in: " + e.getMessage();
         }
     }
+
+    /**
+     * initiates the return process by marking a transaction as 'Pending Return'.
+     * this status prevents further use until an admin approves the return.
+     */
     public String pendingReturn(TransactionDAO dao, int transactionId) {
         try {
             dao.pendingReturn(transactionId);
@@ -143,6 +167,11 @@ public class TransactionHandler {
             return "Failed to approve return: " + e.getMessage();
         }
     }
+
+    /**
+     * cancels a pending return request and moves the unit back to 'Checked-out' status.
+     * useful if a return was initiated in error.
+     */
     public String revertToCheckedOut(TransactionDAO dao, int transactionId) {
         try {
             dao.revertToCheckedOut(transactionId);

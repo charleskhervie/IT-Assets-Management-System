@@ -18,7 +18,20 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ui.util.AlertUtil;
 import ui.util.SessionManager;
-
+/**
+ * Controller for the Check In Screen.
+ * 
+ * Manages the return process for deployed hardware assets. This controller facilitates 
+ * the transition of units from a "checked-out" status back to the inventory 
+ * by initiating return requests that await administrative verification.
+ * 
+ * - Populates session-specific data by identifying the currently logged-in 
+ *   {@link Employee} and fetching their active deployments via {@link TransactionHandler}.
+ * - Supports context-aware initialization by allowing a target {@link Unit} to 
+ *   be pre-selected when the modal is launched from a specific list item.
+ * - Formalizes the return pipeline by updating transaction states to a pending 
+ *   return phase, ensuring data consistency within the {@link TransactionDAO}.
+ */
 public class CheckInScreen implements Initializable {
 
     @FXML private ComboBox<String> checkInComboBox;

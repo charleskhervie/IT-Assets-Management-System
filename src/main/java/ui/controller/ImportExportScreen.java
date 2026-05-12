@@ -28,7 +28,23 @@ import ui.service.InventoryCsvService;
 import ui.service.InventoryJsonService;
 import ui.service.InventorySqlService;
 import ui.util.NavigationUtil;
-
+/**
+ * Controller for the Import and Export Screen.
+ * 
+ * Manages the bidirectional transfer of inventory data between the application and 
+ * external files. It provides a unified interface for handling multiple data 
+ * formats including JSON, CSV, and SQL.
+ * 
+ *  features:
+ * - Format-specific operations via {@link InventoryJsonService}, {@link InventoryCsvService}, 
+ *   and {@link InventorySqlService}.
+ * - Robust Import Pipeline: Includes file selection, structural validation, and 
+ *   a preview mechanism that displays record counts and descriptive error messages.
+ * - Dynamic UI Selection: Implements single-selection logic for export formats 
+ *   with reactive styling to highlight the active choice.
+ * - Data Integrity: Prevents imports of corrupted or invalid files through a 
+ *   pre-import validation check ({@link ImportValidationResult}).
+ */
 public class ImportExportScreen implements Initializable {
 
     @FXML private CheckBox exportJson;

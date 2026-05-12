@@ -2,12 +2,24 @@ package dao.dao_util;
 
 import java.io.*;
 import java.util.Properties;
-
+/**
+ * utility class for managing application environment variables and user sessions.
+ * this class handles the reading, writing, and deletion of the {@code app.env} 
+ * file to persist system credentials and state information across sessions.
+ * 
+ * <p>it utilizes the {@link java.util.Properties} api to maintain a simple 
+ * key-value store for configuration data.</p>
+ * 
+ * @author your name/team
+ * @version 1.0
+ */
 public class CredentialManager {
     private static final String ENV_FILE = "app.env";
 
     public CredentialManager() {} 
 
+
+    //writes env user credential info for accessing database
     public void write(String user, String pass, String mode) throws IOException {
         Properties props = new Properties();
         props.setProperty("user", user);
@@ -17,7 +29,7 @@ public class CredentialManager {
             props.store(output, null);
         }
     }
-
+    //writes env user credential info for accessing app
     public void writeAppSession(String appUser, String appMode) throws IOException {
         Properties props = new Properties();
 

@@ -43,7 +43,19 @@ import dao.model.Employee;
 import dao.model.Equipment;
 import dao.model.Transaction;
 import dao.model.Unit;
-
+/**
+ * Service class for Business Intelligence and Document Generation.
+ * 
+ * Acts as the analytical engine of the IT Asset Management System, responsible 
+ * for transforming raw database entities into structured summaries and 
+ * multi-format reports (PDF, CSV, JSON).
+ * 
+ * - Implements logic to compute asset distribution metrics, including status 
+ *   normalization (Available, Checked Out, Maintenance) and hierarchical 
+ *   grouping by Category and Equipment type.
+ * - Utilizes Java Records for snapshotting the report state, ensuring data 
+ *   consistency across different export processes.
+ */
 public class ReportService {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

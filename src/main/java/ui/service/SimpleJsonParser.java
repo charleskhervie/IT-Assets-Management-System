@@ -4,7 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Custom Recursive Descent Parser for JSON Data.
+ * 
+ * Provides a lightweight, dependency-free implementation for deserializing 
+ * JSON strings into standard Java collection types (Map, List) and 
+ * primitive wrappers (String, Double, Long, Boolean).
+ * 
+ */
 public class SimpleJsonParser {
     private final String text;
     private int index;

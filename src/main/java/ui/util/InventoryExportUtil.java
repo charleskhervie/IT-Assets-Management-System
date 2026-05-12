@@ -26,7 +26,17 @@ import dao.model.Employee;
 import dao.model.Equipment;
 import dao.model.Transaction;
 import dao.model.Unit;
-
+/**
+ * Utility class for Inventory Data Export Aggregation.
+ * 
+ * Acts as a centralized data access facade that consolidates various domain 
+ * entities to facilitate reporting and system-wide data extraction.
+ * 
+ * - Integrates multiple Data Access Objects (DAOs) and Handlers to provide 
+ *   a unified entry point for retrieving raw inventory records.
+ * - Supports comprehensive data retrieval across units, equipment, employees, 
+ *   categories, departments, and transaction histories.
+ */
 public class InventoryExportUtil {
 
     private final unitHandler unitHandler = new unitHandler();

@@ -30,7 +30,12 @@ import ui.util.TransactionTableUtil;
 import ui.service.TableExportService;
 import javafx.stage.FileChooser;
 import java.io.File;
-
+/**
+ * Controller for the Transaction Ledger screen.
+ * 
+ * Implements a state-aware table that changes its available actions (Approve/Decline)
+ * based on the transaction status and the user's administrative privileges.
+ */
 public class TransactionScreen implements Initializable {
 
     @FXML private ComboBox<String> statusFilter;
@@ -92,6 +97,7 @@ public class TransactionScreen implements Initializable {
                     },
                     t -> {
                         Transaction tx = (Transaction) t;
+                        // Pending transactions cannot be deleted, only declined by admin
                         if ("Pending Return".equalsIgnoreCase(tx.getStatus())) {
                             handleDeclineReturn(tx);
                         } else {
@@ -270,7 +276,7 @@ public class TransactionScreen implements Initializable {
         boolean confirmed = AlertUtil.showConfirmation("Decline",
                 "Decline checkout for unit " + transaction.getUnitId() + "?");
         if (!confirmed) return;
-
+        // Soft delete instead of hard delete to preserve transaction foreign key references
         String error = handler.declineCheckout(transactionDAO, transaction.getTransactionId());
         if (error != null) AlertUtil.showError("Error", error);
         loadData();

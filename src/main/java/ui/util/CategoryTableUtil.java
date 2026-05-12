@@ -7,7 +7,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-
+/**
+ * Utility class for Category Table Configuration.
+ * 
+ * Provides centralized methods for initializing and styling {@link TableView} 
+ * components dedicated to {@link Category} data management.
+ * 
+ */
 public class CategoryTableUtil {
 
     public static void setupColumns(

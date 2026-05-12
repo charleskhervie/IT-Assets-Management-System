@@ -8,7 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+/**
+ * Utility class for Modal Window Management.
+ * 
+ * Provides centralized logic for instantiating and displaying blocking 
+ * application dialogs using JavaFX FXML resources.
+ * 
+ */
 public class ModalUtil {
 
     private ModalUtil() {}

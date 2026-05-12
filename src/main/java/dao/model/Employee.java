@@ -6,6 +6,7 @@ public class Employee {
     private String password;
     private String role;
     private String fullName;
+    private String departmentName;
 
     public Employee(int empId, int departmentId, String username, String password, String role, String fullName) {
         this.empId = empId;
@@ -62,6 +63,13 @@ public class Employee {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+    
+    public String getDepartmentName() { 
+        return departmentName; 
+    }
+    public void setDepartmentName(String departmentName) { 
+        this.departmentName = departmentName; 
     }
 
 

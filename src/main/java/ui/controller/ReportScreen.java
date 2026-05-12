@@ -28,7 +28,21 @@ import ui.service.ReportService.EquipmentSummaryRow;
 import ui.service.ReportService.ReportSnapshot;
 import ui.service.ReportService.TransactionSummaryRow;
 import ui.util.NavigationUtil;
-
+/**
+ * Controller for the Comprehensive Reports screen.
+ * 
+ * Provides a high-level data visualization and reporting interface for organizational assets.
+ * It aggregates data across categories, equipment types, and transaction histories to 
+ * produce both visual insights (Charts) and detailed data grids (Tables).
+ * 
+ * Key features:
+ * - Real-time counters for asset availability and maintenance status.
+ * - Multi-format export system (CSV, JSON, PDF) using functional action wrappers.
+ * - Visual analytics via JavaFX {@link PieChart} for status distribution and 
+ *   {@link BarChart} for equipment volume.
+ * - Snapshot-based data loading via {@link ReportService} to ensure data consistency 
+ *   across various summary tables.
+ */
 public class ReportScreen implements Initializable {
 
     @FXML private Label totalUnitsLabel;

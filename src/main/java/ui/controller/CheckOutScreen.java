@@ -19,7 +19,24 @@ import javafx.stage.Stage;
 import ui.util.AdminUtil;
 import ui.util.AlertUtil;
 import ui.util.SessionManager;
-
+/**
+ * Controller for the Check Out Screen.
+ * 
+ * Manages the workflow for requesting and processing hardware asset deployments. 
+ * This controller handles the transition of unit states from "available" to 
+ * "checked-out" or "pending" based on the user's authorization level.
+ * 
+ * - Automates field population by retrieving hardware details from the target 
+ *   {@link Unit} and borrower information from the current {@link SessionManager}.
+ * - Implements conditional business logic that differentiates between direct 
+ *   admin checkouts and employee requests requiring administrative approval.
+ * - Validates unit availability and serial number existence via {@link UnitDAO} 
+ *   to prevent transaction conflicts or data errors.
+ * - Records hardware deployments by generating new {@link Transaction} entries 
+ *   through the {@link TransactionHandler} service layer.
+ * - Provides immediate user feedback on the status of the request while ensuring 
+ *   modal lifecycle management via controlled stage closures.
+ */
 public class CheckOutScreen {
 
     @FXML private TextField serialNoField;

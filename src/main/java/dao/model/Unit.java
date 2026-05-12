@@ -1,8 +1,23 @@
 package dao.model;
 
 import java.time.LocalDateTime;
+/**
+ * Represents a unit of equipment in the IT asset inventory.
+ * A unit is a physical instance of an equipment type, identified by a serial number.
+ */
 
 public class Unit {
+    /**
+     * Constructs a new Unit with the given attributes.
+     *
+     * @param unitId      the unique identifier of the unit
+     * @param equipmentId the ID of the equipment type this unit belongs to
+     * @param serialNumber the unique serial number of this unit
+     * @param status      the current status (Available, Checked-Out, Maintenance)
+     * @param addedBy     the emp_id of the employee who added this unit
+     * @param createdAt   the timestamp when this unit was added
+     * @param assignedTo  the emp_id of the employee currently assigned this unit, or null
+     */
     private int unitId;
     private int equipmentId;
     private String serialNumber;

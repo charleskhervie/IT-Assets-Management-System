@@ -5,7 +5,10 @@ import java.util.List;
 
 import dao.model.Department;
 
-
+/**
+ * Data Access Object interface for Unit operations.
+ * Defines the contract for all database interactions involving the departments table.
+ */
 
 public interface DepartmentDAO {
     void add(Department department) throws SQLException;

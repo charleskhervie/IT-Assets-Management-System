@@ -5,7 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import dao.intfc.EquipmentDAO;
 import dao.model.Equipment;
-
+/**
+ * handler class for managing equipment definitions.
+ * provides validation and error handling for operations involving the 
+ * {@link EquipmentDAO}, specifically managing the relationship between 
+ * equipment types and their categories.
+ */
 public class EquipmentHandler {
 
     public List<Equipment> getEquipments(EquipmentDAO dao) {

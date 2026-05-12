@@ -17,7 +17,19 @@ import dao.model.Transaction;
 import dao.model.Unit;
 import ui.util.InventoryExportUtil;
 import ui.util.InventoryImportUtil;
-
+/**
+ * Service class for CSV Import and Export Operations.
+ *  
+ * - Implements a generic CSV schema (table_name, id, text, date columns) 
+ *   to handle diverse entities like Equipment, Employees, and Transactions 
+ *   within a single file.
+ * - Manages the full Export implementation: retrieving raw entity data from 
+ *   DAOs, escaping special characters for CSV compliance, and persisting 
+ *   the result to the file system.
+ * - Supports previews via {@link ImportPreviewData}, allowing 
+ *   users to inspect potential changes and validation issues before 
+ *   modifying the database.
+ */
 public class InventoryCsvService {
 
     private final InventoryExportUtil exportUtil = new InventoryExportUtil();

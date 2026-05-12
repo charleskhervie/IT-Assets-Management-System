@@ -20,6 +20,22 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import dao.model.Unit;
 import dao.model.Transaction;
+/**
+ * Utility service for Tabular Data Export to PDF.
+ * 
+ * Specializes in generating formatted document exports for specific database 
+ * views, primarily used for capturing filtered lists of assets and 
+ * historical audit logs.
+ * 
+ * - Provides static utility methods to transform collections of {@link Unit} 
+ *   and {@link Transaction} models into professional PDF documents.
+ * - Supports dynamic metadata inclusion, such as filter descriptions and 
+ *   total record counts, to provide context for the exported data.
+ * - Configures a landscape (A4 Rotate) orientation to accommodate 
+ *   multi-column tables with high readability.
+ * - Encapsulates complex PDF table construction logic, including cell 
+ *   creation and stream management, within reusable private helper methods.
+ */
 
 public class TableExportService {
 

@@ -17,6 +17,7 @@ import ui.util.EmployeeTableUtil;
 import ui.util.ModalUtil;
 import ui.util.NavigationUtil;
 import ui.util.AlertUtil;
+import ui.util.EmployeeFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -26,7 +27,24 @@ import java.util.ArrayList;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
+/**
+ * Controller for the Employee Management Screen.
+ * 
+ * Facilitates administrative oversight of personnel records, including account 
+ * creation, role assignments, and department tracking. It utilizes a paginated 
+ * architecture to maintain high performance when handling large staff directories.
+ * 
+ * - Renders personnel data through a partitioned TableView with custom-configured 
+ *   columns via {@link EmployeeTableUtil}.
+ * - Implements a reactive search interface using {@link EmployeeFilter} to 
+ *   provide instant feedback as the user types.
+ * - Manages employee lifecycles by coordinating CRUD operations through 
+ *   {@link EmployeeHandler} and {@link EmployeeDAO}.
+ * - Supports bulk operations, allowing users to select and delete multiple 
+ *   records simultaneously via a standard context menu.
+ * - Handles modular record editing by injecting existing data into the 
+ *   {@link AddEmployeeModalScreen} using a shared FXML component.
+ */
 public class EmployeeScreen implements Initializable {
 
     @FXML private TextField searchField;
@@ -63,26 +81,13 @@ public class EmployeeScreen implements Initializable {
 
     private void applyFilters() {
         String keyword = searchField != null ? searchField.getText().toLowerCase().trim() : "";
+
         currentFilteredData = masterList.stream()
-            .filter(employee -> matchesKeyword(employee, keyword))
-            .collect(java.util.stream.Collectors.toList());
+            .filter(emp -> EmployeeFilter.matches(emp, keyword))
+            .toList();
+
         currentPage = 0;
         updatePage();
-    }
-
-    private boolean matchesKeyword(Employee employee, String keyword) {
-        if (keyword.isEmpty()) {
-            return true;
-        }
-        return String.valueOf(employee.getEmpId()).contains(keyword)
-            || containsKeyword(employee.getUsername(), keyword)
-            || containsKeyword(employee.getFullName(), keyword)
-            || containsKeyword(employee.getRole(), keyword)
-            || String.valueOf(employee.getDepartmentId()).contains(keyword);
-    }
-
-    private boolean containsKeyword(String value, String keyword) {
-        return value != null && value.toLowerCase().contains(keyword);
     }
 
     private void updatePage() {

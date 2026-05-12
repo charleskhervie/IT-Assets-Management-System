@@ -4,7 +4,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import dao.model.Transaction;
-
+/**
+ * Data Access Object interface for Unit operations.
+ * Defines the contract for all database interactions involving the Transactions table.
+ */
 public interface TransactionDAO {
     void add(Transaction transaction) throws SQLException;
     void update(Transaction transaction) throws SQLException;

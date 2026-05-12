@@ -10,6 +10,11 @@ import java.util.List;
 import dao.intfc.CategoryDAO;
 import dao.model.Category;
 import dao.dao_util.DBUtil;
+/**
+ * Implementation of the {@link CategoryDAO} interface for handling database
+ * operations involving the employee table. .
+ * 
+*/
 public class CategoryDAOImpl  implements CategoryDAO{
     
     @Override

@@ -12,7 +12,6 @@ import dao.intfc.CategoryDAO;
 import dao.model.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +26,25 @@ import ui.util.AlertUtil;
 import ui.util.CategoryFilter;
 import ui.util.CategoryTableUtil;
 import ui.util.ModalUtil;
-
+/**
+ * Controller for the Category List Screen.
+ * 
+ * Manages the comprehensive display and administrative control of inventory 
+ * categories. This controller implements a robust data-view architecture that 
+ * balances user accessibility with administrative security.
+ * 
+ * - Implements a paginated {@link TableView} to efficiently navigate through 
+ *   large classification sets while maintaining UI responsiveness.
+ * - Enforces role-based access control by dynamically hiding or showing 
+ *   administrative tools like the "Add Category" button and context menus 
+ *   based on {@link AdminUtil#isAdminMode()}.
+ * - Provides real-time data filtering using {@link CategoryFilter}, allowing 
+ *   users to quickly isolate specific categories via the search interface.
+ * - Handles complex CRUD operations, including bulk deletion with integrated 
+ *   error reporting and transactional integrity verification via {@link CategoryHandler}.
+ * - Facilitates modular record editing by launching the {@link EditCategoryModalScreen} 
+ *   and refreshing the master data list upon completion of modal interactions.
+ */
 public class CategoryListScreen implements Initializable {
 
     @FXML private TextField searchField11;

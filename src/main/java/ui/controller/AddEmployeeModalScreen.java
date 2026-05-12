@@ -11,7 +11,26 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ui.util.AlertUtil;
-
+/**
+ * Controller for the Add Employee Modal Screen.
+ * 
+ * Manages the creation and modification of system user accounts. This controller 
+ * handles the synchronization between user profile attributes and the organizational 
+ * hierarchy.
+ * 
+ * - Populates selection components with predefined system roles and organizational 
+ *   departments during initialization.
+ * - Supports dual-mode functionality, serving as both a creation form for new 
+ *   users and an editor for existing {@link Employee} records.
+ * - Implements a mapping layer between descriptive department names and numerical 
+ *   database identifiers using switch expressions.
+ * - Conducts mandatory field validation to ensure the integrity of security 
+ *   credentials and profile information.
+ * - Interfaces with {@link EmployeeHandler} and {@link EmployeeDAO} to manage 
+ *   data persistence and account updates.
+ * - Orchestrates the modal lifecycle by resolving current stage references 
+ *   for clean exit behaviors.
+ */
 public class AddEmployeeModalScreen {
 
     @FXML private TextField fullNameField;

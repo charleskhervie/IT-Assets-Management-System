@@ -1,7 +1,12 @@
 package ui.util;
 
 import dao.model.Category;
-
+/**
+ * Utility class for Filtering Category Data.
+ * 
+ * Provides centralized logic for evaluating search criteria against 
+ * {@link Category} attributes to support dynamic UI filtering.
+ */
 public class CategoryFilter {
 
     private CategoryFilter() {}

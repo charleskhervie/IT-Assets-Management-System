@@ -4,7 +4,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import dao.model.Unit;
-
+/**
+ * Data Access Object interface for Unit operations.
+ * Defines the contract for all database interactions involving the units table.
+ */
 public interface UnitDAO {
     void add(Unit unit) throws SQLException;
     void update(Unit unit) throws SQLException;

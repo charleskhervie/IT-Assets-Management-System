@@ -27,8 +27,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-
-public class LoginScreen implements Initializable{
+/**
+ * Controller for the Login Screen.
+ * 
+ * Manages user authentication and application entry. It validates user credentials 
+ * against the database, enforces role-based access control, and establishes 
+ * the global session state.
+ * responsibilities:
+ * - Checks usernames and passwords via {@link EmployeeDAO}.
+ * - Maps internal database roles to application-level modes (Admin/Employee).
+ * - Stores authenticated user details in {@link SessionManager} 
+ *   and updates persistent local session files via {@link CredentialManager}.
+ * - Orchestrates the transition from the login portal to the 
+ *   Main Dashboard upon successful authentication.
+ */public class LoginScreen implements Initializable{
 
     @FXML
     private TextField usernameField;

@@ -11,9 +11,15 @@ import java.util.List;
 import dao.dao_util.DBUtil;
 import dao.intfc.UnitDAO;
 import dao.model.Unit;
-
+/**
+ * implementation of the {@link UnitDAO} interface for managing individual 
+ * physical equipment instances. this class handles state transitions, 
+ * assignment tracking, and soft-deletion logic for units within the 
+ * it asset management system.
+ * 
+ */
 public class UnitDAOImpl implements UnitDAO {
-
+    //add unit
     @Override
     public void add(Unit unit) throws SQLException {
         String query = "insert into units (equipment_id, serial_number, status, added_by, created_at, assigned_to) values (?, ?, ?, ?, ?, ?)";
@@ -33,7 +39,7 @@ public class UnitDAOImpl implements UnitDAO {
             }
         }
     }
-
+    //update unit
     @Override
     public void update(Unit unit) throws SQLException {
         String query = "update units set equipment_id = ?, serial_number = ?, status = ?, added_by = ?, assigned_to = ? where unit_id = ?";
@@ -51,7 +57,7 @@ public class UnitDAOImpl implements UnitDAO {
             }
         }
     }
-
+    //delete a unit
     @Override
     public void delete(int unitId) throws SQLException {
         String query = "delete from units where unit_id = ?";
@@ -61,6 +67,13 @@ public class UnitDAOImpl implements UnitDAO {
             ps.executeUpdate();
         }
     }
+    /**
+     * Soft deletes a unit by setting its is_deleted flag to true.
+     * This preserves transaction history that references the unit.
+     *
+     * @param unitId the ID of the unit to soft delete
+     * @throws SQLException if a database error occurs
+     */
     @Override
     public void softDelete(int unitId) throws SQLException {
         String query = "update units set is_deleted = TRUE where unit_id = ?";
@@ -89,6 +102,13 @@ public class UnitDAOImpl implements UnitDAO {
 
         return units;
     }
+     /**
+     * Retrieves all active units with display-friendly joined fields
+     * such as equipment name, category name, added by name, and assigned to name.
+     *
+     * @return list of units with populated display fields
+     * @throws SQLException if a database error occurs
+     */
     @Override
     public List<Unit> findAllDisplay() throws SQLException {
         List<Unit> units = new ArrayList<>();
@@ -116,7 +136,12 @@ public class UnitDAOImpl implements UnitDAO {
         }
         return units;
     }
-
+     /**
+     * Retrieves all active units with specific id
+     *
+     * @return list of units with matched id
+     * @throws SQLException if a database error occurs
+     */
     @Override
     public Unit findById(int unitId) throws SQLException {
         String query = "select * from units where unit_id = ?";
@@ -196,6 +221,17 @@ public class UnitDAOImpl implements UnitDAO {
 
         return units;
     }
+    /**
+     * Maps a single row from a ResultSet into a {@code Unit} object containing 
+     * only core database fields.
+     * 
+     * <p>This method is typically used when querying the 'units' table directly 
+     * without joining other tables for descriptive names.</p>
+     * 
+     * @param rs the {@code ResultSet} currently positioned at the desired row
+     * @return a {@code Unit} object populated with basic column data
+     * @throws SQLException if a database access error occurs or the column labels are invalid
+     */
     private Unit mapRowRaw(ResultSet rs) throws SQLException {
         return new Unit(
             rs.getInt("unit_id"),
@@ -207,7 +243,19 @@ public class UnitDAOImpl implements UnitDAO {
             rs.getObject("assigned_to", Integer.class)
         );
     }
-    
+    /**
+     * Maps a single row from a ResultSet into a {@code Unit} object, including 
+     * additional descriptive fields for display purposes.
+     * 
+     * <p>In addition to the core fields, this method populates human-readable names 
+     * (e.g., equipment name, category, and personnel names) which are expected 
+     * to be present in the query result via SQL joins.</p>
+     * 
+     * @param rs the {@code ResultSet} currently positioned at the desired row
+     * @return a {@code Unit} object populated with core data and display attributes
+     * @throws SQLException if a database access error occurs or the expected 
+     *         join columns are missing
+     */
     private Unit mapRowDisplay(ResultSet rs) throws SQLException {
         Unit unit = new Unit(
             rs.getInt("unit_id"),

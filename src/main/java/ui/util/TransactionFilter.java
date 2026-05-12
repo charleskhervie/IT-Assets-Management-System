@@ -4,7 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import dao.model.Transaction;
-
+/**
+ * Utility class for Filtering Transaction Data.
+ * 
+ * Provides centralized logic for evaluating search criteria and workflow states 
+ * against {@link Transaction} records to support dynamic UI filtering.
+ * 
+ */
 public class TransactionFilter {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

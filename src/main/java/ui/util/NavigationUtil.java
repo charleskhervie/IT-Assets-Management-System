@@ -8,7 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import ui.controller.DashboardScreen;
+/**
+ * Utility class for Application Navigation.
+ * 
+ * Provides centralized logic for switching scenes and managing dynamic 
+ * content loading within the application's primary workspace.
+ * 
+ */
 public class NavigationUtil {
 
     public static void loadIntoDashboard(ActionEvent event, String fxmlPath) {

@@ -11,7 +11,11 @@ import dao.intfc.DepartmentDAO;
 import dao.model.Department;
 import dao.dao_util.DBUtil;
 
-
+/**
+ * Implementation of the {@link DepartmentDAO } interface for handling database
+ * operations involving the employee table. .
+ * 
+*/
 public class DepartmentDAOImpl implements DepartmentDAO {
     
     @Override

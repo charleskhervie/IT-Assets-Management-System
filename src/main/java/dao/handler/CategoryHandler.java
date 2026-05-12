@@ -5,7 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import dao.intfc.CategoryDAO;
 import dao.model.Category;
-
+/**
+ * handler class for managing category definitions.
+ * provides validation and error handling for operations involving the 
+ * {@link EmployeeDAO}, with all CRUD implementations
+ */
 public class CategoryHandler {
 
     public List<Category> getCategories(CategoryDAO dao) {

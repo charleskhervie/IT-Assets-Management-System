@@ -14,7 +14,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ui.util.AlertUtil;
-
+/**
+ * Controller for the Edit Unit Screen.
+ * 
+ * Manages the modification of specific hardware unit instances within the inventory. 
+ * This controller facilitates data persistence for unit-level attributes such as 
+ * serial numbers and personnel assignments while maintaining immutable audit data.
+ * 
+ * - Handles the injection and visualization of existing {@link Unit} data into 
+ *   form fields, formatting timestamps via {@link DateTimeFormatter}.
+ * - Enforces data integrity by preventing the editing of read-only fields like 
+ *   creation timestamps.
+ * - Performs comprehensive input validation to ensure mandatory fields are 
+ *   populated and numerical constraints are respected.
+ * - Synchronizes state updates with the database through the {@link unitHandler} 
+ *   and {@link UnitDAO} persistence layer.
+ * - Manages modal lifecycle by providing safe window closure mechanisms for 
+ *   both successful save operations and user cancellations.
+ */
 public class EditUnitScreen implements Initializable {
 
     @FXML private TextField equipmentIdField;

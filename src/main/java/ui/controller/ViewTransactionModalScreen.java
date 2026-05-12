@@ -6,7 +6,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
+/**
+ * Controller for the Description Transaction screen.
+ * 
+ * Implements a description table displaying formatted data from selected items
+ */
 public class ViewTransactionModalScreen {
 
     @FXML private Label transactionIdLabel;

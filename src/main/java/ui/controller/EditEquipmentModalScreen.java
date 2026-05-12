@@ -13,7 +13,25 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ui.util.AlertUtil;
-
+/**
+ * Controller for the Edit Equipment Modal Screen.
+ * 
+ * Manages the interface for updating existing equipment specifications and 
+ * metadata. This controller acts as a specialized dialogue for refining asset 
+ * details, ensuring that modifications adhere to database constraints and 
+ * relational integrity.
+ * 
+ * - Populates form fields with current {@link Equipment} data, including 
+ *   descriptive text, branding, and technical specifications.
+ * - Implements strict input validation to ensure mandatory fields such as 
+ *   equipment name and category identifiers are correctly formatted.
+ * - Enforces referential integrity by verifying the existence of the 
+ *   provided Category ID via {@link CategoryDAO} before committing updates.
+ * - Orchestrates data persistence by delegating the update logic to 
+ *   {@link EquipmentHandler} and handling potential SQL exceptions.
+ * - Controls the modal lifecycle by providing event-driven methods to 
+ *   dismiss the window upon successful completion or user cancellation.
+ */
 public class EditEquipmentModalScreen {
 
     @FXML private TextField equipmentNameField;
@@ -66,7 +84,7 @@ public class EditEquipmentModalScreen {
         }
 
         try {
-            boolean categoryExists = !categoryDAO.findWithAttribute("categoryId", String.valueOf(categoryId)).isEmpty();
+            boolean categoryExists = !categoryDAO.findWithAttribute("category_id", String.valueOf(categoryId)).isEmpty();
             if (!categoryExists) {
                 AlertUtil.showError("Validation Error", "Category ID " + categoryId + " does not exist. Please enter a valid category.");
                 return;

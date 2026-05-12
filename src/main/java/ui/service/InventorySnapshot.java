@@ -10,7 +10,19 @@ import dao.model.Employee;
 import dao.model.Equipment;
 import dao.model.Transaction;
 import dao.model.Unit;
-
+/**
+ * Data record for Inventory State Snapshots.
+ * 
+ * Serves as a unified container for a complete, point-in-time capture of 
+ * all domain entities within the asset management system.
+ * 
+ * - Aggregates various entity collections, including Departments, Employees, 
+ *   Equipment, Units, and Transactions, into a single immutable structure.
+ * - Acts as the primary data exchange object between the import/export 
+ *   services and the underlying persistence layer.
+ * - Provides utility methods to calculate the aggregate record count and 
+ *   generate a mapping of record distributions across different sections.
+ */
 public record InventorySnapshot(
         List<Department> departments,
         List<Employee> employees,

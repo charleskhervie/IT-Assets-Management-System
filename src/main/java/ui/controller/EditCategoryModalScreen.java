@@ -9,7 +9,24 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ui.util.AlertUtil;
-
+/**
+ * Controller for the Edit Category Modal Screen.
+ * 
+ * Provides a specialized interface for modifying inventory classifications. 
+ * This controller focuses on maintaining the taxonomy of organizational assets 
+ * by ensuring category labels remain accurate and non-redundant.
+ * 
+ * - Manages the state transfer from the parent screen to the modal by initializing 
+ *   form fields with existing {@link Category} attributes.
+ * - Implements UI-level validation to prevent the submission of null or empty 
+ *   category names, maintaining data quality within the system.
+ * - Bridges the presentation layer with the backend by delegating update 
+ *   persistence to the {@link CategoryHandler} and {@link CategoryDAO}.
+ * - Displays contextual feedback via {@link AlertUtil} in the event of database 
+ *   constraints or execution errors.
+ * - Coordinates modal dismissal by resolving the current {@link Stage} from the 
+ *   triggering action event.
+ */
 public class EditCategoryModalScreen {
 
     @FXML private TextField categoryNameField;

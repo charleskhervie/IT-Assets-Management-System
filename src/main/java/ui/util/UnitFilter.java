@@ -1,7 +1,13 @@
 package ui.util;
 
 import dao.model.Unit;
-
+/**
+ * Utility class for Filtering Unit Data.
+ * 
+ * Provides centralized logic for evaluating search criteria and status states 
+ * against {@link Unit} attributes to support dynamic UI filtering.
+ *
+ */
 public class UnitFilter {
 
     private static final String STATUS_ALL = "All";

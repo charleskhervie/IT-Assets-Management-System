@@ -27,7 +27,24 @@ import ui.util.NavigationUtil;
 
 import java.util.Optional;
 import java.util.Properties;
-
+/**
+ * Controller for the Main Dashboard Screen.(important)
+ * 
+ * Serves as the central navigation hub and primary shell for the IT Asset Management 
+ * System. It coordinates the display of high-level inventory metrics and manages 
+ * the dynamic loading of sub-interfaces within a centralized viewing area.
+ * 
+ * - Orchestrates conditional UI rendering based on administrative privileges, 
+ *   restricting access to sensitive modules via {@link AdminUtil#isAdminMode()}.
+ * - Manages the primary navigation state, utilizing a reactive styling mechanism 
+ *   to highlight the currently active module.
+ * - Aggregates system-wide statistics by querying the handler layer to provide 
+ *   real-time counts for units, equipment, employees, and transactions.
+ * - Integrates with {@link CredentialManager} to securely display session data, 
+ *   including the current user's identity and system role.
+ * - Facilitates modular content swapping within the {@link BorderPane} using 
+ *   {@link NavigationUtil} for a seamless single-page application experience.
+ */
 public class DashboardScreen implements Initializable {
 
     @FXML

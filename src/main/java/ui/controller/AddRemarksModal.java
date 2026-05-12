@@ -4,7 +4,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-
+/**
+ * Controller for the Add Remarks Modal.
+ * 
+ * Provides a streamlined interface for capturing supplemental text annotations 
+ * during inventory or transaction processes. This controller acts as a 
+ * data-entry buffer, allowing users to append qualitative notes to records 
+ * before final commitment.
+ * 
+ */
 public class AddRemarksModal {
 
     @FXML private TextArea remarksArea;

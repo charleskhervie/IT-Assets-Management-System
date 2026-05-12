@@ -12,7 +12,6 @@ import dao.intfc.EquipmentDAO;
 import dao.model.Equipment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +26,24 @@ import ui.util.AlertUtil;
 import ui.util.EquipmentFilter;
 import ui.util.EquipmentTableUtil;
 import ui.util.ModalUtil;
-
+/**
+ * Controller for the Equipment List Screen.
+ * 
+ * Manages the display, filtering, and lifecycle operations of organizational 
+ * hardware assets. It provides a paginated table view with dynamic administrative 
+ * controls based on the current user's session.
+ *  responsibilities:
+ * - Efficiently renders large equipment datasets by 
+ *   partitioning results into manageable pages.
+ * - Automatically toggles the visibility of "Add", "Edit", 
+ *   and "Delete" actions depending on {@link AdminUtil#isAdminMode()}.
+ * - Implements a real-time search listener that filters the 
+ *   {@link TableView} based on keyword matches via {@link EquipmentFilter}.
+ * - Orchestrates equipment modification and removal through 
+ *   modal dialogs and the {@link EquipmentHandler} service layer.
+ * - Utilizes {@link EquipmentTableUtil} to standardize 
+ *   column rendering and context menu behaviors across the application.
+ */
 public class EquipmentListScreen implements Initializable {
 
     @FXML private TextField searchField1;

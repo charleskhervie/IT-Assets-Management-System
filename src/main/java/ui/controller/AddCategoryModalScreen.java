@@ -9,7 +9,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ui.util.AlertUtil;
-
+/**
+ * Controller for the Add Category Modal Screen.
+ * 
+ * Facilitates the addition of new asset classifications within the system. 
+ * This controller provides a focused interface for defining top-level 
+ * categories used to organize equipment and units.
+ * 
+ * - Captures and sanitizes category nomenclature through a single-entry 
+ *   text interface.
+ * - Implements validation logic to prevent the creation of empty or 
+ *   whitespace-only category records.
+ * - Bridges the UI and persistence layers by delegating the creation 
+ *   of {@link Category} objects to {@link CategoryHandler} and {@link CategoryDAO}.
+ */
 public class AddCategoryModalScreen {
 
     @FXML private TextField categoryNameField;

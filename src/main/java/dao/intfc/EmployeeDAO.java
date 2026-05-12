@@ -4,7 +4,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import dao.model.Employee;
-
+/**
+ * Data Access Object interface for Unit operations.
+ * Defines the contract for all database interactions involving the employees table.
+ */
 public interface EmployeeDAO {
     void add(Employee employee) throws SQLException;
     void update(Employee employee) throws SQLException;

@@ -9,6 +9,12 @@ import java.util.List;
 import dao.intfc.EmployeeDAO;
 import dao.model.Employee;
 import dao.dao_util.DBUtil;
+
+/**
+ * Implementation of the {@link EmployeeDAO} interface for handling database
+ * operations involving the employee table. .
+ * 
+*/
 public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
@@ -83,10 +89,14 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public List<Employee> findAll() throws SQLException {
         List<Employee> employees = new ArrayList<>();
-        String query = "select * from employees";
+        String query = """
+            select e.*, coalesce(d.department_name, 'Unknown') as department_name
+            from employees e
+            left join departments d on e.department_id = d.department_id
+        """;
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Employee employee = new Employee(
                     rs.getInt("emp_id"),
@@ -96,6 +106,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
                     rs.getString("role"),
                     rs.getString("full_name")
                 );
+                employee.setDepartmentName(rs.getString("department_name"));
                 employees.add(employee);
             }
         }

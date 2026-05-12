@@ -18,6 +18,24 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+/**
+ * Controller for the Add Unit Screen.
+ * 
+ * Facilitates the registration of new hardware assets into the inventory system. 
+ * This controller ensures that every new unit is initialized with correct 
+ * ownership data and audit timestamps before being persisted.
+ * 
+ * - Automates administrative tracking by retrieving the current user's identity 
+ *   via {@link CredentialManager} and populating read-only audit fields.
+ * - Enforces robust data entry standards through real-time validation of 
+ *   mandatory fields and numerical constraints for equipment identifiers.
+ * - Bridges the UI and database layers by transforming form input into valid 
+ *   {@link Unit} objects for processing by {@link unitHandler}.
+ * - Implements secure session fallback mechanisms to ensure system stability 
+ *   even when local credential properties are inaccessible.
+ * - Provides immediate diagnostic feedback using localized alert dialogs to 
+ *   inform the user of validation errors or successful record creation.
+ */
 public class AddUnitScreen implements Initializable {
 
 

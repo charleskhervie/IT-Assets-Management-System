@@ -10,7 +10,11 @@ import java.util.List;
 import dao.dao_util.DBUtil;
 import dao.intfc.EquipmentDAO;
 import dao.model.Equipment;
-
+/**
+ * Implementation of the {@link EquipmentDAO} interface for handling database
+ * operations involving the equipment table. .
+ * 
+ */
 public class EquipmentDAOImpl implements EquipmentDAO {
 
     @Override

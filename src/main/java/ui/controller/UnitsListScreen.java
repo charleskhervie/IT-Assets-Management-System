@@ -31,6 +31,15 @@ import ui.service.TableExportService;
 import javafx.stage.FileChooser;
 import java.io.File;
 
+/**
+ * Controller for the Units List screen.
+ *
+ * Displays a paginated, filterable table of all units in the system.
+ * Admin users see Edit and Delete action buttons per row, along with an Add Unit button.
+ * Staff users see Check-out and Check-in buttons instead.
+ *
+ * Filtering is done client-side against a master list loaded from the database.
+ */
 public class UnitsListScreen implements Initializable {
 
     @FXML private ComboBox<String> statusFilter;
@@ -64,8 +73,7 @@ public class UnitsListScreen implements Initializable {
     private final unitHandler handler = new unitHandler();
     private final ObservableList<Unit> masterList = FXCollections.observableArrayList();
     private UnitDAO unitDAO;
-    
-   
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initDAO();
@@ -74,15 +82,17 @@ public class UnitsListScreen implements Initializable {
         initFilterListeners();
         initButtonVisibility();
         loadData();
-        
     }
-    
 
-     private void initFilterListeners() {
+    private void initFilterListeners() {
         searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
         statusFilter.valueProperty().addListener((obs, oldVal, newVal) -> applyFilters());
     }
 
+    /**
+     * Shows or hides action buttons based on whether the current user is an admin or staff.
+     * Admins see unit management buttons; staff see checkout/checkin buttons.
+     */
     private void initButtonVisibility() {
         boolean isAdmin = AdminUtil.isAdminMode();
         setUserButtonVisibility(!isAdmin);
@@ -105,10 +115,10 @@ public class UnitsListScreen implements Initializable {
             addUnitButton.setVisible(visible);
             addUnitButton.setManaged(visible);
         }
-    }    
+    }
 
     private void initDAO() {
-        if (unitDAO == null){
+        if (unitDAO == null) {
             unitDAO = new UnitDAOImpl();
         }
     }
@@ -118,11 +128,16 @@ public class UnitsListScreen implements Initializable {
         statusFilter.setValue(STATUS_ALL);
     }
 
-   @SuppressWarnings("unchecked")
+    /**
+     * Sets up table columns differently based on role.
+     * Admins get inline Edit and Delete buttons per row via {@link UnitTableUtil#setupColumnsWithActions}.
+     * Staff get a plain read-only table.
+     */
+    @SuppressWarnings("unchecked")
     private void initTable() {
         String editStyle = "-fx-background-color: #78A1BB; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
         String deleteStyle = "-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 4; -fx-font-size: 11px;";
-       
+
         TableView<Object> table = (TableView<Object>) (TableView<?>) unitsTable;
 
         if (AdminUtil.isAdminMode()) {
@@ -139,22 +154,31 @@ public class UnitsListScreen implements Initializable {
         updatePage();
     }
 
-    
     public void loadData() {
         masterList.setAll(handler.getUnitsDisplay(unitDAO));
         applyFilters();
     }
 
+    /**
+     * Filters the master list by status and keyword, then resets to page 1.
+     * Called whenever the search field or status dropdown changes.
+     */
     private void applyFilters() {
         String keyword = searchField.getText().toLowerCase().trim();
         String status = statusFilter.getValue();
+
         currentFilteredData = masterList.stream()
             .filter(unit -> UnitFilter.matches(unit, status, keyword))
-            .collect(java.util.stream.Collectors.toList());
+            .toList();
+
         currentPage = 0;
         updatePage();
     }
 
+    /**
+     * Slices {@code currentFilteredData} to the current page and updates
+     * the table, page label, and prev/next button states.
+     */
     private void updatePage() {
         int fromIndex = currentPage * PAGE_SIZE;
         int toIndex = Math.min(fromIndex + PAGE_SIZE, currentFilteredData.size());
@@ -191,6 +215,7 @@ public class UnitsListScreen implements Initializable {
         }
     }
 
+    /** Guards against multi-selection before opening the edit modal. */
     private void handleEditSelected() {
         List<Unit> selected = unitsTable.getSelectionModel().getSelectedItems();
         if (selected.size() > 1) {
@@ -205,7 +230,7 @@ public class UnitsListScreen implements Initializable {
             Parent root = loader.load();
 
             EditUnitScreen controller = loader.getController();
-            controller.setUnit(unit);   
+            controller.setUnit(unit);
 
             Stage modal = new Stage();
             modal.initOwner(unitsTable.getScene().getWindow());
@@ -215,11 +240,12 @@ public class UnitsListScreen implements Initializable {
             modal.setScene(new Scene(root));
             modal.showAndWait();
 
-            loadData();  
+            loadData();
         } catch (IOException e) {
             throw new RuntimeException("Failed to load editAsset.fxml", e);
         }
     }
+
     @FXML
     private void handleAddUnit(ActionEvent event) {
         try {
@@ -234,7 +260,7 @@ public class UnitsListScreen implements Initializable {
             modal.setScene(new Scene(root));
             modal.showAndWait();
 
-            loadData(); // refresh the table after adding
+            loadData();
         } catch (IOException e) {
             AlertUtil.showError("Navigation Error", "Could not load the Add Unit screen.");
             e.printStackTrace();
@@ -243,11 +269,11 @@ public class UnitsListScreen implements Initializable {
 
     private void handleDeleteSelected() {
         List<Unit> selected = new ArrayList<>(unitsTable.getSelectionModel().getSelectedItems());
-        if (selected.isEmpty()) return; // ← was this returning early?
+        if (selected.isEmpty()) return;
 
-        boolean alert = AlertUtil.showConfirmation("Delete Units", 
+        boolean confirmed = AlertUtil.showConfirmation("Delete Units",
             "Are you sure you want to delete " + selected.size() + " unit(s)?");
-        if (!alert) return;
+        if (!confirmed) return;
 
         List<String> errors = deleteUnits(selected);
         if (!errors.isEmpty()) {
@@ -256,17 +282,25 @@ public class UnitsListScreen implements Initializable {
         loadData();
     }
 
+    /**
+     * Performs a soft delete on each unit, collecting any errors.
+     * A soft delete marks the unit as deleted without removing it from the database.
+     *
+     * @return list of error messages for any units that failed to delete
+     */
     private List<String> deleteUnits(List<Unit> units) {
         List<String> errors = new ArrayList<>();
         for (Unit unit : units) {
             String error = handler.softDeleteUnit(unitDAO, unit.getUnitId());
-            if (error != null){
+            if (error != null) {
                 errors.add("Unit " + unit.getUnitId() + ": " + error);
             }
         }
         return errors;
     }
-    @FXML private void handleExit(ActionEvent event) {
+
+    @FXML 
+    private void handleExit(ActionEvent event) {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Confirm Exit");
         confirmAlert.setHeaderText("Exit to Login");
@@ -277,7 +311,9 @@ public class UnitsListScreen implements Initializable {
 
         NavigationUtil.loadScene(event, "/fxml/login.fxml");
     }
-    @FXML private void handleCheckOut(ActionEvent event) { 
+
+    @FXML 
+    private void handleCheckOut(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
             Parent root = loader.load();
@@ -294,7 +330,8 @@ public class UnitsListScreen implements Initializable {
         }
     }
 
-    @FXML private void handleCheckIn(ActionEvent event) { 
+    @FXML 
+    private void handleCheckIn(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-in.fxml"));
             Parent root = loader.load();
@@ -311,7 +348,8 @@ public class UnitsListScreen implements Initializable {
         }
     }
 
-    @FXML private void handleExportPdf(ActionEvent event) {
+    @FXML 
+    private void handleExportPdf(ActionEvent event) {
         if (currentFilteredData.isEmpty()) {
             AlertUtil.showError("Export Error", "No units to export. Please check your filters.");
             return;
@@ -325,9 +363,7 @@ public class UnitsListScreen implements Initializable {
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
 
             File file = chooser.showSaveDialog(unitsTable.getScene().getWindow());
-            if (file == null) {
-                return;
-            }
+            if (file == null) return;
 
             TableExportService.exportUnitsToPdf(file.toPath(), currentFilteredData, filterDesc);
             AlertUtil.showInfo("Export Complete", "Units exported to:\n" + file.getAbsolutePath());
@@ -336,6 +372,7 @@ public class UnitsListScreen implements Initializable {
         }
     }
 
+    /** Builds a human-readable description of active filters for the PDF export header. */
     private String buildFilterDescription() {
         StringBuilder desc = new StringBuilder();
         String status = statusFilter.getValue();

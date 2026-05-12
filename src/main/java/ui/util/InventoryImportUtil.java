@@ -36,7 +36,17 @@ import dao.model.Unit;
 import ui.service.ImportIssue;
 import ui.service.ImportSummary;
 import ui.service.InventorySnapshot;
-
+/**
+ * Utility class for Inventory Data Import.
+ * 
+ * Provides centralized logic for validating and migrating external data 
+ * snapshots into the application's persistent database.
+ * 
+ * - Generates comprehensive {@link ImportSummary} and {@link ImportIssue} 
+ *   reports to provide transparency on skipped, imported, or rejected records.
+ * - Utilizes specialized DAOs and handlers to bridge external {@link InventorySnapshot} 
+ *   data with the internal relational schema.
+ */
 
 public class InventoryImportUtil {
 
