@@ -17,7 +17,7 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     @Override
     public void add(Department department) throws SQLException {
         String query = "insert into departments ( department_name, location) values (?, ?)";
-        try (Connection conn = DBUtil.getConnection();
+        try (Connection conn = DBUtil.getConnection();  
             PreparedStatement ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, department.getDepartmentName());
             ps.setString(2, department.getLocation());
@@ -32,7 +32,7 @@ public class DepartmentDAOImpl implements DepartmentDAO {
 
      @Override
     public void update (Department department) throws SQLException{
-        String query = "update departments set department_name = ? , location = ? where department_id = ?";
+        String query = "update departments set department_name = ? ,    location = ? where department_id = ?";
         try (Connection conn =  DBUtil.getConnection();
             PreparedStatement ps = conn.prepareStatement(query)){
             ps.setString(1,department.getDepartmentName());

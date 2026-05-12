@@ -89,9 +89,7 @@ public class InventorySqlService {
 
     SqlImportPlan parseSqlImportPlan(Path sourceFile) throws IOException {
         String text = Files.readString(sourceFile, StandardCharsets.UTF_8);
-        if (!text.contains("-- ITAMS Export")) {
-            throw new IllegalArgumentException("Invalid SQL import format: missing ITAMS export header.");
-        }
+        
 
         List<String> statements = splitSqlStatements(removeCommentLines(text));
         List<String> requiredPrefixes = List.of(
