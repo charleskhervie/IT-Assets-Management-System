@@ -248,6 +248,11 @@ public class TransactionDAOImpl implements TransactionDAO {
     public void approveReturn(int transactionId, int processedBy, String remarks) throws SQLException {
         String updateTransaction = "update transaction set status = 'Returned', return_date = ?, processed_by = ?, remarks = ? where transaction_id = ?";
         String updateUnit = "update units set status = 'Available', assigned_to = NULL where unit_id = (select unit_id from transaction where transaction_id = ?)";
+        String declineOthers = """
+            update transaction set status = 'Declined' 
+            where unit_id in (select unit_id from (select unit_id from transaction where transaction_id = ?) as derived) 
+            and transaction_id != ? and status = 'Pending Return'
+            """;
         
         try (Connection conn = DBUtil.getConnection()) {
             conn.setAutoCommit(false);
@@ -261,6 +266,11 @@ public class TransactionDAOImpl implements TransactionDAO {
                 }
                 try (PreparedStatement ps = conn.prepareStatement(updateUnit)) {
                     ps.setInt(1, transactionId);
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps = conn.prepareStatement(declineOthers)) {
+                    ps.setInt(1, transactionId);
+                    ps.setInt(2, transactionId);
                     ps.executeUpdate();
                 }
                 conn.commit();
@@ -288,6 +298,11 @@ public class TransactionDAOImpl implements TransactionDAO {
             (select borrowed_by from transaction where transaction_id = ?) 
             where unit_id = (select unit_id from transaction where transaction_id = ?)
             """;
+        String declineOthers = """
+            update transaction set status = 'Declined' 
+            where unit_id in (select unit_id from (select unit_id from transaction where transaction_id = ?) as derived) 
+            and transaction_id != ? and status = 'Pending'
+            """;
         try (Connection conn = DBUtil.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -298,6 +313,11 @@ public class TransactionDAOImpl implements TransactionDAO {
                     ps.executeUpdate();
                 }
                 try (PreparedStatement ps = conn.prepareStatement(updateUnit)) {
+                    ps.setInt(1, transactionId);
+                    ps.setInt(2, transactionId);
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps = conn.prepareStatement(declineOthers)) {
                     ps.setInt(1, transactionId);
                     ps.setInt(2, transactionId);
                     ps.executeUpdate();
