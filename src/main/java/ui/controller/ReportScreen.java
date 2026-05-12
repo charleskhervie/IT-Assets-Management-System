@@ -34,8 +34,7 @@ import ui.util.NavigationUtil;
  * Provides a high-level data visualization and reporting interface for organizational assets.
  * It aggregates data across categories, equipment types, and transaction histories to 
  * produce both visual insights (Charts) and detailed data grids (Tables).
- * 
- * Key features:
+ *  features:
  * - Real-time counters for asset availability and maintenance status.
  * - Multi-format export system (CSV, JSON, PDF) using functional action wrappers.
  * - Visual analytics via JavaFX {@link PieChart} for status distribution and 

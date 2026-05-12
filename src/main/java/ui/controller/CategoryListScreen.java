@@ -56,7 +56,7 @@ public class CategoryListScreen implements Initializable {
     @FXML private Button nextButton11;
     @FXML private Label pageLabel11;
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 16;
     private int currentPage = 0;
     private List<Category> currentFilteredData = new ArrayList<>();
     private final CategoryHandler handler = new CategoryHandler();

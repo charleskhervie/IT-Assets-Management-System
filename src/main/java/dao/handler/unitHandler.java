@@ -105,4 +105,18 @@ public class unitHandler {
     private boolean isAddInputValid(int equipmentId, String serialNumber) {
         return equipmentId > 0 && serialNumber != null && !serialNumber.isBlank();
     }
+
+    public String setUnitMaintenance(UnitDAO dao,int id){
+        try{
+            Unit foundUnit = dao.findById(id);
+            if(foundUnit == null){
+                return "Unit not found. Unable to change status";
+            }
+            foundUnit.setStatus("Maintenance");
+            dao.update(foundUnit);
+            return null;
+        }catch(SQLException e){
+            return "SetUnitMaintenanceError: "+e.getMessage();
+        }
+    }
 }

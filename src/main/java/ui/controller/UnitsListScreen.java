@@ -34,7 +34,7 @@ import java.io.File;
 /**
  * Controller for the Units List screen.
  *
- * features:
+ * Features:
  * Displays a paginated, filterable table of all units in the system.
  * Admin users see Edit and Delete action buttons per row, along with an Add Unit button.
  * Staff users see Check-out and Check-in buttons instead.
@@ -62,7 +62,7 @@ public class UnitsListScreen implements Initializable {
     @FXML private Button nextButton;
     @FXML private Label pageLabel;
 
-    private static final int PAGE_SIZE = 18;
+    private static final int PAGE_SIZE = 16;
     private int currentPage = 0;
     private List<Unit> currentFilteredData = new ArrayList<>();
 
@@ -145,7 +145,8 @@ public class UnitsListScreen implements Initializable {
             UnitTableUtil.setupColumnsWithActions(
                 (TableView<Object>) (TableView<?>) unitsTable,
                 "Edit", editStyle, e -> handleEditSelected(),
-                "Delete", deleteStyle, e -> handleDeleteSelected()
+                "Delete", deleteStyle, e -> handleDeleteSelected(),
+                e -> handleSetMaintenance()
             );
         } else {
             UnitTableUtil.setupColumns(table);
@@ -201,14 +202,16 @@ public class UnitsListScreen implements Initializable {
             nextButton.setDisable(currentPage >= totalPages - 1);
     }
 
-    @FXML private void handlePrev(ActionEvent event) {
+    @FXML
+    private void handlePrev(ActionEvent event) {
         if (currentPage > 0) {
             currentPage--;
             updatePage();
         }
     }
 
-    @FXML private void handleNext(ActionEvent event) {
+    @FXML
+    private void handleNext(ActionEvent event) {
         int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
         if (currentPage < totalPages - 1) {
             currentPage++;
@@ -300,7 +303,47 @@ public class UnitsListScreen implements Initializable {
         return errors;
     }
 
-    @FXML 
+    /**
+     * Sets the status of selected unit(s) to 'Maintenance'.
+     * Supports multi-selection.
+     */
+    private void handleSetMaintenance() {
+        List<Unit> selected = new ArrayList<>(unitsTable.getSelectionModel().getSelectedItems());
+        if (selected.isEmpty()) return;
+
+        for (Unit unit : selected) {
+            if (!unit.getStatus().equalsIgnoreCase("available")) {
+                AlertUtil.showError(
+                    "Set Maintenance Failed",
+                    "One or more selected units are not Available.\n" +
+                    "Please select only Available units to set as Maintenance."
+                );
+                return;
+            }
+        }
+
+        boolean confirmed = AlertUtil.showConfirmation(
+            "Set Maintenance",
+            "Mark " + selected.size() + " unit(s) as 'Maintenance'?"
+        );
+        if (!confirmed) return;
+
+        List<String> errors = new ArrayList<>();
+        for (Unit unit : selected) {
+            String error = handler.setUnitMaintenance(unitDAO, unit.getUnitId());
+            if (error != null) {
+                errors.add("Unit " + unit.getUnitId() + ": " + error);
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            AlertUtil.showError("Some Updates Failed", String.join("\n", errors));
+        }
+
+        loadData();
+    }
+
+    @FXML
     private void handleExit(ActionEvent event) {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Confirm Exit");
@@ -316,7 +359,7 @@ public class UnitsListScreen implements Initializable {
     @FXML
     private void handleCheckOut(ActionEvent event) {
         Unit selected = unitsTable.getSelectionModel().getSelectedItem();
-        
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
             Parent root = loader.load();
@@ -356,7 +399,7 @@ public class UnitsListScreen implements Initializable {
         }
     }
 
-    @FXML 
+    @FXML
     private void handleExportPdf(ActionEvent event) {
         if (currentFilteredData.isEmpty()) {
             AlertUtil.showError("Export Error", "No units to export. Please check your filters.");

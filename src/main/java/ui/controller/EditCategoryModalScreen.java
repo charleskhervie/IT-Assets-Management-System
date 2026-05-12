@@ -22,10 +22,6 @@ import ui.util.AlertUtil;
  *   category names, maintaining data quality within the system.
  * - Bridges the presentation layer with the backend by delegating update 
  *   persistence to the {@link CategoryHandler} and {@link CategoryDAO}.
- * - Displays contextual feedback via {@link AlertUtil} in the event of database 
- *   constraints or execution errors.
- * - Coordinates modal dismissal by resolving the current {@link Stage} from the 
- *   triggering action event.
  */
 public class EditCategoryModalScreen {
 

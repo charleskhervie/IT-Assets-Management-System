@@ -28,8 +28,6 @@ import ui.util.AlertUtil;
  *   credentials and profile information.
  * - Interfaces with {@link EmployeeHandler} and {@link EmployeeDAO} to manage 
  *   data persistence and account updates.
- * - Orchestrates the modal lifecycle by resolving current stage references 
- *   for clean exit behaviors.
  */
 public class AddEmployeeModalScreen {
 

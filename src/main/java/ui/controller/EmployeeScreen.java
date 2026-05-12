@@ -61,7 +61,7 @@ public class EmployeeScreen implements Initializable {
     private final EmployeeHandler handler = new EmployeeHandler();
     private final EmployeeDAO employeeDAO = new EmployeeDAOImpl();
     private final ObservableList<Employee> masterList = FXCollections.observableArrayList();
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 16;
     private int currentPage = 0;
     private java.util.List<Employee> currentFilteredData = new ArrayList<>();
 

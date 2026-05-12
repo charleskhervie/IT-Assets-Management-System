@@ -59,7 +59,7 @@ public class EquipmentListScreen implements Initializable {
     @FXML private Label pageLabel1;
     @FXML private Button addEquipmentButton;
     
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 16;
     private int currentPage = 0;
     private List<Equipment> currentFilteredData = new ArrayList<>();
     private final EquipmentHandler handler = new EquipmentHandler();

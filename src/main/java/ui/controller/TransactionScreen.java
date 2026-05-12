@@ -33,6 +33,7 @@ import java.io.File;
 /**
  * Controller for the Transaction Ledger screen.
  * 
+ * features:
  * Implements a state-aware table that changes its available actions (Approve/Decline)
  * based on the transaction status and the user's administrative privileges.
  */
@@ -54,7 +55,7 @@ public class TransactionScreen implements Initializable {
     @FXML private Button nextButton;
     @FXML private Label pageLabel;
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 16;
     private int currentPage = 0;
     private List<Transaction> currentFilteredData = new ArrayList<>();
 

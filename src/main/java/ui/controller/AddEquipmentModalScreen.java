@@ -17,17 +17,10 @@ import ui.util.AlertUtil;
  * Facilitates the entry of new equipment types into the organizational asset catalog. 
  * This controller serves as the primary interface for defining high-level hardware 
  * templates, including technical specifications and categorization.
- * 
- * - Captures structured input for asset attributes such as nomenclature, branding, 
- *   model identification, and detailed technical specifications.
- * - Implements front-end validation to ensure that critical descriptive fields 
- *   are not null and that categorical references are numerically valid.
  * - Manages the instantiation of new {@link Equipment} objects, mapping UI 
  *   text fields to the underlying data model.
  * - Interfaces with the {@link EquipmentHandler} and {@link EquipmentDAO} to 
  *   persist new records while providing immediate error feedback via {@link AlertUtil}.
- * - Handles the modal's lifecycle by resolving the execution context from 
- *   the triggering {@link ActionEvent} to perform clean window closures.
  */
 public class AddEquipmentModalScreen {
 

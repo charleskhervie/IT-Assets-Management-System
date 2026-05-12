@@ -11,6 +11,7 @@ import java.util.List;
 import dao.dao_util.DBUtil;
 import dao.intfc.UnitDAO;
 import dao.model.Unit;
+import javafx.collections.FXCollections;
 /**
  * implementation of the {@link UnitDAO} interface for managing individual 
  * physical equipment instances. this class handles state transitions, 
@@ -236,6 +237,7 @@ public class UnitDAOImpl implements UnitDAO {
         }
         return null;
     }
+    
     private Unit mapRowRaw(ResultSet rs) throws SQLException {
         return new Unit(
             rs.getInt("unit_id"),

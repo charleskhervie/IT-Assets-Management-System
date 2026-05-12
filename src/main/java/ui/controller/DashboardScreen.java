@@ -40,10 +40,10 @@ import java.util.Properties;
  *   to highlight the currently active module.
  * - Aggregates system-wide statistics by querying the handler layer to provide 
  *   real-time counts for units, equipment, employees, and transactions.
- * - Integrates with {@link CredentialManager} to securely display session data, 
+ * - Integrates with {@link CredentialManager}, 
  *   including the current user's identity and system role.
  * - Facilitates modular content swapping within the {@link BorderPane} using 
- *   {@link NavigationUtil} for a seamless single-page application experience.
+ *   {@link NavigationUtil} 
  */
 public class DashboardScreen implements Initializable {
 
