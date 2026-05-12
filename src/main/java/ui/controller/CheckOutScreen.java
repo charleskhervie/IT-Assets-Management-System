@@ -91,6 +91,15 @@ public class CheckOutScreen {
                 return;
             }
 
+            // Check if there's already a pending request for this unit
+            List<Transaction> pendingTransactions = transactionDAO.findWithAttribute("status", "Pending");
+            for (Transaction txn : pendingTransactions) {
+                if (txn.getUnitId() == unit.getUnitId()) {
+                    AlertUtil.showError("Request Exists", "A pending checkout request already exists for this unit.");
+                    return;
+                }
+            }
+
             String status = AdminUtil.isAdminMode() ? "Checked-out" : "Pending";
             int processedBy = AdminUtil.isAdminMode() ? loggedIn.getEmpId() : 0;
 

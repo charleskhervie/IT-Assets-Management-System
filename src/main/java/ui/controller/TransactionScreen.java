@@ -227,8 +227,6 @@ public class TransactionScreen implements Initializable {
             }
             if (error != null) {
                 AlertUtil.showError("Error", error);
-            } else {
-                AlertUtil.showInfo("Checkout Approved", "This checkout has been approved. Any other pending requests for this unit have been automatically declined.");
             }
             loadData();
         } catch (IOException e) {
@@ -256,11 +254,7 @@ public class TransactionScreen implements Initializable {
             if (!controller.isSaved()) return;
 
             String error = handler.approveReturn(transactionDAO, transaction.getTransactionId(), controller.getRemarks());
-            if (error != null) {
-                AlertUtil.showError("Error", error);
-            } else {
-                AlertUtil.showInfo("Return Approved", "This return has been approved. Any other pending returns for this unit have been automatically declined.");
-            }
+            if (error != null) AlertUtil.showError("Error", error);
             loadData();
         } catch (IOException e) {
             throw new RuntimeException("Failed to load addRemarks.fxml", e);
