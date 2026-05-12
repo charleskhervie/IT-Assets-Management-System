@@ -34,6 +34,7 @@ import java.io.File;
 /**
  * Controller for the Units List screen.
  *
+ * features:
  * Displays a paginated, filterable table of all units in the system.
  * Admin users see Edit and Delete action buttons per row, along with an Add Unit button.
  * Staff users see Check-out and Check-in buttons instead.
@@ -61,7 +62,7 @@ public class UnitsListScreen implements Initializable {
     @FXML private Button nextButton;
     @FXML private Label pageLabel;
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 18;
     private int currentPage = 0;
     private List<Unit> currentFilteredData = new ArrayList<>();
 
@@ -312,11 +313,15 @@ public class UnitsListScreen implements Initializable {
         NavigationUtil.loadScene(event, "/fxml/login.fxml");
     }
 
-    @FXML 
+    @FXML
     private void handleCheckOut(ActionEvent event) {
+        Unit selected = unitsTable.getSelectionModel().getSelectedItem();
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
             Parent root = loader.load();
+            CheckOutScreen controller = loader.getController();
+            controller.setTargetUnit(selected);
             Stage modal = new Stage();
             modal.initOwner(unitsTable.getScene().getWindow());
             modal.initModality(Modality.APPLICATION_MODAL);
@@ -330,11 +335,14 @@ public class UnitsListScreen implements Initializable {
         }
     }
 
-    @FXML 
+    @FXML
     private void handleCheckIn(ActionEvent event) {
+        Unit selected = unitsTable.getSelectionModel().getSelectedItem();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-in.fxml"));
             Parent root = loader.load();
+            CheckInScreen controller = loader.getController();
+            controller.setTargetUnit(selected);
             Stage modal = new Stage();
             modal.initOwner(unitsTable.getScene().getWindow());
             modal.initModality(Modality.APPLICATION_MODAL);

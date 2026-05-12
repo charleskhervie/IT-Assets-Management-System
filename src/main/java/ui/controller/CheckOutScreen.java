@@ -48,7 +48,13 @@ public class CheckOutScreen {
     public void setTargetUnit(Unit unit) {
         if (unit != null) {
             serialNoField.setText(unit.getSerialNumber());
-            serialNoField.setEditable(false); 
+            serialNoField.setEditable(false);
+        }
+        // Auto-fill borrower from session
+        Employee loggedIn = SessionManager.getLoggedInEmployee();
+        if (loggedIn != null) {
+            borrowerField.setText(loggedIn.getFullName());
+            borrowerField.setEditable(false);
         }
     }
     public void initialize() {
