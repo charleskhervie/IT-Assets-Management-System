@@ -221,17 +221,21 @@ public class UnitDAOImpl implements UnitDAO {
 
         return units;
     }
-    /**
-     * Maps a single row from a ResultSet into a {@code Unit} object containing 
-     * only core database fields.
-     * 
-     * <p>This method is typically used when querying the 'units' table directly 
-     * without joining other tables for descriptive names.</p>
-     * 
-     * @param rs the {@code ResultSet} currently positioned at the desired row
-     * @return a {@code Unit} object populated with basic column data
-     * @throws SQLException if a database access error occurs or the column labels are invalid
-     */
+
+    @Override
+    public Unit findBySerialExact(String serial) throws SQLException {
+        String query = "select * from units where BINARY serial_number = ? and is_deleted = FALSE";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, serial);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowRaw(rs);
+                }
+            }
+        }
+        return null;
+    }
     private Unit mapRowRaw(ResultSet rs) throws SQLException {
         return new Unit(
             rs.getInt("unit_id"),

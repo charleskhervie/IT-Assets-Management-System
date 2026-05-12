@@ -75,12 +75,11 @@ public class CheckOutScreen {
         }
 
         try {
-            List<Unit> units = unitDAO.findWithAttribute("serial_number", serialNo);
-            if (units.isEmpty()) {
+            Unit unit = unitDAO.findBySerialExact(serialNo);
+            if (unit == null) {
                 AlertUtil.showError("Not Found", "No unit found with serial number: " + serialNo);
                 return;
             }
-            Unit unit = units.get(0);
             if (!"available".equalsIgnoreCase(unit.getStatus())) {
                 AlertUtil.showError("Unavailable", "Unit is not available for checkout.");
                 return;

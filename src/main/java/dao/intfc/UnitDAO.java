@@ -18,4 +18,5 @@ public interface UnitDAO {
     List<Unit> findAllDisplay() throws SQLException;
     List<Unit> findWithAttribute(String attribute, String value) throws SQLException;
     boolean hasUnitsByEquipmentId(int equipmentId) throws SQLException;
+    Unit findBySerialExact(String serial) throws SQLException;
 }
