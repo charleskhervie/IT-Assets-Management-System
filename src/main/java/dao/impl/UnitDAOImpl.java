@@ -196,6 +196,21 @@ public class UnitDAOImpl implements UnitDAO {
 
         return units;
     }
+
+    @Override
+    public Unit findBySerialExact(String serial) throws SQLException {
+        String query = "select * from units where BINARY serial_number = ? and is_deleted = FALSE";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, serial);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRowRaw(rs);
+                }
+            }
+        }
+        return null;
+    }
     private Unit mapRowRaw(ResultSet rs) throws SQLException {
         return new Unit(
             rs.getInt("unit_id"),
