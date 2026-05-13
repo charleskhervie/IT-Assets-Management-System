@@ -66,7 +66,7 @@ public class EditEquipmentModalScreen {
         }
 
         try {
-            boolean categoryExists = !categoryDAO.findWithAttribute("categoryId", String.valueOf(categoryId)).isEmpty();
+            boolean categoryExists = !categoryDAO.findWithAttribute("category_id", String.valueOf(categoryId)).isEmpty();
             if (!categoryExists) {
                 AlertUtil.showError("Validation Error", "Category ID " + categoryId + " does not exist. Please enter a valid category.");
                 return;

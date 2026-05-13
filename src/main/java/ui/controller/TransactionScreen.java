@@ -176,7 +176,14 @@ public class TransactionScreen implements Initializable {
         if (transaction == null) return;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/viewTransaction.fxml"));
+            URL location = getClass().getResource("/fxml/viewTransaction.fxml");
+            if (location == null) {
+                location = ClassLoader.getSystemResource("fxml/viewTransaction.fxml");
+            }
+            if (location == null) {
+                throw new IOException("Cannot find resource: /fxml/viewTransaction.fxml");
+            }
+            FXMLLoader loader = new FXMLLoader(location);
             Parent root = loader.load();
 
             ViewTransactionModalScreen controller = loader.getController();
@@ -199,7 +206,14 @@ public class TransactionScreen implements Initializable {
         if (!confirmed) return;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addRemarks.fxml"));
+            URL location = getClass().getResource("/fxml/AddRemarks.fxml");
+            if (location == null) {
+                location = ClassLoader.getSystemResource("fxml/AddRemarks.fxml");
+            }
+            if (location == null) {
+                throw new IOException("Cannot find resource: /fxml/AddRemarks.fxml");
+            }
+            FXMLLoader loader = new FXMLLoader(location);
             Parent root = loader.load();
 
             AddRemarksModal controller = loader.getController();
@@ -224,7 +238,7 @@ public class TransactionScreen implements Initializable {
             }
             loadData();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load addRemarks.fxml", e);
+            throw new RuntimeException("Failed to load AddRemarks.fxml", e);
         }
     }
     private void handleApproveReturn(Transaction transaction) {
@@ -233,7 +247,14 @@ public class TransactionScreen implements Initializable {
         if (!confirmed) return;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addRemarks.fxml"));
+            URL location = getClass().getResource("/fxml/AddRemarks.fxml");
+            if (location == null) {
+                location = ClassLoader.getSystemResource("fxml/AddRemarks.fxml");
+            }
+            if (location == null) {
+                throw new IOException("Cannot find resource: /fxml/AddRemarks.fxml");
+            }
+            FXMLLoader loader = new FXMLLoader(location);
             Parent root = loader.load();
             AddRemarksModal controller = loader.getController();
 
@@ -251,7 +272,7 @@ public class TransactionScreen implements Initializable {
             if (error != null) AlertUtil.showError("Error", error);
             loadData();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load addRemarks.fxml", e);
+            throw new RuntimeException("Failed to load AddRemarks.fxml", e);
         }
     }
 

@@ -281,6 +281,11 @@ public class UnitsListScreen implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Check-out.fxml"));
             Parent root = loader.load();
+            CheckOutScreen controller = loader.getController();
+            Unit selectedUnit = unitsTable.getSelectionModel().getSelectedItem();
+            if (selectedUnit != null) {
+                controller.setTargetUnit(selectedUnit);
+            }
             Stage modal = new Stage();
             modal.initOwner(unitsTable.getScene().getWindow());
             modal.initModality(Modality.APPLICATION_MODAL);
