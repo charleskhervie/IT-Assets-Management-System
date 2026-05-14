@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 
 public class UnitTableUtil {
@@ -114,7 +115,7 @@ public class UnitTableUtil {
     public static void setupColumnsWithActions(TableView<Object> table,
             String btn1Label, String btn1Style, EventHandler<ActionEvent> onBtn1,
             String btn2Label, String btn2Style, EventHandler<ActionEvent> onBtn2,
-            EventHandler<ActionEvent> onMaintenance) {
+            EventHandler<ActionEvent> onMaintenance, EventHandler<ActionEvent> onAvailable) {
 
         table.getColumns().clear();
 
@@ -204,6 +205,9 @@ public class UnitTableUtil {
             MenuItem editItem = new MenuItem("Edit Unit");
             MenuItem deleteItem = new MenuItem("Delete Selected");
             MenuItem maintenanceItem = new MenuItem("Set Status: Maintenance");
+            MenuItem availableItem = new MenuItem("Set Status: Available");
+
+            
 
             editItem.setOnAction(e -> {
                 if (table.getSelectionModel().getSelectedItems().size() > 1) return;
@@ -211,8 +215,9 @@ public class UnitTableUtil {
             });
             deleteItem.setOnAction(e -> onBtn2.handle(e));
             maintenanceItem.setOnAction(e -> onMaintenance.handle(e));
+            availableItem.setOnAction(e -> onAvailable.handle(e));
 
-            ContextMenu contextMenu = new ContextMenu(editItem, deleteItem, maintenanceItem);
+            ContextMenu contextMenu = new ContextMenu(editItem, deleteItem, maintenanceItem, availableItem);
 
             table.setRowFactory(t -> {
                 TableRow<Object> row = new TableRow<>();

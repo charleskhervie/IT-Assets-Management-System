@@ -119,4 +119,17 @@ public class unitHandler {
             return "SetUnitMaintenanceError: "+e.getMessage();
         }
     }
+    public String setUnitAvailable(UnitDAO dao, int id) {
+        try{
+            Unit foundUnit = dao.findById(id);
+            if(foundUnit == null){
+                return "Unit not found. Unable to change status";
+            }
+            foundUnit.setStatus("Available");
+            dao.update(foundUnit);
+            return null;
+        }catch(SQLException e){
+            return "SetUnitAvailableError: "+e.getMessage();
+        }
+    }
 }

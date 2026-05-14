@@ -146,7 +146,8 @@ public class UnitsListScreen implements Initializable {
                 (TableView<Object>) (TableView<?>) unitsTable,
                 "Edit", editStyle, e -> handleEditSelected(),
                 "Delete", deleteStyle, e -> handleDeleteSelected(),
-                e -> handleSetMaintenance()
+                e -> handleSetMaintenance(),
+                e -> handleSetAvailable()
             );
         } else {
             UnitTableUtil.setupColumns(table);
@@ -169,9 +170,13 @@ public class UnitsListScreen implements Initializable {
         String keyword = searchField.getText().toLowerCase().trim();
         String status = statusFilter.getValue();
 
-        currentFilteredData = masterList.stream()
-            .filter(unit -> UnitFilter.matches(unit, status, keyword))
-            .toList();
+        List<Unit> filtered = new ArrayList<>();
+        for (Unit unit : masterList) {
+            if (UnitFilter.matches(unit, status, keyword)) {
+                filtered.add(unit);
+            }
+        }
+        currentFilteredData = filtered;
 
         currentPage = 0;
         updatePage();
@@ -331,6 +336,40 @@ public class UnitsListScreen implements Initializable {
         List<String> errors = new ArrayList<>();
         for (Unit unit : selected) {
             String error = handler.setUnitMaintenance(unitDAO, unit.getUnitId());
+            if (error != null) {
+                errors.add("Unit " + unit.getUnitId() + ": " + error);
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            AlertUtil.showError("Some Updates Failed", String.join("\n", errors));
+        }
+
+        loadData();
+    }
+    private void handleSetAvailable() {
+        List<Unit> selected = new ArrayList<>(unitsTable.getSelectionModel().getSelectedItems());
+        if (selected.isEmpty()) return;
+
+        for (Unit unit : selected) {
+            if (!unit.getStatus().equalsIgnoreCase("maintenance")) {
+                AlertUtil.showError(
+                    "Set Available Failed",
+                    "One or more selected units are not under Maintenance."
+                );
+                return;
+            }
+        }
+
+        boolean confirmed = AlertUtil.showConfirmation(
+            "Set Available",
+            "Mark " + selected.size() + " unit(s) as 'Available'?"
+        );
+        if (!confirmed) return;
+
+        List<String> errors = new ArrayList<>();
+        for (Unit unit : selected) {
+            String error = handler.setUnitAvailable(unitDAO, unit.getUnitId());
             if (error != null) {
                 errors.add("Unit " + unit.getUnitId() + ": " + error);
             }
