@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import dao.handler.EquipmentHandler;
 import dao.impl.EquipmentDAOImpl;
@@ -118,9 +119,13 @@ public class EquipmentListScreen implements Initializable {
 
     private void applyFilters() {
         String keyword = searchField1.getText().toLowerCase().trim();
-        currentFilteredData = masterList.stream()
-            .filter(equipment -> EquipmentFilter.matches(equipment, keyword))
-            .collect(java.util.stream.Collectors.toList());
+        List<Equipment> filtered = new ArrayList<>();
+        for (Equipment equipment : masterList) {
+            if (EquipmentFilter.matches(equipment, keyword)) {
+                filtered.add(equipment);
+            }
+        }
+        currentFilteredData = filtered;
         currentPage = 0;
         updatePage();
     }
@@ -143,14 +148,16 @@ public class EquipmentListScreen implements Initializable {
             nextButton1.setDisable(currentPage >= totalPages - 1);
     }
 
-    @FXML private void handlePrev(ActionEvent event) {
+    @FXML 
+    private void handlePrev(ActionEvent event) {
         if (currentPage > 0) {
             currentPage--;
             updatePage();
         }
     }
 
-    @FXML private void handleNext(ActionEvent event) {
+    @FXML
+    private void handleNext(ActionEvent event) {
         int totalPages = (int) Math.ceil((double) currentFilteredData.size() / PAGE_SIZE);
         if (currentPage < totalPages - 1) {
             currentPage++;

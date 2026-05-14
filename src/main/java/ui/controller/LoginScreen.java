@@ -92,19 +92,10 @@ import javafx.stage.Stage;
         }
 
         try {
-            // Validate employee exists
-             
-            EmployeeDAO employeeDAO = new EmployeeDAOImpl();
-            EmployeeHandler employeeHandler = new EmployeeHandler();
-            Employee employee = employeeHandler.getEmployeeByUsername(employeeDAO, username);
-            if (employee == null) {
-                errorLabel.setText("Username not found.");
-                errorLabel.setVisible(true);
-                return;
-            }
 
             // Store in session
-            SessionManager.setLoggedInEmployee(employee);
+            SessionManager.setLoggedInEmployee(matchedEmployee);
+            SessionManager.setAdminMode("Admin".equalsIgnoreCase(matchedEmployee.getRole()));
 
             CredentialManager credentialManager = new CredentialManager();
             credentialManager.writeAppSession(matchedEmployee.getUsername(), normalizeAppMode(matchedEmployee.getRole()));

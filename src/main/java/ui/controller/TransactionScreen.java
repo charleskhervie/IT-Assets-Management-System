@@ -137,9 +137,13 @@ public class TransactionScreen implements Initializable {
     private void applyFilters() {
         String keyword = searchField.getText().toLowerCase().trim();
         String status = statusFilter.getValue();
-        currentFilteredData = masterList.stream()
-            .filter(t -> TransactionFilter.matches(t, status, keyword))
-            .collect(java.util.stream.Collectors.toList());
+        List<Transaction> filtered = new ArrayList<>();
+        for (Transaction t : masterList) {
+            if (TransactionFilter.matches(t, status, keyword)) {
+                filtered.add(t);
+            }
+        }
+        currentFilteredData = filtered;
         currentPage = 0;
         updatePage();
     }
@@ -206,7 +210,7 @@ public class TransactionScreen implements Initializable {
         if (!confirmed) return;
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addRemarks.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AddRemarks.fxml"));
             Parent root = loader.load();
 
             AddRemarksModal controller = loader.getController();

@@ -87,7 +87,8 @@ public class DashboardScreen implements Initializable {
             dashboardButton.setManaged(adminMode); 
         }
         if (importExportButton != null) { 
-            importExportButton.setVisible(adminMode); importExportButton.setManaged(adminMode); 
+            importExportButton.setVisible(adminMode); 
+            importExportButton.setManaged(adminMode); 
         }
         if (employeesButton != null){ 
             employeesButton.setVisible(adminMode);    
@@ -95,7 +96,7 @@ public class DashboardScreen implements Initializable {
         }
         if (reportsButton != null){ 
             reportsButton.setVisible(adminMode);      
-            reportsButton.setManaged(adminMode); 
+            reportsButton.setManaged(adminMode);    
         }
         if (transactionsButton != null) {
             transactionsButton.setVisible(true);
@@ -108,18 +109,7 @@ public class DashboardScreen implements Initializable {
             setActiveButton(unitsButton);
         }
         if (usernameLabel != null && roleLabel != null) {
-            try {
-                CredentialManager cm = new CredentialManager();
-                if (cm.exists()) {
-                    Properties props = cm.load();
-                    String appUser = props.getProperty("app_user", "Unknown");
-                    String appRole = props.getProperty("app_mode", "Unknown");
-                    usernameLabel.setText(appUser);
-                    roleLabel.setText(appRole);
-                }
-            } catch (IOException e) {
-                usernameLabel.setText("Unknown");
-            }
+            setRoleLabel();
         }
 
         if (!adminMode) {
@@ -127,6 +117,20 @@ public class DashboardScreen implements Initializable {
         }
 
         loadCounts();
+    }
+    private void setRoleLabel(){
+        try {
+            CredentialManager cm = new CredentialManager();
+            if (cm.exists()) {
+                Properties props = cm.load();
+                String appUser = props.getProperty("app_user", "Unknown");
+                String appRole = props.getProperty("app_mode", "Unknown");
+                usernameLabel.setText(appUser);
+                roleLabel.setText(appRole);
+            }
+        } catch (IOException e) {
+            usernameLabel.setText("Unknown");
+        }
     }
 
     @FXML private void handleUnits(ActionEvent event){ 
@@ -188,7 +192,7 @@ public class DashboardScreen implements Initializable {
         EmployeeHandler empHandler = new EmployeeHandler();
         TransactionHandler txHandler = new TransactionHandler();
 
-        if (unitCountLabel != null)
+        if (unitCountLabel != null){}
             unitCountLabel.setText(String.valueOf(handler.getUnitsRaw(new UnitDAOImpl()).size()));
         if (equipmentCountLabel != null)
             equipmentCountLabel.setText(String.valueOf(eqHandler.getEquipments(new EquipmentDAOImpl()).size()));
@@ -216,7 +220,9 @@ public class DashboardScreen implements Initializable {
         };
 
         for (Button btn : navButtons) {
-            if (btn != null) btn.getStyleClass().remove("active");
+            if (btn != null){
+                btn.getStyleClass().remove("active");
+            }
         }
 
         if (clickedButton != null) {

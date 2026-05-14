@@ -4,6 +4,7 @@ import dao.handler.EmployeeHandler;
 import dao.impl.EmployeeDAOImpl;
 import dao.intfc.EmployeeDAO;
 import dao.model.Employee;
+import dao.model.Unit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +17,7 @@ import javafx.scene.control.*;
 import ui.util.EmployeeTableUtil;
 import ui.util.ModalUtil;
 import ui.util.NavigationUtil;
+import ui.util.UnitFilter;
 import ui.util.AlertUtil;
 import ui.util.EmployeeFilter;
 import javafx.stage.Modality;
@@ -24,6 +26,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -63,7 +66,7 @@ public class EmployeeScreen implements Initializable {
     private final ObservableList<Employee> masterList = FXCollections.observableArrayList();
     private static final int PAGE_SIZE = 16;
     private int currentPage = 0;
-    private java.util.List<Employee> currentFilteredData = new ArrayList<>();
+    private List<Employee> currentFilteredData = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -82,9 +85,13 @@ public class EmployeeScreen implements Initializable {
     private void applyFilters() {
         String keyword = searchField != null ? searchField.getText().toLowerCase().trim() : "";
 
-        currentFilteredData = masterList.stream()
-            .filter(emp -> EmployeeFilter.matches(emp, keyword))
-            .toList();
+        List<Employee> filtered = new ArrayList<>();
+        for (Employee emp : masterList) {
+            if (EmployeeFilter.matches(emp,  keyword)) {
+                filtered.add(emp);
+            }
+        }
+        currentFilteredData = filtered;
 
         currentPage = 0;
         updatePage();

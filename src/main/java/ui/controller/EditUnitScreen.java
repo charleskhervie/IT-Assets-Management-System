@@ -50,7 +50,11 @@ public class EditUnitScreen implements Initializable {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
-        populateFields();
+        if (unit == null) return;
+        equipmentIdField.setText(String.valueOf(unit.getEquipmentId()));
+        serialNumberField.setText(unit.getSerialNumber());
+        assignedToField.setText(unit.getAssignedTo() != null ? String.valueOf(unit.getAssignedTo()) : "");
+        createdAtField.setText(unit.getCreatedAt().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
     }
 
     @Override
@@ -58,13 +62,6 @@ public class EditUnitScreen implements Initializable {
         createdAtField.setEditable(false);
     }
 
-    private void populateFields() {
-        if (unit == null) return;
-        equipmentIdField.setText(String.valueOf(unit.getEquipmentId()));
-        serialNumberField.setText(unit.getSerialNumber());
-        assignedToField.setText(unit.getAssignedTo() != null ? String.valueOf(unit.getAssignedTo()) : "");
-        createdAtField.setText(unit.getCreatedAt().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
-    }
 
     @FXML
     private void handleSave() {

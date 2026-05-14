@@ -16,11 +16,10 @@ public class CredentialManager {
 
 
     //writes env user credential info for accessing database
-    public void write(String user, String pass, String mode) throws IOException {
+    public void write(String user, String pass) throws IOException {
         Properties props = new Properties();
         props.setProperty("user", user);
         props.setProperty("password", pass);
-        props.setProperty("app_mode", mode);
         try (OutputStream output = new FileOutputStream(ENV_FILE)) {
             props.store(output, null);
         }

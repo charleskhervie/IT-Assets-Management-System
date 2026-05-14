@@ -1,16 +1,9 @@
 package ui.util;
-
 import dao.model.Employee;
-/**
- * Utility class for Session Management.
- * 
- * Provides a centralized, thread-local mechanism for tracking the 
- * currently authenticated user throughout the application lifecycle.
- * 
- */
-public class SessionManager {
 
+public class SessionManager {
     private static Employee loggedInEmployee;
+    private static boolean adminMode = false; // ← add this
 
     private SessionManager() {}
 
@@ -22,7 +15,16 @@ public class SessionManager {
         return loggedInEmployee;
     }
 
+    public static void setAdminMode(boolean isAdmin) { 
+        adminMode = isAdmin;
+    }
+
+    public static boolean isAdminMode() { 
+        return adminMode;
+    }
+
     public static void clear() {
         loggedInEmployee = null;
+        adminMode = false;
     }
 }
